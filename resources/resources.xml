@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/neatdecisions/detwinner">
+    <file compressed="true" preprocess="xml-stripblanks">ui/toolbarSearchPane.glade</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/toolbarResultsPane.glade</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/appMenu.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/duplicateTreeViewMenu.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/regexHelperMenu.ui</file>
+  </gresource>
+</gresources>

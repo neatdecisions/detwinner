@@ -1,0 +1,16 @@
+data/com.neatdecisions.Detwinner.appdata.xml.in
+data/com.neatdecisions.Detwinner.desktop.in
+resources/ui/appMenu.ui
+resources/ui/duplicateTreeViewMenu.ui
+resources/ui/regexHelperMenu.ui
+resources/ui/toolbarResultsPane.glade
+resources/ui/toolbarSearchPane.glade
+src/detwinner/DetwinnerApp.cpp
+src/detwinner/tools/BackupFileDeleter.cpp
+src/detwinner/ui/DetwinnerWindow.cpp
+src/detwinner/ui/DuplicatesTreeView.cpp
+src/detwinner/ui/FilePreview.cpp
+src/detwinner/ui/RegexListbox.cpp
+src/detwinner/ui/SearchProgressDialog.cpp
+src/detwinner/ui/SearchResultsPane.cpp
+src/detwinner/ui/SearchSettingsDialog.cpp

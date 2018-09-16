@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id='menu-duplicate-file'>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>Open</attribute>
+        <attribute name='action'>duplicatestreeview.file_open</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Open containing folder</attribute>
+        <attribute name='action'>duplicatestreeview.file_openfolder</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id='menu-duplicate-group'>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>Exclude from search results</attribute>
+        <attribute name='action'>duplicatestreeview.group_exclude</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name='label' translatable='yes'>Smart select</attribute>
+        <section>
+          <item>
+            <attribute name='label' translatable='yes'>Keep the first in a group</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_first</attribute>
+          </item>
+          <item>
+            <attribute name='label' translatable='yes'>Keep the last in a group</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_last</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the earliest modification date</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_earliest</attribute>
+          </item>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the latest modification date</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_latest</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the shortest name</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_shortestname</attribute>
+          </item>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the longest name</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_longestname</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the shortest path</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_shortestpath</attribute>
+          </item>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the longest path</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_longestpath</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the lowest resolution</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_lowestresolution</attribute>
+            <attribute name='hidden-when'>action-disabled</attribute>
+          </item>
+          <item>
+            <attribute name='label' translatable='yes'>Keep with the highest resolution</attribute>
+            <attribute name='action'>duplicatestreeview.group_smartselect_highestresolution</attribute>
+            <attribute name='hidden-when'>action-disabled</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>Select all</attribute>
+        <attribute name='action'>duplicatestreeview.group_selectall</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Clear selection</attribute>
+        <attribute name='action'>duplicatestreeview.group_clearselection</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Invert selection</attribute>
+        <attribute name='action'>duplicatestreeview.group_invertselection</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# IDE
+.vscode
+
+# Translations
+*.mo
+
+# Build folders
+Debug
+Release

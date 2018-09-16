@@ -1,0 +1,528 @@
+# English translations for detwinner package.
+# Copyright (C) 2018 THE detwinner'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the detwinner package.
+# Automatically generated, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: detwinner\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-11 21:27+0200\n"
+"PO-Revision-Date: 2018-09-12 20:58+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:7
+#: data/com.neatdecisions.Detwinner.desktop.in:3
+#: src/detwinner/DetwinnerApp.cpp:26 src/detwinner/DetwinnerApp.cpp:129
+msgid "Detwinner"
+msgstr "Detwinner"
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:8
+msgid "Find and remove duplicate files and similar images"
+msgstr "Find and remove duplicate files and similar images"
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:10
+msgid ""
+"Detwinner is a tool to search and remove exact file duplicates and similar "
+"images."
+msgstr ""
+"Detwinner is a tool to search and remove exact file duplicates and similar "
+"images."
+
+#: data/com.neatdecisions.Detwinner.desktop.in:4
+msgid "Find and remove duplicate files"
+msgstr "Find and remove duplicate files"
+
+#: data/com.neatdecisions.Detwinner.desktop.in:6
+msgid "disk;filesystem;"
+msgstr "disk;filesystem;"
+
+#: data/com.neatdecisions.Detwinner.desktop.in:9
+msgid "com.neatdecisions.Detwinner"
+msgstr "com.neatdecisions.Detwinner"
+
+#: resources/ui/appMenu.ui:7
+msgid "About"
+msgstr "About"
+
+#: resources/ui/appMenu.ui:11
+msgid "Quit"
+msgstr "Quit"
+
+#: resources/ui/duplicateTreeViewMenu.ui:6
+msgid "Open"
+msgstr "Open"
+
+#: resources/ui/duplicateTreeViewMenu.ui:10
+msgid "Open containing folder"
+msgstr "Open containing folder"
+
+#: resources/ui/duplicateTreeViewMenu.ui:18
+msgid "Exclude from search results"
+msgstr "Exclude from search results"
+
+#: resources/ui/duplicateTreeViewMenu.ui:24
+#: resources/ui/toolbarResultsPane.glade:21
+#: resources/ui/toolbarResultsPane.glade:103
+msgid "Smart select"
+msgstr "Smart select"
+
+#: resources/ui/duplicateTreeViewMenu.ui:27
+#: resources/ui/toolbarResultsPane.glade:120
+msgid "Keep the first in a group"
+msgstr "Keep the first in a group"
+
+#: resources/ui/duplicateTreeViewMenu.ui:31
+#: resources/ui/toolbarResultsPane.glade:134
+msgid "Keep the last in a group"
+msgstr "Keep the last in a group"
+
+#: resources/ui/duplicateTreeViewMenu.ui:37
+#: resources/ui/toolbarResultsPane.glade:159
+msgid "Keep with the earliest modification date"
+msgstr "Keep with the earliest modification date"
+
+#: resources/ui/duplicateTreeViewMenu.ui:41
+#: resources/ui/toolbarResultsPane.glade:173
+msgid "Keep with the latest modification date"
+msgstr "Keep with the latest modification date"
+
+#: resources/ui/duplicateTreeViewMenu.ui:47
+#: resources/ui/toolbarResultsPane.glade:198
+msgid "Keep with the shortest name"
+msgstr "Keep with the shortest name"
+
+#: resources/ui/duplicateTreeViewMenu.ui:51
+#: resources/ui/toolbarResultsPane.glade:212
+msgid "Keep with the longest name"
+msgstr "Keep with the longest name"
+
+#: resources/ui/duplicateTreeViewMenu.ui:57
+#: resources/ui/toolbarResultsPane.glade:237
+msgid "Keep with the shortest path"
+msgstr "Keep with the shortest path"
+
+#: resources/ui/duplicateTreeViewMenu.ui:61
+#: resources/ui/toolbarResultsPane.glade:251
+msgid "Keep with the longest path"
+msgstr "Keep with the longest path"
+
+#: resources/ui/duplicateTreeViewMenu.ui:67
+#: resources/ui/toolbarResultsPane.glade:276
+msgid "Keep with the lowest resolution"
+msgstr "Keep with the lowest resolution"
+
+#: resources/ui/duplicateTreeViewMenu.ui:72
+#: resources/ui/toolbarResultsPane.glade:290
+msgid "Keep with the highest resolution"
+msgstr "Keep with the highest resolution"
+
+#: resources/ui/duplicateTreeViewMenu.ui:81
+#: resources/ui/toolbarResultsPane.glade:47
+#: resources/ui/toolbarSearchPane.glade:22
+msgid "Select all"
+msgstr "Select all"
+
+#: resources/ui/duplicateTreeViewMenu.ui:85
+#: resources/ui/toolbarResultsPane.glade:61
+#: resources/ui/toolbarSearchPane.glade:36
+msgid "Clear selection"
+msgstr "Clear selection"
+
+#: resources/ui/duplicateTreeViewMenu.ui:89
+#: resources/ui/toolbarResultsPane.glade:75
+msgid "Invert selection"
+msgstr "Invert selection"
+
+#: resources/ui/regexHelperMenu.ui:6
+msgid "Files with a name"
+msgstr "Files with a name"
+
+#: resources/ui/regexHelperMenu.ui:10
+msgid "Files in a folder"
+msgstr "Files in a folder"
+
+#: resources/ui/regexHelperMenu.ui:14
+msgid "Files with an extension"
+msgstr "Files with an extension"
+
+#: resources/ui/toolbarResultsPane.glade:323
+msgid "Total size of a group"
+msgstr "Total size of a group"
+
+#: resources/ui/toolbarResultsPane.glade:338
+msgid "Size of a single file"
+msgstr "Size of a single file"
+
+#: resources/ui/toolbarResultsPane.glade:353
+msgid "Number of files in a group"
+msgstr "Number of files in a group"
+
+#: resources/ui/toolbarResultsPane.glade:378
+msgid "Ascending"
+msgstr "Ascending"
+
+#: resources/ui/toolbarResultsPane.glade:411
+msgid "Permanently"
+msgstr "Permanently"
+
+#: resources/ui/toolbarResultsPane.glade:425
+msgid "Move to Trash"
+msgstr "Move to Trash"
+
+#: resources/ui/toolbarResultsPane.glade:439
+msgid "Move to…"
+msgstr "Move to…"
+
+#: resources/ui/toolbarResultsPane.glade:519
+msgid "Sort by"
+msgstr "Sort by"
+
+#: resources/ui/toolbarResultsPane.glade:568
+msgid "Select"
+msgstr "Select"
+
+#: resources/ui/toolbarResultsPane.glade:617
+msgid "Delete"
+msgstr "Delete"
+
+#: resources/ui/toolbarResultsPane.glade:652
+msgid "New search"
+msgstr "New search"
+
+#: resources/ui/toolbarSearchPane.glade:61
+msgid "Reload"
+msgstr "Reload"
+
+#: resources/ui/toolbarSearchPane.glade:86
+msgid "Show hidden files"
+msgstr "Show hidden files"
+
+#: resources/ui/toolbarSearchPane.glade:124
+msgid "Search for: "
+msgstr "Search for: "
+
+#: resources/ui/toolbarSearchPane.glade:146
+#: resources/ui/toolbarSearchPane.glade:258
+#: src/detwinner/ui/DetwinnerWindow.cpp:105
+msgid "Exact duplicates"
+msgstr "Exact duplicates"
+
+#: resources/ui/toolbarSearchPane.glade:182
+msgid "Start search"
+msgstr "Start search"
+
+#: resources/ui/toolbarSearchPane.glade:241
+#: resources/ui/toolbarSearchPane.glade:275
+#: src/detwinner/ui/SearchSettingsDialog.cpp:22
+msgid "Settings"
+msgstr "Settings"
+
+#: resources/ui/toolbarSearchPane.glade:292
+#: src/detwinner/ui/DetwinnerWindow.cpp:102
+msgid "Similar images"
+msgstr "Similar images"
+
+#: src/detwinner/DetwinnerApp.cpp:131
+msgid "Neat duplicate file finder"
+msgstr "Neat duplicate file finder"
+
+#: src/detwinner/tools/BackupFileDeleter.cpp:39
+msgid "File with this name already exists. What should we do?"
+msgstr "File with this name already exists. What should we do?"
+
+#: src/detwinner/tools/BackupFileDeleter.cpp:42
+msgid "Overwrite"
+msgstr "Overwrite"
+
+#: src/detwinner/tools/BackupFileDeleter.cpp:43
+msgid "Skip"
+msgstr "Skip"
+
+#: src/detwinner/tools/BackupFileDeleter.cpp:44
+#: src/detwinner/ui/SearchResultsPane.cpp:419
+#: src/detwinner/ui/SearchSettingsDialog.cpp:37
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:71
+msgid "Name"
+msgstr "Name"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:91
+msgid "Path"
+msgstr "Path"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:98
+msgid "Size"
+msgstr "Size"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:105
+msgid "Resolution"
+msgstr "Resolution"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:112
+msgid "Updated"
+msgstr "Updated"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:351
+msgid "%1 files, %2 each"
+msgstr "%1 files, %2 each"
+
+#: src/detwinner/ui/DuplicatesTreeView.cpp:355
+msgid "%1 files, from %2 to %3"
+msgstr "%1 files, from %2 to %3"
+
+#: src/detwinner/ui/FilePreview.cpp:27
+msgid "<b>File name:</b> "
+msgstr "<b>File name:</b> "
+
+#: src/detwinner/ui/FilePreview.cpp:28
+msgid "<b>File size:</b> "
+msgstr "<b>File size:</b> "
+
+#: src/detwinner/ui/FilePreview.cpp:29
+msgid "<b>Modified:</b> "
+msgstr "<b>Modified:</b> "
+
+#: src/detwinner/ui/FilePreview.cpp:203
+msgid ""
+"\n"
+" ... only first %1 shown ... \n"
+msgstr ""
+"\n"
+" ... only first %1 shown ... \n"
+
+#: src/detwinner/ui/RegexListbox.cpp:212
+msgid "Invalid regexp"
+msgstr "Invalid regexp"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:29
+msgid "Search progress"
+msgstr "Search progress"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:31
+msgid "Stop"
+msgstr "Stop"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:32
+#: src/detwinner/ui/SearchProgressDialog.cpp:224
+msgid "Pause"
+msgstr "Pause"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:44
+msgid "Paused"
+msgstr "Paused"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:55
+msgid "<b>Stage:</b> "
+msgstr "<b>Stage:</b> "
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:56
+msgid "<b>Total files processed:</b> "
+msgstr "<b>Total files processed:</b> "
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:57
+msgid "<b>Skipped files:</b> "
+msgstr "<b>Skipped files:</b> "
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:58
+msgid "<b>Duplicates found:</b> "
+msgstr "<b>Duplicates found:</b> "
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:59
+msgid "<b>Time spent:</b> "
+msgstr "<b>Time spent:</b> "
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:151
+msgid "(1/4) Indexing…"
+msgstr "(1/4) Indexing…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:154
+msgid "(2/4) Examining images…"
+msgstr "(2/4) Examining images…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:157
+msgid "(3/4) Comparing images…"
+msgstr "(3/4) Comparing images…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:160
+msgid "(4/4) Organizing images…"
+msgstr "(4/4) Organizing images…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:170
+msgid "(1/2) Indexing…"
+msgstr "(1/2) Indexing…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:173
+msgid "(2/2) Comparing…"
+msgstr "(2/2) Comparing…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:180
+msgid "%1 of %2"
+msgstr "%1 of %2"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:184
+msgid "%1 in %2 groups (total size: %3, can be freed: %4)"
+msgstr "%1 in %2 groups (total size: %3, can be freed: %4)"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:220
+msgid "Continue"
+msgstr "Continue"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:254
+msgid "Preparing results…"
+msgstr "Preparing results…"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:258
+msgid "Abort"
+msgstr "Abort"
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:281
+msgid "Finished."
+msgstr "Finished."
+
+#: src/detwinner/ui/SearchProgressDialog.cpp:282
+msgid "Close"
+msgstr "Close"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:124
+#: src/detwinner/ui/SearchResultsPane.cpp:132
+#: src/detwinner/ui/SearchResultsPane.cpp:140
+#: src/detwinner/ui/SearchResultsPane.cpp:148
+#: src/detwinner/ui/SearchResultsPane.cpp:156
+#: src/detwinner/ui/SearchResultsPane.cpp:164
+#: src/detwinner/ui/SearchResultsPane.cpp:172
+#: src/detwinner/ui/SearchResultsPane.cpp:180
+#: src/detwinner/ui/SearchResultsPane.cpp:188
+#: src/detwinner/ui/SearchResultsPane.cpp:196
+#: src/detwinner/ui/SearchResultsPane.cpp:204
+#: src/detwinner/ui/SearchResultsPane.cpp:212
+#: src/detwinner/ui/SearchResultsPane.cpp:220
+msgid "Selecting…"
+msgstr "Selecting…"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:293
+msgid ""
+"Remaining %1 duplicates in %2 groups (total size: %3, could be potentially "
+"freed: %4)"
+msgstr ""
+"Remaining %1 duplicates in %2 groups (total size: %3, could be potentially "
+"freed: %4)"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:372
+msgid "Selected files will be permanently removed. Continue?"
+msgstr "Selected files will be permanently removed. Continue?"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:376
+#: src/detwinner/ui/SearchResultsPane.cpp:399
+msgid ""
+"Warning: you have selected all files in one or more duplicate groups. This "
+"means that all these files will be deleted."
+msgstr ""
+"Warning: you have selected all files in one or more duplicate groups. This "
+"means that all these files will be deleted."
+
+#: src/detwinner/ui/SearchResultsPane.cpp:384
+msgid "Deleting…"
+msgstr "Deleting…"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:395
+msgid "Selected files will be moved to trash. Continue?"
+msgstr "Selected files will be moved to trash. Continue?"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:407
+msgid "Moving to trash…"
+msgstr "Moving to trash…"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:418
+msgid "Select a backup folder"
+msgstr "Select a backup folder"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:420
+#: src/detwinner/ui/SearchSettingsDialog.cpp:35
+msgid "OK"
+msgstr "OK"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:430
+msgid "Moving…"
+msgstr "Moving…"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:24
+msgid "<b>Similar images</b>"
+msgstr "<b>Similar images</b>"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:25
+msgid "Similarity level:"
+msgstr "Similarity level:"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:26
+msgid "Take rotations into account"
+msgstr "Take rotations into account"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:27
+msgid "<b>File size</b>"
+msgstr "<b>File size</b>"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:28
+msgid "Greater than:"
+msgstr "Greater than:"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:29
+msgid "Smaller than:"
+msgstr "Smaller than:"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:30
+msgid "<b>File attributes</b>"
+msgstr "<b>File attributes</b>"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:31
+msgid "Read only"
+msgstr "Read only"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:32
+msgid "Hidden"
+msgstr "Hidden"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:33
+msgid "Executable"
+msgstr "Executable"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:34
+msgid "<b>File path regexps</b>"
+msgstr "<b>File path regexps</b>"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:85
+#: src/detwinner/ui/SearchSettingsDialog.cpp:89
+#: src/detwinner/ui/SearchSettingsDialog.cpp:230
+msgid "B"
+msgstr "bytes"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:86
+#: src/detwinner/ui/SearchSettingsDialog.cpp:227
+#: src/detwinner/ui/SearchSettingsDialog.cpp:243
+msgid "KB"
+msgstr "kB"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:87
+#: src/detwinner/ui/SearchSettingsDialog.cpp:224
+#: src/detwinner/ui/SearchSettingsDialog.cpp:242
+msgid "MB"
+msgstr "MB"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:88
+#: src/detwinner/ui/SearchSettingsDialog.cpp:221
+#: src/detwinner/ui/SearchSettingsDialog.cpp:241
+msgid "GB"
+msgstr "GB"
+
+#: src/detwinner/ui/SearchSettingsDialog.cpp:196
+msgid "<b>File path regexps</b> (%1 in total)"
+msgstr "<b>File path regexps</b> (%1 in total)"

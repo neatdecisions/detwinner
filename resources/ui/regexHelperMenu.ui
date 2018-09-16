@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id='menu-regex-helper'>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>Files with a name</attribute>
+        <attribute name='action'>regexlistbox.files_with_name</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Files in a folder</attribute>
+        <attribute name='action'>regexlistbox.files_in_folder</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Files with an extension</attribute>
+        <attribute name='action'>regexlistbox.files_with_extension</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
