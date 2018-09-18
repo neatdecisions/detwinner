@@ -47,7 +47,9 @@ private:
 	void on_smart_select_resolution_lowest_clicked();
 	void on_smart_select_resolution_highest_clicked();
 
-	void execute_duplicate_action(const Glib::ustring & label, callbacks::IDeferredAction::Ptr_t action);
+	callbacks::IDeferredAction::Result_t execute_duplicate_action(
+		const Glib::ustring & label,
+		callbacks::IDeferredAction::Ptr_t action);
 
 	void on_expand_all_clicked();
 	void on_collapse_all_clicked();
@@ -62,6 +64,7 @@ private:
 	void on_delete_permanently();
 	void on_delete_move_to_trash();
 	void on_delete_move_to_folder();
+	void process_deletion_result(callbacks::IDeferredAction::Result_t result);
 
 	Gtk::ScrolledWindow m_scrolledWindow;
 

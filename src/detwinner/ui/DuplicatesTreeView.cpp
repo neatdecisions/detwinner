@@ -1258,7 +1258,8 @@ DuplicatesTreeView::TreeAction::TreeAction(DuplicatesTreeView & tree) :
 	m_tree(tree),
 	m_totalItems(m_tree.m_store->children().size()),
 	m_currentItem(0),
-	m_iter(tree.m_store->children().begin())
+	m_iter(tree.m_store->children().begin()),
+	m_resultStatus(Result_t::Success)
 {}
 
 
@@ -1268,6 +1269,14 @@ DuplicatesTreeView::TreeAction::getProgress() const
 {
 	if (m_totalItems == 0) return 1.0;
 	return static_cast<double>(m_currentItem) / m_totalItems;
+}
+
+
+//------------------------------------------------------------------------------
+DuplicatesTreeView::TreeAction::Result_t
+DuplicatesTreeView::TreeAction::getStatus() const
+{
+	return m_resultStatus;
 }
 
 
@@ -1414,6 +1423,14 @@ DuplicatesTreeView::TreePopulateAction::processNext()
 
 
 //------------------------------------------------------------------------------
+DuplicatesTreeView::TreePopulateAction::Result_t
+DuplicatesTreeView::TreePopulateAction::getStatus() const
+{
+	return Result_t::Success;
+}
+
+
+//------------------------------------------------------------------------------
 void
 DuplicatesTreeView::TreePopulateAction::beginBatch()
 {
@@ -1451,7 +1468,9 @@ DuplicatesTreeView::TreeDeleteAction::TreeDeleteAction(
 	DuplicatesTreeView & tree, tools::AbstractFileDeleter::Ptr_t fileDeleter) :
 	DuplicatesTreeView::TreeAction(tree),
 	m_fileDeleter(fileDeleter)
-{}
+{
+	m_resultStatus = Result_t::Unknown;
+}
 
 
 //------------------------------------------------------------------------------
@@ -1465,14 +1484,19 @@ DuplicatesTreeView::TreeDeleteAction::processNext()
 		auto it = m_iter->children().begin();
 		while (it)
 		{
-			if ( (m_tree.getCheck(it) == CheckState_t::Checked) &&
-			      m_fileDeleter->removeFile(it->get_value(m_tree.m_columns.filePath)) )
+			if (m_tree.getCheck(it) == CheckState_t::Checked)
 			{
-				it = m_tree.m_store->erase(it);
-			} else
-			{
-				++it;
+				if (m_fileDeleter->removeFile(it->get_value(m_tree.m_columns.filePath)))
+				{
+					it = m_tree.m_store->erase(it);
+					updateResultStatus(Result_t::Success);
+					continue;
+				} else
+				{
+					updateResultStatus(Result_t::Failure);
+				}
 			}
+			++it;
 		}
 	}
 
@@ -1498,6 +1522,33 @@ DuplicatesTreeView::TreeDeleteAction::processNext()
 	}
 
 	return static_cast<bool>(++m_iter);
+}
+
+
+//------------------------------------------------------------------------------
+void
+DuplicatesTreeView::TreeDeleteAction::updateResultStatus(Result_t stepStatus)
+{
+	if (stepStatus == Result_t::Mixed)
+	{
+		m_resultStatus = Result_t::Mixed;
+	} else
+	{
+		switch (m_resultStatus)
+		{
+			case Result_t::Unknown:
+				m_resultStatus = stepStatus;
+				break;
+			case Result_t::Failure:
+				if (m_resultStatus == Result_t::Success) m_resultStatus = Result_t::Mixed;
+				break;
+			case Result_t::Success:
+				if (m_resultStatus == Result_t::Failure) m_resultStatus = Result_t::Mixed;
+				break;
+			case Result_t::Mixed:
+				break;
+		}
+	}
 }
 
 

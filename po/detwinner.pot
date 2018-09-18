@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: detwinner\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-12 21:50+0200\n"
-"PO-Revision-Date: 2018-09-16 11:48+0200\n"
+"POT-Revision-Date: 2018-09-18 21:32+0200\n"
 "Last-Translator: Neat Decisions <opensource@neatdecisions.com>\n"
 "Language-Team: Neat Decisions <opensource@neatdecisions.com>\n"
 "Language: \n"
@@ -248,7 +248,7 @@ msgid "Skip"
 msgstr ""
 
 #: src/detwinner/tools/BackupFileDeleter.cpp:45
-#: src/detwinner/ui/SearchResultsPane.cpp:419
+#: src/detwinner/ui/SearchResultsPane.cpp:417
 #: src/detwinner/ui/SearchSettingsDialog.cpp:37
 msgid "Cancel"
 msgstr ""
@@ -392,40 +392,40 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:124
-#: src/detwinner/ui/SearchResultsPane.cpp:132
-#: src/detwinner/ui/SearchResultsPane.cpp:140
-#: src/detwinner/ui/SearchResultsPane.cpp:148
-#: src/detwinner/ui/SearchResultsPane.cpp:156
-#: src/detwinner/ui/SearchResultsPane.cpp:164
-#: src/detwinner/ui/SearchResultsPane.cpp:172
-#: src/detwinner/ui/SearchResultsPane.cpp:180
-#: src/detwinner/ui/SearchResultsPane.cpp:188
-#: src/detwinner/ui/SearchResultsPane.cpp:196
-#: src/detwinner/ui/SearchResultsPane.cpp:204
-#: src/detwinner/ui/SearchResultsPane.cpp:212
-#: src/detwinner/ui/SearchResultsPane.cpp:220
+#: src/detwinner/ui/SearchResultsPane.cpp:126
+#: src/detwinner/ui/SearchResultsPane.cpp:134
+#: src/detwinner/ui/SearchResultsPane.cpp:142
+#: src/detwinner/ui/SearchResultsPane.cpp:150
+#: src/detwinner/ui/SearchResultsPane.cpp:158
+#: src/detwinner/ui/SearchResultsPane.cpp:166
+#: src/detwinner/ui/SearchResultsPane.cpp:174
+#: src/detwinner/ui/SearchResultsPane.cpp:182
+#: src/detwinner/ui/SearchResultsPane.cpp:190
+#: src/detwinner/ui/SearchResultsPane.cpp:198
+#: src/detwinner/ui/SearchResultsPane.cpp:206
+#: src/detwinner/ui/SearchResultsPane.cpp:214
+#: src/detwinner/ui/SearchResultsPane.cpp:222
 msgid "Selecting…"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:293
+#: src/detwinner/ui/SearchResultsPane.cpp:295
 msgid ""
 "Remaining %1 duplicates in %2 groups (total size: %3, could be potentially "
 "freed: %4)"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:372
+#: src/detwinner/ui/SearchResultsPane.cpp:374
 msgid "Selected files will be permanently removed. Continue?"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:376
+#: src/detwinner/ui/SearchResultsPane.cpp:378
 #: src/detwinner/ui/SearchResultsPane.cpp:399
 msgid ""
 "Warning: you have selected all files in one or more duplicate groups. This "
 "means that all these files will be deleted."
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:384
+#: src/detwinner/ui/SearchResultsPane.cpp:386
 msgid "Deleting…"
 msgstr ""
 
@@ -437,17 +437,26 @@ msgstr ""
 msgid "Moving to trash…"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:418
+#: src/detwinner/ui/SearchResultsPane.cpp:416
 msgid "Select a backup folder"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:420
+#: src/detwinner/ui/SearchResultsPane.cpp:418
 #: src/detwinner/ui/SearchSettingsDialog.cpp:35
 msgid "OK"
 msgstr ""
 
-#: src/detwinner/ui/SearchResultsPane.cpp:430
+#: src/detwinner/ui/SearchResultsPane.cpp:427
 msgid "Moving…"
+msgstr ""
+
+#: src/detwinner/ui/SearchResultsPane.cpp:442
+msgid "Some of the files could not be deleted"
+msgstr ""
+
+#: src/detwinner/ui/SearchResultsPane.cpp:443
+msgid ""
+"Please verify that sufficient permissions have been granted for your account."
 msgstr ""
 
 #: src/detwinner/ui/SearchSettingsDialog.cpp:24

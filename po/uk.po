@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: detwinner\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-11 21:27+0200\n"
-"PO-Revision-Date: 2018-09-12 21:00+0200\n"
+"POT-Creation-Date: 2018-09-18 21:23+0200\n"
+"PO-Revision-Date: 2018-09-18 21:31+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: ua\n"
@@ -233,20 +233,24 @@ msgstr "Подібні зображення"
 msgid "Neat duplicate file finder"
 msgstr "Охайний шукач дублікатів"
 
+#: src/detwinner/DetwinnerApp.cpp:137
+msgid "translator-credits"
+msgstr ""
+
 #: src/detwinner/tools/BackupFileDeleter.cpp:39
 msgid "File with this name already exists. What should we do?"
 msgstr "Файл із таким іменем вже існує. Як вчинити?"
 
-#: src/detwinner/tools/BackupFileDeleter.cpp:42
+#: src/detwinner/tools/BackupFileDeleter.cpp:43
 msgid "Overwrite"
 msgstr "Перезаписати"
 
-#: src/detwinner/tools/BackupFileDeleter.cpp:43
+#: src/detwinner/tools/BackupFileDeleter.cpp:44
 msgid "Skip"
 msgstr "Пропустити"
 
-#: src/detwinner/tools/BackupFileDeleter.cpp:44
-#: src/detwinner/ui/SearchResultsPane.cpp:419
+#: src/detwinner/tools/BackupFileDeleter.cpp:45
+#: src/detwinner/ui/SearchResultsPane.cpp:417
 #: src/detwinner/ui/SearchSettingsDialog.cpp:37
 msgid "Cancel"
 msgstr "Скасувати"
@@ -392,23 +396,23 @@ msgstr "Закінчено."
 msgid "Close"
 msgstr "Закрити"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:124
-#: src/detwinner/ui/SearchResultsPane.cpp:132
-#: src/detwinner/ui/SearchResultsPane.cpp:140
-#: src/detwinner/ui/SearchResultsPane.cpp:148
-#: src/detwinner/ui/SearchResultsPane.cpp:156
-#: src/detwinner/ui/SearchResultsPane.cpp:164
-#: src/detwinner/ui/SearchResultsPane.cpp:172
-#: src/detwinner/ui/SearchResultsPane.cpp:180
-#: src/detwinner/ui/SearchResultsPane.cpp:188
-#: src/detwinner/ui/SearchResultsPane.cpp:196
-#: src/detwinner/ui/SearchResultsPane.cpp:204
-#: src/detwinner/ui/SearchResultsPane.cpp:212
-#: src/detwinner/ui/SearchResultsPane.cpp:220
+#: src/detwinner/ui/SearchResultsPane.cpp:126
+#: src/detwinner/ui/SearchResultsPane.cpp:134
+#: src/detwinner/ui/SearchResultsPane.cpp:142
+#: src/detwinner/ui/SearchResultsPane.cpp:150
+#: src/detwinner/ui/SearchResultsPane.cpp:158
+#: src/detwinner/ui/SearchResultsPane.cpp:166
+#: src/detwinner/ui/SearchResultsPane.cpp:174
+#: src/detwinner/ui/SearchResultsPane.cpp:182
+#: src/detwinner/ui/SearchResultsPane.cpp:190
+#: src/detwinner/ui/SearchResultsPane.cpp:198
+#: src/detwinner/ui/SearchResultsPane.cpp:206
+#: src/detwinner/ui/SearchResultsPane.cpp:214
+#: src/detwinner/ui/SearchResultsPane.cpp:222
 msgid "Selecting…"
 msgstr "Виділення…"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:293
+#: src/detwinner/ui/SearchResultsPane.cpp:295
 msgid ""
 "Remaining %1 duplicates in %2 groups (total size: %3, could be potentially "
 "freed: %4)"
@@ -416,11 +420,11 @@ msgstr ""
 "Залишається %1 дублікатів у %2 групах (загальний розмір: %3, можливо "
 "очистити: %4)"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:372
+#: src/detwinner/ui/SearchResultsPane.cpp:374
 msgid "Selected files will be permanently removed. Continue?"
 msgstr "Обрані файли будуть остаточно вилучені. Продовжити?"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:376
+#: src/detwinner/ui/SearchResultsPane.cpp:378
 #: src/detwinner/ui/SearchResultsPane.cpp:399
 msgid ""
 "Warning: you have selected all files in one or more duplicate groups. This "
@@ -429,7 +433,7 @@ msgstr ""
 "Увага: обрано всі файли у одній або декількох групах. Це означає, что всі ці "
 "файли будуть вилучені."
 
-#: src/detwinner/ui/SearchResultsPane.cpp:384
+#: src/detwinner/ui/SearchResultsPane.cpp:386
 msgid "Deleting…"
 msgstr "Вилучення…"
 
@@ -441,18 +445,28 @@ msgstr "Обрані файли будуть переміщені у смітн�
 msgid "Moving to trash…"
 msgstr "Переміщення у смітник…"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:418
+#: src/detwinner/ui/SearchResultsPane.cpp:416
 msgid "Select a backup folder"
 msgstr "Обрати теку"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:420
+#: src/detwinner/ui/SearchResultsPane.cpp:418
 #: src/detwinner/ui/SearchSettingsDialog.cpp:35
 msgid "OK"
 msgstr "ОК"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:430
+#: src/detwinner/ui/SearchResultsPane.cpp:427
 msgid "Moving…"
 msgstr "Переміщення…"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:442
+msgid "Some of the files could not be deleted"
+msgstr "Неможливо видалити деякі файли"
+
+#: src/detwinner/ui/SearchResultsPane.cpp:443
+msgid ""
+"Please verify that sufficient permissions have been granted for your account."
+msgstr ""
+"Переконайтесь, що для вашого облікового запису надано достатньо дозволів."
 
 #: src/detwinner/ui/SearchSettingsDialog.cpp:24
 msgid "<b>Similar images</b>"
