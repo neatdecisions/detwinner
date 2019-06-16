@@ -13,6 +13,7 @@
 #include <logic/FileIndexer.hpp>
 #include <logic/MurmurHash.hpp>
 
+#include <numeric>
 #include <unordered_map>
 
 
@@ -49,14 +50,10 @@ DuplicateFilesFinder::find(
 	FileMappingReceiver totalMap;
 	FileIndexer(searchSettings).performIndexing(folderList, totalMap, searchProcessCallback);
 
+	const unsigned int count = std::accumulate(totalMap.mapping.begin(), totalMap.mapping.end(), 0,
+		[](unsigned int val, const FileSizeMapping_t::value_type & el) { return val + el.second.size(); });
+
 	DuplicatesList_t result;
-
-	unsigned int count = 0;
-	for (auto && mapItem: totalMap.mapping)
-	{
-		count += mapItem.second.size();
-	}
-
 	if (searchProcessCallback)
 	{
 		if (searchProcessCallback->pauseAndStopStatus()) return result;
