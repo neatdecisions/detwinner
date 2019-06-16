@@ -33,11 +33,13 @@ DetwinnerWindow::DetwinnerWindow() :
 	m_refBuilder->get_widget("headerBarSearchResults", m_pHeaderBarResults);
 	m_pHeaderBarResults->insert_action_group("view", m_SearchResultsBox.getActionGroup());
 	m_pHeaderBarResults->set_show_close_button(true);
+	m_pHeaderBarResults->set_title("Detwinner");
 
 
 	m_refBuilder->get_widget("headerBarSearchOptions", m_pHeaderBarOptions);
 	m_pHeaderBarOptions->insert_action_group("view", m_SearchOptionsBox.getActionGroup());
 	m_pHeaderBarOptions->set_show_close_button(true);
+	m_pHeaderBarOptions->set_title("Detwinner");
 
 	m_refBuilder->get_widget("hbSearchMode_Label", m_pLabelSearchMode);
 
