@@ -132,7 +132,7 @@ DetwinnerApp::on_action_about()
 	aboutDialog.set_website("https://neatdecisions.com");
 	aboutDialog.set_website_label("neatdecisions.com");
 	aboutDialog.set_license_type(Gtk::LICENSE_GPL_3_0);
-	aboutDialog.set_copyright("© 2018 – 2019 Neat Decisions");
+	aboutDialog.set_copyright("© 2018–2019 Neat Decisions");
 	aboutDialog.set_logo_icon_name("com.neatdecisions.Detwinner");
 	aboutDialog.set_translator_credits(_("translator-credits"));
 	aboutDialog.set_modal(true);
