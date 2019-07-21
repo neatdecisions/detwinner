@@ -30,3 +30,5 @@ subdir('resources')
 subdir('src/detwinner-lib')
 subdir('src/detwinner')
 subdir('test')
+
+run_target('cppcheck', command : ['cppcheck', '--quiet', '--project=' + join_paths(meson.build_root(), 'compile_commands.json')])

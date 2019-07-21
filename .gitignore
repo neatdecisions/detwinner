@@ -38,5 +38,7 @@
 *.mo
 
 # Build folders
+build
+dist
 Debug
 Release
