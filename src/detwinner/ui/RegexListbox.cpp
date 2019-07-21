@@ -55,16 +55,15 @@ RegexListbox::addLine()
 bool
 RegexListbox::isInputValid() const
 {
-	const std::size_t rowCount = get_children().size();
-	for (std::size_t i = 0; i < rowCount; ++i)
+	for (auto pWidget : get_children())
 	{
-		auto pRow = dynamic_cast<const RegexRow *>(get_row_at_index(i));
+		auto pRow = dynamic_cast<const RegexRow *>(pWidget);
 		if (!pRow) continue;
 		const std::string & rxString = pRow->getRegex();
 		if (rxString.empty()) return false;
 		try
 		{
-			std::regex rx(rxString);
+			const std::regex rx(rxString);
 		} catch (const std::regex_error & ex)
 		{
 			return false;
@@ -79,12 +78,11 @@ RegexListbox::isInputValid() const
 std::vector<std::string>
 RegexListbox::getRegexps() const
 {
-	const std::size_t rowCount = get_children().size();
 	std::vector<std::string> result;
-	result.reserve(rowCount);
-	for (std::size_t i = 0; i < rowCount; ++i)
+	result.reserve(get_children().size());
+	for (auto pWidget : get_children())
 	{
-		auto pRow = dynamic_cast<const RegexRow *>(get_row_at_index(i));
+		auto pRow = dynamic_cast<const RegexRow *>(pWidget);
 		if (!pRow) continue;
 		const std::string & rx = pRow->getRegex();
 		if (!rx.empty()) result.push_back(rx);
@@ -121,12 +119,11 @@ RegexListbox::RegexRow::RegexRow(const std::string & regex, RegexListbox & regex
 	m_pEntry(Gtk::manage(Gtk::manage(new Gtk::Entry()))),
 	m_refActionGroup(Gio::SimpleActionGroup::create())
 {
-	auto createCssProvider = []() {
+	static auto cssProvider = []() {
 		auto css = Gtk::CssProvider::create();
 		css->load_from_data("entry#noborder {border: none;}");
 		return css;
-	};
-	static auto cssProvider = createCssProvider();
+	}();
 
 	auto m_refBuilder = Gtk::Builder::create();
 	m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/regexHelperMenu.ui");
