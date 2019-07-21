@@ -162,15 +162,14 @@ void
 FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 {
 	if (!iter) return;
-	auto row = **iter;
+	auto row = *iter;
 
-	const std::string & filePath = Glib::ustring((*iter)[m_columns.fullPath]);
+	const std::string & filePath = Glib::ustring(row[m_columns.fullPath]);
 
-	auto it = row.children().begin();
-	while (it)
+	for (auto it = row.children().begin(); it; )
 	{
-		Gtk::TreeRow row = *it;
-		if (row[m_columns.fake])
+		Gtk::TreeRow childRow = *it;
+		if (childRow[m_columns.fake])
 		{
 			it = m_store->erase(it);
 		} else
@@ -316,10 +315,9 @@ FileTreeView::collectChilden(const std::string & parentPath, std::vector<FolderT
 	Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(parentPath);
 
 	Glib::RefPtr<Gio::FileEnumerator> child_enumeration = file->enumerate_children("standard::name,standard::is-hidden");
-	Glib::RefPtr<Gio::FileInfo> file_info;
 
 	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
-	while ( (file_info = child_enumeration->next_file()) )
+	while (auto file_info = child_enumeration->next_file())
 	{
 		if (!file_info) continue;
 		if (!m_showHiddenFiles && file_info->is_hidden()) continue;
