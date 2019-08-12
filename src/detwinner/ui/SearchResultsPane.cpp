@@ -41,10 +41,7 @@ SearchResultsPane::SearchResultsPane() :
 	m_refActionGroup->add_action("selectKeepPathLongest", sigc::mem_fun(*this, &SearchResultsPane::on_smart_select_path_longest_clicked));
 
 	m_refActionGroup->add_action("deletePermanently", sigc::mem_fun(*this, &SearchResultsPane::on_delete_permanently));
-	// until flatpak can properly handle GIO trash
-	#ifndef FLATPAK
 	m_refActionGroup->add_action("deleteMoveToTrash", sigc::mem_fun(*this, &SearchResultsPane::on_delete_move_to_trash));
-	#endif
 	m_refActionGroup->add_action("deleteMoveToFolder", sigc::mem_fun(*this, &SearchResultsPane::on_delete_move_to_folder));
 
 	m_refActionSortBy = m_refActionGroup->add_action_radio_integer("sortBy", sigc::mem_fun(*this, &SearchResultsPane::on_sort_by_changed), 0);
