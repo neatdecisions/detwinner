@@ -2,10 +2,9 @@ project('detwinner', ['c', 'cpp'],
   version: '0.2.0',
   license: 'GPL3+',
   meson_version: '>=0.45.0',
-	default_options : ['c_std=c11', 'cpp_std=c++17'])
+	default_options : ['c_std=c11', 'cpp_std=c++17', 'warning_level=3', 'werror=true'])
 
 add_project_arguments ('-DGTKMM_DISABLE_DEPRECATED', language:'cpp')
-add_project_arguments('-Wall', '-Wextra', language: 'cpp')
 i18n = import('i18n')
 
 project_name = meson.project_name()
