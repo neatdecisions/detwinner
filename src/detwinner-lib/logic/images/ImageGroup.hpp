@@ -11,7 +11,7 @@
 #ifndef LOGIC_IMAGES_IMAGEGROUP_HPP_
 #define LOGIC_IMAGES_IMAGEGROUP_HPP_
 
-#include <map>
+#include <string>
 #include <vector>
 
 

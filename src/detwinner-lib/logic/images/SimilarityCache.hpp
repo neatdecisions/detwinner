@@ -11,12 +11,8 @@
 #ifndef LOGIC_IMAGES_SIMILARITYCACHE_HPP_
 #define LOGIC_IMAGES_SIMILARITYCACHE_HPP_
 
-#include <atomic>
 #include <vector>
-#include <unordered_set>
 
-#include <logic/callbacks/IImageFinderCallback.hpp>
-#include <logic/images/ImageFeatures.hpp>
 #include <logic/images/Types.hpp>
 
 

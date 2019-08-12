@@ -11,9 +11,6 @@
 #ifndef LOGIC_COMMONDATATYPES_HPP_
 #define LOGIC_COMMONDATATYPES_HPP_
 
-#include <map>
-#include <memory>
-#include <queue>
 #include <vector>
 #include <compat/optional.hpp>
 

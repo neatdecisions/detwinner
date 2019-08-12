@@ -14,7 +14,6 @@
 
 #include <atomic>
 #include <vector>
-#include <unordered_set>
 #include <logic/callbacks/IImageFinderCallback.hpp>
 #include <logic/images/ImageFeatures.hpp>
 #include <logic/images/SimilarityCache.hpp>

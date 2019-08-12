@@ -11,6 +11,10 @@
 #ifndef LOGIC_DUPLICATEFILESFINDER_HPP_
 #define LOGIC_DUPLICATEFILESFINDER_HPP_
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include <logic/callbacks/ISearchProcessCallback.hpp>
 #include <logic/callbacks/IIndexedFileReceiver.hpp>
 #include <logic/CommonDataTypes.hpp>
