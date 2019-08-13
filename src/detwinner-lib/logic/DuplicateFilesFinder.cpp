@@ -50,18 +50,16 @@ DuplicateFilesFinder::find(
 	FileMappingReceiver totalMap;
 	FileIndexer(searchSettings).performIndexing(folderList, totalMap, searchProcessCallback);
 
-	const unsigned int count = std::accumulate(totalMap.mapping.begin(), totalMap.mapping.end(), 0,
-		[](unsigned int val, const FileSizeMapping_t::value_type & el) { return val + el.second.size(); });
-
-	DuplicatesList_t result;
 	if (searchProcessCallback)
 	{
-		if (searchProcessCallback->pauseAndStopStatus()) return result;
+		if (searchProcessCallback->pauseAndStopStatus()) return DuplicatesList_t();
+		const unsigned int count = std::accumulate(totalMap.mapping.begin(), totalMap.mapping.end(), 0,
+			[](unsigned int val, const FileSizeMapping_t::value_type & el) { return val + el.second.size(); });
 		searchProcessCallback->onStartComparing(count);
 		searchProcessCallback->setStage(1);
 	}
 
-	calculateHashes(totalMap.mapping, result, searchProcessCallback);
+	DuplicatesList_t result = calculateHashes(totalMap.mapping, searchProcessCallback);
 
 	if (searchProcessCallback) searchProcessCallback->onFinish();
 
@@ -70,13 +68,13 @@ DuplicateFilesFinder::find(
 
 
 //------------------------------------------------------------------------------
-void
+DuplicatesList_t
 DuplicateFilesFinder::calculateHashes(
 	FileSizeMapping_t & totalMap,
-	DuplicatesList_t & result,
-	callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback)
+	callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback) const
 {
 	std::unordered_map<std::string, std::vector<std::string> > sameSizeDuplicateGroup;
+	DuplicatesList_t result;
 	std::string hash;
 
 	for (auto & aSizeGroup: totalMap)
@@ -85,7 +83,7 @@ DuplicateFilesFinder::calculateHashes(
 		{
 			sameSizeDuplicateGroup.clear();
 
-			for (auto && aFileName: aSizeGroup.second)
+			for (const auto & aFileName: aSizeGroup.second)
 			{
 				if ( !MurmurHash::GetHash(aFileName, hash) )
 				{
@@ -95,18 +93,19 @@ DuplicateFilesFinder::calculateHashes(
 
 				if (searchProcessCallback)
 				{
-					if (searchProcessCallback->pauseAndStopStatus()) return;
+					if (searchProcessCallback->pauseAndStopStatus()) return result;
 					searchProcessCallback->onFileProcessed(aSizeGroup.first);
 				}
 
 				sameSizeDuplicateGroup[hash].push_back(aFileName);
 			}
 
-			for (auto & aDuplicateGroup : sameSizeDuplicateGroup)
+			for (const auto & aDuplicateGroup : sameSizeDuplicateGroup)
 			{
 				if (aDuplicateGroup.second.size() > 1)
 				{
-					DuplicateContainer container;
+					result.emplace_back();
+					DuplicateContainer & container = result.back();
 					for (auto && fileName: aDuplicateGroup.second)
 					{
 						container.files.emplace_back(aSizeGroup.first, fileName);
@@ -117,8 +116,6 @@ DuplicateFilesFinder::calculateHashes(
 						const unsigned long long totalSize = fileCount * aSizeGroup.first;
 						searchProcessCallback->onDuplicateFound(fileCount, totalSize, totalSize - aSizeGroup.first);
 					}
-
-					result.push_back(std::move(container));
 				}
 			}
 		} else
@@ -130,6 +127,8 @@ DuplicateFilesFinder::calculateHashes(
 		}
 		aSizeGroup.second.clear();
 	}
+
+	return result;
 }
 
 

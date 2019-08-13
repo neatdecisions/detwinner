@@ -45,10 +45,9 @@ private:
 		FileSizeMapping_t mapping;
 	};
 
-	void calculateHashes(
+	DuplicatesList_t calculateHashes(
 			FileSizeMapping_t & totalMap,
-			DuplicatesList_t & result,
-			callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback);
+			callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback) const;
 };
 
 }}
