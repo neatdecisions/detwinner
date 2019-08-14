@@ -34,7 +34,7 @@ public:
 	void set(std::size_t i1, std::size_t i2, Distance_t val);
 	Distance_t get(std::size_t i1, std::size_t i2) const;
 protected:
-	std::size_t m_size;
+	const std::size_t m_size;
 	std::vector<Distance_t> m_matrix;
 };
 

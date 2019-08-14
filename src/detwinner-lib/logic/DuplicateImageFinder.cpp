@@ -36,9 +36,6 @@ DuplicateImageFinder::FileToProcessReceiver::receive(FileInfo && fileInfo)
 // DuplicateImageFinder
 //==============================================================================
 
-const unsigned short DuplicateImageFinder::kDefaultSensitivity = 85;
-const bool DuplicateImageFinder::kDefaultProcessRotations = false;
-
 //------------------------------------------------------------------------------
 DuplicatesList_t
 DuplicateImageFinder::find(

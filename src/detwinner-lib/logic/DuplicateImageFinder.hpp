@@ -41,8 +41,8 @@ private:
 		std::vector<std::string> fileNames;
 	};
 
-	static const unsigned short kDefaultSensitivity;
-	static const bool kDefaultProcessRotations;
+	static constexpr unsigned short kDefaultSensitivity = 85;
+	static constexpr bool kDefaultProcessRotations = false;
 };
 
 
