@@ -49,7 +49,7 @@ TEST_F(SimilarImageFinderTest, empty_input)
 	EXPECT_CALL(*m_pMockedCallback, imgOrganizingProgress(_, _)).Times(0);
 	EXPECT_CALL(*m_pMockedCallback, similarImagesFound(_, _, _)).Times(0);
 	const DuplicateImageResult result = m_finder.find(fileNames, 50, true, m_pMockedCallback);
-	EXPECT_EQ(0UL, result.getImageGroupCount());
+	EXPECT_TRUE(result.empty());
 }
 
 
@@ -92,14 +92,13 @@ TEST_F(SimilarImageFinderTest, empty_basic)
 	}
 
 	const DuplicateImageResult result = m_finder.find(fileNames, 80, true, m_pMockedCallback);
-	ASSERT_EQ(2UL, result.getImageGroupCount());
+	ASSERT_EQ(2UL, result.size());
 
-	for (std::size_t i = 0; i < result.getImageGroupCount(); ++i)
+	for (const ImageGroup & ig : result)
 	{
-		const ImageGroup & ig = result.getImageGroup(i);
-		ASSERT_EQ(2UL, ig.getImageCount());
-		const ImageInfo & ii1 = ig.getImageInfo(0);
-		const ImageInfo & ii2 = ig.getImageInfo(1);
+		ASSERT_EQ(2UL, ig.size());
+		const ImageInfo & ii1 = ig[0];
+		const ImageInfo & ii2 = ig[1];
 		if (FilePathIncludesFileName(ii1.fileName, "data/images/gm-125x80.gif"))
 		{
 			EXPECT_EQ(2726ULL, ii1.fileSize);
@@ -159,7 +158,7 @@ TEST_F(SimilarImageFinderTest, interruption)
 	};
 	auto pMockedCallback = callbacks::mocks::MockImageFinderCallback::Create();
 	ON_CALL(*pMockedCallback, pauseAndStopStatus()).WillByDefault(Return(true));
-	EXPECT_EQ(0UL, m_finder.find(fileNames, 80, true, pMockedCallback).getImageGroupCount());
+	EXPECT_EQ(0UL, m_finder.find(fileNames, 80, true, pMockedCallback).size());
 }
 
 
@@ -173,7 +172,7 @@ TEST_F(SimilarImageFinderTest, null_callback)
 		"data/images/gm-125x80t.png",
 		"data/images/gm-654x418t.png"
 	};
-	EXPECT_EQ(2UL, m_finder.find(fileNames, 80, true, nullptr).getImageGroupCount());
+	EXPECT_EQ(2UL, m_finder.find(fileNames, 80, true, nullptr).size());
 }
 
 

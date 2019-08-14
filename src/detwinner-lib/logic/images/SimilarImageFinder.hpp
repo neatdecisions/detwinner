@@ -3,7 +3,7 @@
  Name        : SimilarImageFinder.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -17,7 +17,6 @@
 #include <unordered_set>
 
 #include <logic/callbacks/IImageFinderCallback.hpp>
-#include <logic/images/ImageGroup.hpp>
 #include <logic/images/DuplicateImageResult.hpp>
 #include <logic/images/ImageFeatures.hpp>
 #include <logic/images/Types.hpp>

@@ -3,7 +3,7 @@
  Name        : DuplicateImageFinder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -54,21 +54,17 @@ DuplicateImageFinder::find(
 			searchSettings.processRotations.value_or(kDefaultProcessRotations),
 			std::make_shared<callbacks::ImageFinderCallback>(searchProcessCallback));
 
-	const auto imageGroupCount = res.getImageGroupCount();
 	DuplicatesList_t result;
-	result.reserve(imageGroupCount);
+	result.reserve(res.size());
 
-	for (size_t i = 0; i < imageGroupCount; ++i)
+	for (const auto & vec : res)
 	{
-		const images::ImageGroup & vec = res.getImageGroup(i);
-
 		DuplicateContainer container;
-		const auto imageCount = vec.getImageCount();
+		const auto imageCount = vec.size();
 		container.files.reserve(imageCount);
 
-		for (size_t j = 0; j < imageCount; ++j)
+		for (const images::ImageInfo & imageInfo : vec)
 		{
-			const images::ImageInfo & imageInfo = vec.getImageInfo(j);
 			container.files.emplace_back(
 					imageInfo.fileSize,
 					imageInfo.fileName,
