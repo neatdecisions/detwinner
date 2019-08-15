@@ -3,7 +3,7 @@
  Name        : FilePreview.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -120,6 +120,8 @@ Glib::ustring
 FilePreview::buildHexPreview(const char * buffer, unsigned long size) const
 {
 	Glib::ustring result;
+	if ( (buffer == nullptr) || (size == 0) ) return result;
+
 	result.reserve(size * 3 + size + (size / 16 + ( (size % 16) ? 1 : 0)) * 10);
 
 	for (unsigned long i = 0; i < size; i += 16)
@@ -166,7 +168,7 @@ void FilePreview::reload()
 		m_previewStack.set_visible_child("image");
 		return;
 	}
-	bool uncertain;
+	bool uncertain = true;
 	const Glib::ustring & fileType = Gio::content_type_guess(m_filePath, nullptr, 0, uncertain);
 
 	if (fileType.substr(0, 5) == "image")

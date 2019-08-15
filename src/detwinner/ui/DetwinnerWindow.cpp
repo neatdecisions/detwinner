@@ -3,7 +3,7 @@
  Name        : DetwinnerWindow.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -19,6 +19,8 @@
 namespace detwinner {
 namespace ui {
 
+const Glib::ustring DetwinnerWindow::kName_SearchOptions = "searchOptions";
+const Glib::ustring DetwinnerWindow::kName_SearchResults = "searchResults";
 
 //------------------------------------------------------------------------------
 DetwinnerWindow::DetwinnerWindow() :
@@ -48,8 +50,8 @@ DetwinnerWindow::DetwinnerWindow() :
 	set_border_width(0);
 	add(m_Stack);
 
-	m_Stack.add(m_SearchOptionsBox, "searchOptions");
-	m_Stack.add(m_SearchResultsBox, "searchResults");
+	m_Stack.add(m_SearchOptionsBox, kName_SearchOptions);
+	m_Stack.add(m_SearchResultsBox, kName_SearchResults);
 
 	set_default_size(640, 480);
 	show_all_children();
@@ -65,7 +67,7 @@ DetwinnerWindow::DetwinnerWindow() :
 void
 DetwinnerWindow::on_start_search()
 {
-	if (m_Stack.get_visible_child_name() == "searchOptions")
+	if (m_Stack.get_visible_child_name() == kName_SearchOptions)
 	{
 		m_SearchResultsBox.init();
 		const settings::SearchSettings searchSettings = m_SearchOptionsBox.getSearchSettings();
@@ -75,18 +77,16 @@ DetwinnerWindow::on_start_search()
 			m_SearchOptionsBox.getSearchPaths(),
 			m_SearchResultsBox.createPopulationDelegate());
 
-		int res = dialog.run();
-
-		if (res == Gtk::RESPONSE_OK)
+		if (dialog.run() == Gtk::RESPONSE_OK)
 		{
 			m_SearchResultsBox.setMode(searchSettings.searchMode);
 			m_SearchResultsBox.updateStatus();
-			m_Stack.set_visible_child("searchResults");
+			m_Stack.set_visible_child(kName_SearchResults);
 			set_titlebar(*m_pHeaderBarResults);
 		}
 	} else
 	{
-		m_Stack.set_visible_child("searchOptions");
+		m_Stack.set_visible_child(kName_SearchOptions);
 		set_titlebar(*m_pHeaderBarOptions);
 		m_SearchResultsBox.init();
 	}

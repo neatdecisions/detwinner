@@ -3,7 +3,7 @@
  Name        : FileTreeView.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -164,7 +164,7 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 	if (!iter) return;
 	auto row = *iter;
 
-	const std::string & filePath = Glib::ustring(row[m_columns.fullPath]);
+	const std::string filePath = Glib::ustring(row[m_columns.fullPath]);
 
 	for (auto it = row.children().begin(); it; )
 	{
@@ -432,15 +432,15 @@ FileTreeView::fillTreeRow(
 		Gtk::TreeRow & treeRow)
 {
 	if (!fileInfo) return;
-	const std::string & aFilePath = Glib::build_filename(path, fileInfo->get_name());
+	const std::string & filePath = Glib::build_filename(path, fileInfo->get_name());
 
 	treeRow[m_columns.fake] = false;
-	treeRow[m_columns.fullPath] = aFilePath;
+	treeRow[m_columns.fullPath] = filePath;
 	treeRow[m_columns.checkState] = CheckState_t::Unchecked;
 
 	if (fileInfo->get_file_type() == Gio::FILE_TYPE_DIRECTORY)
 	{
-		Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(aFilePath);
+		Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filePath);
 		try
 		{
 			if (file && file->enumerate_children())
