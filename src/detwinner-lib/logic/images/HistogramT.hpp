@@ -3,7 +3,7 @@
  Name        : HistogramT.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -30,7 +30,7 @@ class HistogramT
 public:
 	static_assert( BinNumber > 1, "Histogram should contain more than 1 bin" );
 	using BinValue_t = uint_least16_t;
-	static const std::size_t kBinCount = BinNumber;
+	static constexpr std::size_t kBinCount = BinNumber;
 
 	float compare(const HistogramT & hist) const
 	{

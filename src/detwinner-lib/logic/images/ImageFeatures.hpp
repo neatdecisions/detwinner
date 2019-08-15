@@ -3,7 +3,7 @@
  Name        : ImageFeatures.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -35,10 +35,11 @@ struct ImageFeatures
 
 	unsigned int getId() const { return id; }
 
-	Histogram histY[4];
-	Histogram histU[4];
-	Histogram histV[4];
-	HistogramI histI[4];
+	static constexpr uint8_t kSectionCount = 4;
+	Histogram histY[kSectionCount];
+	Histogram histU[kSectionCount];
+	Histogram histV[kSectionCount];
+	HistogramI histI[kSectionCount];
 
 	float compare(const ImageFeatures & f, bool processRotations) const;
 

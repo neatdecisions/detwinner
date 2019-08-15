@@ -3,7 +3,7 @@
  Name        : ImageFeaturesBridge.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -48,7 +48,7 @@ ImageFeaturesBridge::GetIntensityHistogram(
 	}
 
 	constexpr int kBinNumber = HistogramI::kBinCount;
-	constexpr double kBinSize = 255 / kBinNumber;
+	constexpr float kBinSize = 255.0 / kBinNumber;
 
 	std::array<std::size_t, kBinNumber> realHistI{};
 

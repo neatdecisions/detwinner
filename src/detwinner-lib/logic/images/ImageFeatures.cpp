@@ -3,7 +3,7 @@
  Name        : ImageFeatures.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -41,8 +41,6 @@ ImageFeatures::compareHistogram(const Histogram_t & h1, const Histogram_t & h2) 
 float
 ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 {
-	constexpr uint8_t kSectionCount = 4;
-
 	const bool isOrientationSame = ( (aspect > 1.0f) && (f.aspect > 1.0f) ) ||
 	                               ( (aspect < 1.0f) && (f.aspect < 1.0f) );
 
