@@ -3,7 +3,7 @@
  Name        : ImageFeaturesBuilder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -40,12 +40,9 @@ ImageFeaturesBuilder::execute()
 
 	m_processedCount = 0;
 	if (m_callback) m_callback->imgIndexingProgress(0, fns);
-	unsigned int numThreads = 1;
 	// we don't want to create threads for a microtasks
-	if (fns > kMinimumFilesPerThread)
-	{
-		numThreads = std::max(4U, std::thread::hardware_concurrency());
-	}
+	const unsigned int numThreads = (fns > kMinimumFilesPerThread) ?
+		std::max(4U, std::thread::hardware_concurrency()) : 1;
 	// distribute the list of filenames into separate tasks
 	// which than will be run in a separate tasks
 	const std::size_t delta = fns / numThreads;
@@ -97,15 +94,13 @@ ImageFeaturesBuilder::executeInternal(const std::size_t startIndex, const std::s
 	img.quiet(true); // avoid warning exceptions
 	for (std::size_t i = startIndex; (i < endIndex) && !m_stopped; ++i)
 	{
-		const std::string & aFileName = m_fileNames.at(i);
 		try
 		{
-			img.read(kResizeGeometry, aFileName);
+			img.read(kResizeGeometry, m_fileNames.at(i));
 			imageFeatures.push_back(ImageFeaturesBridge::GetImageFeatures(img, i));
-		} catch (const Magick::Exception & e)
+		} catch (const Magick::Exception&)
 		{
-			//std::cout << e.what() << ": " << aFileName << std::endl;
-			//continue;
+			// normal to have it here if the file being read is not an image
 		}
 		if (m_callback)
 		{
