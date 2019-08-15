@@ -510,30 +510,22 @@ Glib::ustring
 DuplicatesTreeView::getPreviewPath(const Gtk::TreeIter & iter) const
 {
 	Glib::ustring result;
-	if (iter)
+	if (!iter) return result;
+	const auto & duplicates = iter->children();
+	if (!duplicates) return extractFullPath(iter);
+	if ((*iter)[m_columns.locked])
 	{
-		if (iter->children())
+		auto it = std::find_if(duplicates.begin(), duplicates.end(),
+			[this](auto val) { return val[m_columns.locked]; });
+		if (it != duplicates.end())
 		{
-			if ((*iter)[m_columns.locked])
-			{
-				for (auto && it : iter->children())
-				{
-						if ((*it)[m_columns.locked])
-						{
-							result = extractFullPath(it);
-							break;
-						}
-				}
-			} else
-			{
-				if (!iter->children().empty())
-				{
-					result = extractFullPath(iter->children().begin());
-				}
-			}
-		} else
+			result = extractFullPath(it);
+		}
+	} else
+	{
+		if (!duplicates.empty())
 		{
-			result = extractFullPath(iter);
+			result = extractFullPath(duplicates.begin());
 		}
 	}
 	return result;
