@@ -66,6 +66,7 @@ void Initialize()
 
 	// first call GetMagickInfo, otherwise UnregisterMagickInfo won't work
 	MagickLib::ExceptionInfo e;
+	MagickLib::GetExceptionInfo(&e);
 	MagickLib::GetMagickInfo("*", &e);
 
 	for (const std::string & value : aUnsupportedFormats)
