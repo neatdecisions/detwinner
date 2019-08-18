@@ -33,8 +33,6 @@ private:
 	void on_window_hide(Gtk::Window * window);
 	void on_action_about();
 	void on_action_quit();
-
-	Glib::RefPtr<Gtk::Builder> m_refBuilder;
 };
 
 

@@ -44,31 +44,7 @@ DetwinnerApp::on_startup()
   add_action("about", sigc::mem_fun(*this, &DetwinnerApp::on_action_about));
   add_action("quit", sigc::mem_fun(*this, &DetwinnerApp::on_action_quit));
   set_accel_for_action("app.quit", "<Ctrl>Q");
-
-	m_refBuilder = Gtk::Builder::create();
 	logic::Initialize();
-
-	try
-	{
-		m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/appMenu.ui");
-	}
-	catch (const Glib::Error & ex)
-	{
-		g_warning("DetwinnerApp::on_startup(): %s", ex.what().c_str());
-		return;
-	}
-
-	auto object = m_refBuilder->get_object("appmenu");
-	auto app_menu = Glib::RefPtr<Gio::MenuModel>::cast_dynamic(object);
-	if (app_menu)
-	{
-		set_app_menu(app_menu);
-	} else
-	{
-		g_warning("DetwinnerApp::on_startup(): No \"appmenu\" object in appMenu.ui");
-	}
-
-
 }
 
 
