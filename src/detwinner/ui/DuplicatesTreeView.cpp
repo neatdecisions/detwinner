@@ -3,7 +3,7 @@
  Name        : DuplicatesTreeView.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -198,7 +198,7 @@ DuplicatesTreeView::on_size_allocate(Gtk::Allocation & s)
 bool
 DuplicatesTreeView::on_button_press_event(GdkEventButton * button_event)
 {
-	static constexpr unsigned int kRightButton = 3;
+	constexpr unsigned int kRightButton = 3;
 
 	bool result = Gtk::TreeView::on_button_press_event(button_event);
 	if ( (button_event != nullptr) && (button_event->type == GDK_BUTTON_PRESS) && (button_event->button == kRightButton) )
@@ -431,14 +431,11 @@ DuplicatesTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState
 
 	(*iter)[m_columns.checkState] = checkState;
 
-	if (!noDown)
+	if (!noDown && (checkState != CheckState_t::Mixed))
 	{
-		if (checkState != CheckState_t::Mixed)
+		for (Gtk::TreeIter kid : iter->children())
 		{
-			for (Gtk::TreeIter kid : iter->children())
-			{
-				setCheck(kid, checkState, true, noDown);
-			}
+			setCheck(kid, checkState, true, noDown);
 		}
 	}
 
@@ -447,24 +444,10 @@ DuplicatesTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState
 		auto && parent = iter->parent();
 		if (parent)
 		{
-			bool all = true;
-
-			for (auto && it : parent->children())
-			{
-				if (getCheck(it) != checkState)
-				{
-					all = false;
-					break;
-				}
-			}
-
-			if (all)
-			{
-				setCheck(parent, checkState, noUp, true);
-			} else
-			{
-				setCheck(parent, CheckState_t::Mixed, noUp, true);
-			}
+			const auto & kids = parent->children();
+			const bool all = std::all_of(kids.begin(), kids.end(),
+				[this, checkState](auto it) { return getCheck(it) == checkState; });
+			setCheck(parent, all ? checkState : CheckState_t::Mixed, noUp, true);
 		}
 	}
 
@@ -1113,11 +1096,9 @@ DuplicatesTreeView::empty() const
 bool
 DuplicatesTreeView::atLeastOneTopLevelItemChecked() const
 {
-	for (const auto & it : m_store->children())
-	{
-		if (getCheck(it) == CheckState_t::Checked) return true;
-	}
-	return false;
+	const auto & kids = m_store->children();
+	return std::any_of(kids.begin(), kids.end(),
+		[this](auto it) { return getCheck(it) == CheckState_t::Checked; });
 }
 
 
@@ -1236,7 +1217,6 @@ DuplicatesTreeView::PopulationDelegate::populate(logic::DuplicatesList_t && cont
 {
 	m_tree.sortByTotalSize(false);
 	return std::make_shared<TreePopulateAction>(m_tree, std::move(container));
-
 }
 
 
