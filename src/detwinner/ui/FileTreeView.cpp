@@ -200,19 +200,17 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 			{
 				allChecked = false;
 			}
-			if (!allChecked && !allUnchecked)
-				break;
+			if (!allChecked && !allUnchecked) break;
 		}
+
 		if (allUnchecked)
 		{
 			setCheck(row, CheckState_t::Unchecked, false, true);
-		} else
+		} else if (allChecked)
 		{
-			if (allChecked)
-			{
-				setCheck(row, CheckState_t::Checked, false, true);
-			}
+			setCheck(row, CheckState_t::Checked, false, true);
 		}
+
 	}
 }
 
@@ -362,14 +360,11 @@ FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool
 
 	(*iter)[m_columns.checkState] = checkState;
 
-	if (!noDown)
+	if (!noDown && (checkState != CheckState_t::Mixed))
 	{
-		if (checkState != CheckState_t::Mixed)
+		for (Gtk::TreeIter kid : iter->children())
 		{
-			for (Gtk::TreeIter kid : iter->children())
-			{
-				setCheck(kid, checkState, true, noDown);
-			}
+			setCheck(kid, checkState, true, noDown);
 		}
 	}
 
@@ -378,24 +373,10 @@ FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool
 		auto && parent = iter->parent();
 		if (parent)
 		{
-			bool all = true;
-
-			for (auto && it : parent->children())
-			{
-				if (getCheck(it) != checkState)
-				{
-					all = false;
-					break;
-				}
-			}
-
-			if (all)
-			{
-				setCheck(parent, checkState, noUp, true);
-			} else
-			{
-				setCheck(parent, CheckState_t::Mixed, noUp, true);
-			}
+			const auto & kids = parent->children();
+			const bool all = std::all_of(kids.begin(), kids.end(),
+				[this, checkState](auto it) { return getCheck(it) == checkState; });
+			setCheck(parent, all ? checkState : CheckState_t::Mixed, noUp, true);
 		}
 	}
 
