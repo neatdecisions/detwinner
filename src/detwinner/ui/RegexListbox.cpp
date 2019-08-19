@@ -3,7 +3,7 @@
  Name        : RegexListbox.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -119,15 +119,15 @@ RegexListbox::RegexRow::RegexRow(const std::string & regex, RegexListbox & regex
 	m_pEntry(Gtk::manage(Gtk::manage(new Gtk::Entry()))),
 	m_refActionGroup(Gio::SimpleActionGroup::create())
 {
-	static auto cssProvider = []() {
+	static const auto cssProvider = []() {
 		auto css = Gtk::CssProvider::create();
 		css->load_from_data("entry#noborder {border: none;}");
 		return css;
 	}();
 
-	auto m_refBuilder = Gtk::Builder::create();
-	m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/regexHelperMenu.ui");
-	Glib::RefPtr<Glib::Object> object = m_refBuilder->get_object("menu-regex-helper");
+	auto refBuilder = Gtk::Builder::create();
+	refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/regexHelperMenu.ui");
+	Glib::RefPtr<Glib::Object> object = refBuilder->get_object("menu-regex-helper");
 	Glib::RefPtr<Gio::Menu> gmenu = Glib::RefPtr<Gio::Menu>::cast_dynamic(object);
 	m_refMenu = std::make_unique<Gtk::Menu>(gmenu);
 	if (!m_refMenu->get_attach_widget())
