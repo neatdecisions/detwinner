@@ -3,7 +3,7 @@
  Name        : DetwinnerApp.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -29,7 +29,7 @@ DetwinnerApp::DetwinnerApp() : Gtk::Application("com.neatdecisions.Detwinner")
 
 //------------------------------------------------------------------------------
 std::unique_ptr<DetwinnerApp>
-DetwinnerApp::create()
+DetwinnerApp::Create()
 {
 	return std::unique_ptr<DetwinnerApp>(new DetwinnerApp());
 }
