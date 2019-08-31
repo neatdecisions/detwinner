@@ -3,7 +3,7 @@
  Name        : BackupFileDeleter.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -25,7 +25,7 @@ class BackupFileDeleter: public AbstractFileDeleter
 {
 public:
 	BackupFileDeleter(const std::string & backupFolder, Gtk::Window * dialogParent);
-	virtual bool removeFile(const std::string & filePath);
+	virtual bool removeFile(const std::string & filePath) override;
 
 private:
 	bool move(const std::string & from, const std::string & to);
