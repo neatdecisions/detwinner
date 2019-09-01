@@ -38,6 +38,8 @@ SearchOptionsPane::SearchOptionsPane() :
 	m_places.set_show_trash(false);
 	m_places.set_show_enter_location(false);
 	m_places.set_show_other_locations(false);
+	// set to true and then to false - to ensure that update_places is executed
+	m_places.set_show_recent(true);
 	m_places.set_show_recent(false);
 	m_places.signal_open_location().connect(sigc::mem_fun(*this, &SearchOptionsPane::on_open_location));
 
