@@ -3,7 +3,7 @@
  Name        : Initializer.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -21,12 +21,22 @@ namespace logic {
 
 void Initialize()
 {
-	Magick::InitializeMagick(0);
+	Magick::InitializeMagick(nullptr);
 
 	const std::vector<std::string> aUnsupportedFormats = {
 		"AVI",
+		"EPDF",
+		"EPI",
+		"EPS",
+		"EPT",
+		"EPT2",
+		"EPT3",
+		"EPSF",
+		"EPSI",
 		"GRAY",
-		"HTML"
+		"HTM",
+		"HTML",
+		"M2V",
 		"META",
 		"MPEG",
 		"MPG",
@@ -40,6 +50,7 @@ void Initialize()
 		"TILE",
 		"TIM",
 		"TOPOL",
+		"TRIO",
 		"TTF",
 		"TXT",
 		"UIL",
@@ -54,10 +65,16 @@ void Initialize()
 		"XPM"
 	};
 
+	// first call GetMagickInfo, otherwise UnregisterMagickInfo won't work
+	MagickLib::ExceptionInfo e;
+	MagickLib::GetExceptionInfo(&e);
+	MagickLib::GetMagickInfo("*", &e);
+
 	for (const std::string & value : aUnsupportedFormats)
 	{
 		MagickLib::UnregisterMagickInfo(value.c_str());
 	}
+
 
 }
 

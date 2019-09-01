@@ -177,11 +177,13 @@ private:
 	public:
 		explicit TreeAction(DuplicatesTreeView & tree);
 		virtual double getProgress() const override;
+		virtual Result_t getStatus() const override;
 	protected:
 		DuplicatesTreeView & m_tree;
 		std::size_t m_totalItems;
 		std::size_t m_currentItem;
 		Gtk::TreeModel::iterator m_iter;
+		Result_t m_resultStatus;
 	};
 
 	struct ISmartSelector
@@ -229,6 +231,7 @@ private:
 		virtual ~TreePopulateAction() noexcept override;
 		virtual double getProgress() const override;
 		virtual bool processNext() override;
+		virtual Result_t getStatus() const override;
 	private:
 		void beginBatch();
 		void endBatch();
@@ -244,6 +247,7 @@ private:
 		explicit TreeDeleteAction(DuplicatesTreeView & tree, tools::AbstractFileDeleter::Ptr_t fileDeleter);
 		virtual bool processNext() override;
 	private:
+		void updateResultStatus(Result_t stepStatus);
 		tools::AbstractFileDeleter::Ptr_t m_fileDeleter;
 	};
 

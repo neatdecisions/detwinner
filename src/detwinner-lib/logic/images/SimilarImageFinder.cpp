@@ -3,7 +3,7 @@
  Name        : SimilarImageFinder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -135,7 +135,8 @@ SimilarImageFinder::addClusterToResult(
 		Magick::Image pingImage;
 		pingImage.quiet(true); // avoid warning exceptions
 		const std::size_t similaritiesSize = imageIndexMap.size();
-		ImageGroup imgGroup(cluster.items.size());
+		ImageGroup imgGroup;
+		imgGroup.reserve(cluster.items.size());
 		unsigned long long totalFilesSize = 0ULL;
 		unsigned long long maxFileSize = 0ULL;
 		for (auto && featureIndex: cluster.items)
@@ -149,7 +150,7 @@ SimilarImageFinder::addClusterToResult(
 					const unsigned long long fileSize = pingImage.fileSize();
 					totalFilesSize += fileSize;
 					if (fileSize > maxFileSize) maxFileSize = fileSize;
-					imgGroup.addImageInfo(fileName, fileSize, pingImage.columns(), pingImage.rows());
+					imgGroup.emplace_back(fileName, fileSize, pingImage.columns(), pingImage.rows());
 				} catch (...)
 				{
 					continue;
@@ -159,10 +160,10 @@ SimilarImageFinder::addClusterToResult(
 				assert(false);
 			}
 		}
-		if (imgGroup.getImageCount() > 1)
+		if (imgGroup.size() > 1)
 		{
-			if (callback) callback->similarImagesFound(imgGroup.getImageCount(), totalFilesSize, totalFilesSize - maxFileSize);
-			result.addImageGroup(std::move(imgGroup));
+			if (callback) callback->similarImagesFound(imgGroup.size(), totalFilesSize, totalFilesSize - maxFileSize);
+			result.push_back(std::move(imgGroup));
 		}
 	}
 }

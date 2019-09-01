@@ -36,14 +36,14 @@ IconManager & IconManager::GetInstance()
 
 //------------------------------------------------------------------------------
 Glib::RefPtr<Gdk::Pixbuf>
-IconManager::getFileIcon(const std::string & filePath, int size)
+IconManager::getFileIcon(const std::string & filePath, int size) const
 {
 	Glib::RefPtr<Gdk::Pixbuf> result;
-	Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filePath);
+	const Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filePath);
 	Glib::RefPtr<Gio::FileInfo> fileInfo = file->query_info("standard::icon");
 	if (fileInfo)
 	{
-		Glib::RefPtr<Gio::Icon> icon = fileInfo->get_icon();
+		const Glib::RefPtr<Gio::Icon> icon = fileInfo->get_icon();
 		if (icon)
 		{
 			result = IconManager::GetInstance().getBuiltinIcon(icon, size);
@@ -55,13 +55,13 @@ IconManager::getFileIcon(const std::string & filePath, int size)
 
 //------------------------------------------------------------------------------
 Glib::RefPtr<Gdk::Pixbuf>
-IconManager::getBuiltinIcon(const std::string & iconName, int size)
+IconManager::getBuiltinIcon(const std::string & iconName, int size) const
 {
 	Glib::RefPtr<Gdk::Pixbuf> result;
 
 	if (m_iconTheme)
 	{
-		Gtk::IconInfo iconInfo = m_iconTheme->lookup_icon(iconName, size, Gtk::ICON_LOOKUP_USE_BUILTIN);
+		const Gtk::IconInfo iconInfo = m_iconTheme->lookup_icon(iconName, size, Gtk::ICON_LOOKUP_USE_BUILTIN);
 		if (iconInfo) result = iconInfo.load_icon();
 	}
 	return result;
@@ -70,13 +70,13 @@ IconManager::getBuiltinIcon(const std::string & iconName, int size)
 
 //------------------------------------------------------------------------------
 Glib::RefPtr<Gdk::Pixbuf>
-IconManager::getBuiltinIcon(const Glib::RefPtr<Gio::Icon> & icon, int size)
+IconManager::getBuiltinIcon(const Glib::RefPtr<Gio::Icon> & icon, int size) const
 {
 	Glib::RefPtr<Gdk::Pixbuf> result;
 
 	if (m_iconTheme && icon)
 	{
-		Gtk::IconInfo iconInfo = m_iconTheme->lookup_icon(icon, size, Gtk::ICON_LOOKUP_USE_BUILTIN);
+		const Gtk::IconInfo iconInfo = m_iconTheme->lookup_icon(icon, size, Gtk::ICON_LOOKUP_USE_BUILTIN);
 		if (iconInfo) result = iconInfo.load_icon();
 	}
 	return result;

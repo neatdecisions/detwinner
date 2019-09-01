@@ -3,7 +3,7 @@
  Name        : MemoryMappedFile.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -27,7 +27,7 @@ class MemoryMappedFile::Impl
 public:
 	explicit Impl(const std::string & fileName) : m_pMappedFile(nullptr)
 	{
-		GError * gError = NULL;
+		GError * gError = nullptr;
 		m_pMappedFile = g_mapped_file_new(fileName.c_str(), false, &gError);
 		if (gError)
 		{

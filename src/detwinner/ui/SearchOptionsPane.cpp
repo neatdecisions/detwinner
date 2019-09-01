@@ -3,7 +3,7 @@
  Name        : SearchOptionsPane.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -38,6 +38,9 @@ SearchOptionsPane::SearchOptionsPane() :
 	m_places.set_show_trash(false);
 	m_places.set_show_enter_location(false);
 	m_places.set_show_other_locations(false);
+	// set to true and then to false - to ensure that update_places is executed
+	m_places.set_show_recent(true);
+	m_places.set_show_recent(false);
 	m_places.signal_open_location().connect(sigc::mem_fun(*this, &SearchOptionsPane::on_open_location));
 
 	m_scrolledWindow.add(m_fileTree);

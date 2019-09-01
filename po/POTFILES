@@ -1,6 +1,5 @@
 data/com.neatdecisions.Detwinner.appdata.xml.in
 data/com.neatdecisions.Detwinner.desktop.in
-resources/ui/appMenu.ui
 resources/ui/duplicateTreeViewMenu.ui
 resources/ui/regexHelperMenu.ui
 resources/ui/toolbarResultsPane.glade

@@ -3,7 +3,7 @@
  Name        : DetwinnerWindow.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -41,6 +41,9 @@ protected:
 	Gtk::HeaderBar * m_pHeaderBarOptions;
 	Gtk::HeaderBar * m_pHeaderBarResults;
 	Gtk::Label * m_pLabelSearchMode;
+
+	static const Glib::ustring kName_SearchOptions;
+	static const Glib::ustring kName_SearchResults;
 };
 
 

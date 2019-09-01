@@ -3,7 +3,7 @@
  Name        : DetwinnerApp.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -29,7 +29,7 @@ DetwinnerApp::DetwinnerApp() : Gtk::Application("com.neatdecisions.Detwinner")
 
 //------------------------------------------------------------------------------
 std::unique_ptr<DetwinnerApp>
-DetwinnerApp::create()
+DetwinnerApp::Create()
 {
 	return std::unique_ptr<DetwinnerApp>(new DetwinnerApp());
 }
@@ -44,31 +44,7 @@ DetwinnerApp::on_startup()
   add_action("about", sigc::mem_fun(*this, &DetwinnerApp::on_action_about));
   add_action("quit", sigc::mem_fun(*this, &DetwinnerApp::on_action_quit));
   set_accel_for_action("app.quit", "<Ctrl>Q");
-
-	m_refBuilder = Gtk::Builder::create();
 	logic::Initialize();
-
-	try
-	{
-		m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/appMenu.ui");
-	}
-	catch (const Glib::Error & ex)
-	{
-		g_warning("DetwinnerApp::on_startup(): %s", ex.what().c_str());
-		return;
-	}
-
-	auto object = m_refBuilder->get_object("appmenu");
-	auto app_menu = Glib::RefPtr<Gio::MenuModel>::cast_dynamic(object);
-	if (app_menu)
-	{
-		set_app_menu(app_menu);
-	} else
-	{
-		g_warning("DetwinnerApp::on_startup(): No \"appmenu\" object in appMenu.ui");
-	}
-
-
 }
 
 
@@ -132,7 +108,7 @@ DetwinnerApp::on_action_about()
 	aboutDialog.set_website("https://neatdecisions.com");
 	aboutDialog.set_website_label("neatdecisions.com");
 	aboutDialog.set_license_type(Gtk::LICENSE_GPL_3_0);
-	aboutDialog.set_copyright("© 2018 Neat Decisions");
+	aboutDialog.set_copyright("© 2018–2019 Neat Decisions");
 	aboutDialog.set_logo_icon_name("com.neatdecisions.Detwinner");
 	aboutDialog.set_translator_credits(_("translator-credits"));
 	aboutDialog.set_modal(true);

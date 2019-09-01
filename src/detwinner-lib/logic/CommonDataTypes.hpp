@@ -11,9 +11,6 @@
 #ifndef LOGIC_COMMONDATATYPES_HPP_
 #define LOGIC_COMMONDATATYPES_HPP_
 
-#include <map>
-#include <memory>
-#include <queue>
 #include <vector>
 #include <compat/optional.hpp>
 
@@ -28,9 +25,9 @@ struct DuplicateContainer
 	{
 		struct ImageSize_t
 		{
-			unsigned int width;
-			unsigned int height;
-			ImageSize_t() : width(0), height(0){}
+			unsigned int width = 0;
+			unsigned int height = 0;
+			ImageSize_t() = default;
 			ImageSize_t(unsigned int w, unsigned int h) : width(w), height(h){}
 		};
 

@@ -41,10 +41,7 @@ SearchResultsPane::SearchResultsPane() :
 	m_refActionGroup->add_action("selectKeepPathLongest", sigc::mem_fun(*this, &SearchResultsPane::on_smart_select_path_longest_clicked));
 
 	m_refActionGroup->add_action("deletePermanently", sigc::mem_fun(*this, &SearchResultsPane::on_delete_permanently));
-	// until flatpak can properly handle GIO trash
-	#ifndef FLATPAK
 	m_refActionGroup->add_action("deleteMoveToTrash", sigc::mem_fun(*this, &SearchResultsPane::on_delete_move_to_trash));
-	#endif
 	m_refActionGroup->add_action("deleteMoveToFolder", sigc::mem_fun(*this, &SearchResultsPane::on_delete_move_to_folder));
 
 	m_refActionSortBy = m_refActionGroup->add_action_radio_integer("sortBy", sigc::mem_fun(*this, &SearchResultsPane::on_sort_by_changed), 0);
@@ -79,13 +76,13 @@ SearchResultsPane::getActionGroup()
 
 
 //------------------------------------------------------------------------------
-void
+callbacks::IDeferredAction::Result_t
 SearchResultsPane::execute_duplicate_action(const Glib::ustring & label, callbacks::IDeferredAction::Ptr_t action)
 {
 	if (!action)
 	{
 		g_warning("SearchResultsPane: NULL action");
-		return;
+		return callbacks::IDeferredAction::Result_t::Unknown;
 	}
 
 	freeze_child_notify();
@@ -114,6 +111,8 @@ SearchResultsPane::execute_duplicate_action(const Glib::ustring & label, callbac
 
 	thaw_notify();
 	thaw_child_notify();
+
+	return action->getStatus();
 }
 
 
@@ -381,9 +380,7 @@ SearchResultsPane::on_delete_permanently()
 	if (messageDialog.run() == Gtk::RESPONSE_YES)
 	{
 		messageDialog.hide();
-		execute_duplicate_action(_("Deleting…"), m_treeView.deletePermanently());
-		if (m_treeView.empty()) init();
-		updateStatus();
+		process_deletion_result(execute_duplicate_action(_("Deleting…"), m_treeView.deletePermanently()));
 	}
 }
 
@@ -404,9 +401,7 @@ SearchResultsPane::on_delete_move_to_trash()
 	if (messageDialog.run() == Gtk::RESPONSE_YES)
 	{
 		messageDialog.hide();
-		execute_duplicate_action(_("Moving to trash…"), m_treeView.deleteToTrash());
-		if (m_treeView.empty()) init();
-		updateStatus();
+		process_deletion_result(execute_duplicate_action(_("Moving to trash…"), m_treeView.deleteToTrash()));
 	}
 }
 
@@ -426,10 +421,26 @@ SearchResultsPane::on_delete_move_to_folder()
 	{
 		const auto backupFolder = fileChooser.get_filename();
 		fileChooser.hide();
+		process_deletion_result(execute_duplicate_action(_("Moving…"), m_treeView.deleteToBackupFolder(backupFolder, pParent)));
+	}
+}
 
-		execute_duplicate_action(_("Moving…"), m_treeView.deleteToBackupFolder(backupFolder, pParent));
-		if (m_treeView.empty()) init();
-		updateStatus();
+
+//------------------------------------------------------------------------------
+void
+SearchResultsPane::process_deletion_result(callbacks::IDeferredAction::Result_t result)
+{
+	if (m_treeView.empty()) init();
+	updateStatus();
+
+	if ( (result == callbacks::IDeferredAction::Result_t::Failure) ||
+	     (result == callbacks::IDeferredAction::Result_t::Mixed) )
+	{
+		Gtk::MessageDialog aDialog(_("Some of the files could not be deleted"), false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
+		aDialog.set_secondary_text(_("Please verify that sufficient permissions have been granted for your account."));
+		Gtk::Window * pParent = dynamic_cast<Gtk::Window*>(get_toplevel());
+		if (pParent != nullptr) aDialog.set_transient_for(*pParent);
+		aDialog.run();
 	}
 }
 

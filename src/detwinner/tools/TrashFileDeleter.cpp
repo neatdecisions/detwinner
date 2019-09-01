@@ -27,7 +27,7 @@ TrashFileDeleter::removeFile(const std::string & filePath)
 	{
 		try
 		{
-			isFileDeleted = file->trash();
+			isFileDeleted = !file->query_exists() || file->trash();
 		} catch (const Glib::Error & e)
 		{
 			g_warning("Unable to delete file %s to trash - error %d: %s", filePath.c_str(), e.code(), e.what().c_str());

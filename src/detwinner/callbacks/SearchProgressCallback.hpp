@@ -3,7 +3,7 @@
  Name        : SearchProgressCallback.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -63,18 +63,18 @@ public:
 		m_finished = false;
 	}
 
-	void onFileProcessed(const unsigned long long size) override;
-	void updateProgress(unsigned int progress, unsigned int total) override;
+	virtual void onFileProcessed(const unsigned long long size) override;
+	virtual void updateProgress(unsigned int progress, unsigned int total) override;
 	virtual void onDuplicateFound(
 		const std::size_t numberOfFiles,
 		const unsigned long long totalSize,
 		const unsigned long long wastedSize) override;
-	void onStartComparing(unsigned int totalNumber) override;
-	void onFileIndexed(bool skipped) override;
-	void setStage(int stage) override;
-	void onFinish() override;
-	void onInit() override;
-	bool pauseAndStopStatus() override;
+	virtual void onStartComparing(unsigned int totalNumber) override;
+	virtual void onFileIndexed(bool skipped) override;
+	virtual void setStage(int stage) override;
+	virtual void onFinish() override;
+	virtual void onInit() override;
+	virtual bool pauseAndStopStatus() override;
 
 	void togglePause();
 	void stop();

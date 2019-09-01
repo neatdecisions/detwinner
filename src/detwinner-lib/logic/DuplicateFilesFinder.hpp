@@ -11,6 +11,10 @@
 #ifndef LOGIC_DUPLICATEFILESFINDER_HPP_
 #define LOGIC_DUPLICATEFILESFINDER_HPP_
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include <logic/callbacks/ISearchProcessCallback.hpp>
 #include <logic/callbacks/IIndexedFileReceiver.hpp>
 #include <logic/CommonDataTypes.hpp>
@@ -41,10 +45,9 @@ private:
 		FileSizeMapping_t mapping;
 	};
 
-	void calculateHashes(
+	DuplicatesList_t calculateHashes(
 			FileSizeMapping_t & totalMap,
-			DuplicatesList_t & result,
-			callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback);
+			callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback) const;
 };
 
 }}

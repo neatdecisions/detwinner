@@ -3,7 +3,7 @@
  Name        : DuplicatesTreeView.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -198,7 +198,7 @@ DuplicatesTreeView::on_size_allocate(Gtk::Allocation & s)
 bool
 DuplicatesTreeView::on_button_press_event(GdkEventButton * button_event)
 {
-	static constexpr unsigned int kRightButton = 3;
+	constexpr unsigned int kRightButton = 3;
 
 	bool result = Gtk::TreeView::on_button_press_event(button_event);
 	if ( (button_event != nullptr) && (button_event->type == GDK_BUTTON_PRESS) && (button_event->button == kRightButton) )
@@ -431,14 +431,11 @@ DuplicatesTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState
 
 	(*iter)[m_columns.checkState] = checkState;
 
-	if (!noDown)
+	if (!noDown && (checkState != CheckState_t::Mixed))
 	{
-		if (checkState != CheckState_t::Mixed)
+		for (Gtk::TreeIter kid : iter->children())
 		{
-			for (Gtk::TreeIter kid : iter->children())
-			{
-				setCheck(kid, checkState, true, noDown);
-			}
+			setCheck(kid, checkState, true, noDown);
 		}
 	}
 
@@ -447,24 +444,10 @@ DuplicatesTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState
 		auto && parent = iter->parent();
 		if (parent)
 		{
-			bool all = true;
-
-			for (auto && it : parent->children())
-			{
-				if (getCheck(it) != checkState)
-				{
-					all = false;
-					break;
-				}
-			}
-
-			if (all)
-			{
-				setCheck(parent, checkState, noUp, true);
-			} else
-			{
-				setCheck(parent, CheckState_t::Mixed, noUp, true);
-			}
+			const auto & kids = parent->children();
+			const bool all = std::all_of(kids.begin(), kids.end(),
+				[this, checkState](auto it) { return getCheck(it) == checkState; });
+			setCheck(parent, all ? checkState : CheckState_t::Mixed, noUp, true);
 		}
 	}
 
@@ -510,30 +493,22 @@ Glib::ustring
 DuplicatesTreeView::getPreviewPath(const Gtk::TreeIter & iter) const
 {
 	Glib::ustring result;
-	if (iter)
+	if (!iter) return result;
+	const auto & duplicates = iter->children();
+	if (!duplicates) return extractFullPath(iter);
+	if ((*iter)[m_columns.locked])
 	{
-		if (iter->children())
+		auto it = std::find_if(duplicates.begin(), duplicates.end(),
+			[this](auto val) { return val[m_columns.locked]; });
+		if (it != duplicates.end())
 		{
-			if ((*iter)[m_columns.locked])
-			{
-				for (auto && it : iter->children())
-				{
-						if ((*it)[m_columns.locked])
-						{
-							result = extractFullPath(it);
-							break;
-						}
-				}
-			} else
-			{
-				if (!iter->children().empty())
-				{
-					result = extractFullPath(iter->children().begin());
-				}
-			}
-		} else
+			result = extractFullPath(it);
+		}
+	} else
+	{
+		if (!duplicates.empty())
 		{
-			result = extractFullPath(iter);
+			result = extractFullPath(duplicates.begin());
 		}
 	}
 	return result;
@@ -1121,11 +1096,9 @@ DuplicatesTreeView::empty() const
 bool
 DuplicatesTreeView::atLeastOneTopLevelItemChecked() const
 {
-	for (const auto & it : m_store->children())
-	{
-		if (getCheck(it) == CheckState_t::Checked) return true;
-	}
-	return false;
+	const auto & kids = m_store->children();
+	return std::any_of(kids.begin(), kids.end(),
+		[this](auto it) { return getCheck(it) == CheckState_t::Checked; });
 }
 
 
@@ -1244,7 +1217,6 @@ DuplicatesTreeView::PopulationDelegate::populate(logic::DuplicatesList_t && cont
 {
 	m_tree.sortByTotalSize(false);
 	return std::make_shared<TreePopulateAction>(m_tree, std::move(container));
-
 }
 
 
@@ -1258,7 +1230,8 @@ DuplicatesTreeView::TreeAction::TreeAction(DuplicatesTreeView & tree) :
 	m_tree(tree),
 	m_totalItems(m_tree.m_store->children().size()),
 	m_currentItem(0),
-	m_iter(tree.m_store->children().begin())
+	m_iter(tree.m_store->children().begin()),
+	m_resultStatus(Result_t::Success)
 {}
 
 
@@ -1268,6 +1241,14 @@ DuplicatesTreeView::TreeAction::getProgress() const
 {
 	if (m_totalItems == 0) return 1.0;
 	return static_cast<double>(m_currentItem) / m_totalItems;
+}
+
+
+//------------------------------------------------------------------------------
+DuplicatesTreeView::TreeAction::Result_t
+DuplicatesTreeView::TreeAction::getStatus() const
+{
+	return m_resultStatus;
 }
 
 
@@ -1414,6 +1395,14 @@ DuplicatesTreeView::TreePopulateAction::processNext()
 
 
 //------------------------------------------------------------------------------
+DuplicatesTreeView::TreePopulateAction::Result_t
+DuplicatesTreeView::TreePopulateAction::getStatus() const
+{
+	return Result_t::Success;
+}
+
+
+//------------------------------------------------------------------------------
 void
 DuplicatesTreeView::TreePopulateAction::beginBatch()
 {
@@ -1451,7 +1440,9 @@ DuplicatesTreeView::TreeDeleteAction::TreeDeleteAction(
 	DuplicatesTreeView & tree, tools::AbstractFileDeleter::Ptr_t fileDeleter) :
 	DuplicatesTreeView::TreeAction(tree),
 	m_fileDeleter(fileDeleter)
-{}
+{
+	m_resultStatus = Result_t::Unknown;
+}
 
 
 //------------------------------------------------------------------------------
@@ -1465,14 +1456,19 @@ DuplicatesTreeView::TreeDeleteAction::processNext()
 		auto it = m_iter->children().begin();
 		while (it)
 		{
-			if ( (m_tree.getCheck(it) == CheckState_t::Checked) &&
-			      m_fileDeleter->removeFile(it->get_value(m_tree.m_columns.filePath)) )
+			if (m_tree.getCheck(it) == CheckState_t::Checked)
 			{
-				it = m_tree.m_store->erase(it);
-			} else
-			{
-				++it;
+				if (m_fileDeleter->removeFile(it->get_value(m_tree.m_columns.filePath)))
+				{
+					it = m_tree.m_store->erase(it);
+					updateResultStatus(Result_t::Success);
+					continue;
+				} else
+				{
+					updateResultStatus(Result_t::Failure);
+				}
 			}
+			++it;
 		}
 	}
 
@@ -1498,6 +1494,33 @@ DuplicatesTreeView::TreeDeleteAction::processNext()
 	}
 
 	return static_cast<bool>(++m_iter);
+}
+
+
+//------------------------------------------------------------------------------
+void
+DuplicatesTreeView::TreeDeleteAction::updateResultStatus(Result_t stepStatus)
+{
+	if (stepStatus == Result_t::Mixed)
+	{
+		m_resultStatus = Result_t::Mixed;
+	} else
+	{
+		switch (m_resultStatus)
+		{
+			case Result_t::Unknown:
+				m_resultStatus = stepStatus;
+				break;
+			case Result_t::Failure:
+				if (m_resultStatus == Result_t::Success) m_resultStatus = Result_t::Mixed;
+				break;
+			case Result_t::Success:
+				if (m_resultStatus == Result_t::Failure) m_resultStatus = Result_t::Mixed;
+				break;
+			case Result_t::Mixed:
+				break;
+		}
+	}
 }
 
 

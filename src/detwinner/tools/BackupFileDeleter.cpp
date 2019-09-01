@@ -99,7 +99,7 @@ BackupFileDeleter::move(const std::string & iFrom, const std::string & iTo)
 	{
 		try
 		{
-			isFileMoved = fileFrom->move(fileTo, Gio::FILE_COPY_OVERWRITE);
+			isFileMoved = !fileFrom->query_exists() || fileFrom->move(fileTo, Gio::FILE_COPY_OVERWRITE);
 		} catch (const Glib::Error & e)
 		{
 			g_warning("Unable to move file %s to %s: %s", iFrom.c_str(), iTo.c_str(), e.what().c_str());

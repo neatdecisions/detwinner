@@ -9,11 +9,9 @@ srcLogic = [
     'logic/FileIndexer.cpp',
     'logic/Initializer.cpp',
     'logic/MurmurHash.cpp',
-    'logic/images/DuplicateImageResult.cpp',
     'logic/images/ImageFeatures.cpp',
     'logic/images/ImageFeaturesBridge.cpp',
     'logic/images/ImageFeaturesBuilder.cpp',
-    'logic/images/ImageGroup.cpp',
     'logic/images/SimilarityCache.cpp',
     'logic/images/SimilarityCacheBuilder.cpp',
     'logic/images/SimilarImageFinder.cpp'

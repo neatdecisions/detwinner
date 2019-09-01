@@ -3,7 +3,7 @@
  Name        : ImageFeaturesBridge.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -39,8 +39,6 @@ ImageFeaturesBridge::GetIntensityHistogram(
 	const Magick::Geometry & roi,
 	HistogramI & histI)
 {
-	int n = 0;
-
 	const unsigned int width = roi.xOff() + roi.width();
 	const unsigned int height = roi.yOff() + roi.height();
 
@@ -50,7 +48,7 @@ ImageFeaturesBridge::GetIntensityHistogram(
 	}
 
 	constexpr int kBinNumber = HistogramI::kBinCount;
-	constexpr double kBinSize = 255 / kBinNumber;
+	constexpr float kBinSize = 255.0 / kBinNumber;
 
 	std::array<std::size_t, kBinNumber> realHistI{};
 
@@ -59,7 +57,7 @@ ImageFeaturesBridge::GetIntensityHistogram(
 		for (unsigned int y = roi.yOff(); y < height; ++y)
 		{
 			const Magick::Color & color = image.pixelColor(x, y);
-			n = static_cast<int>(std::floor(( color.intensity() ) / kBinSize));
+			int n = static_cast<int>(std::floor(( color.intensity() ) / kBinSize));
 			if (n >= kBinNumber) n = kBinNumber - 1;
 			if (n < 0) n = 0;
 			++realHistI[n];
@@ -91,9 +89,6 @@ ImageFeaturesBridge::GetYUVHistograms(
 	constexpr float uBinSize = (uMax - uMin) / kBinNumber;
 	constexpr float vBinSize = (vMax - vMin) / kBinNumber;
 
-	int n = 0;
-	float t = 0.0f;
-
 	const unsigned int width = roi.xOff() + roi.width();
 	const unsigned int height = roi.yOff() + roi.height();
 
@@ -113,12 +108,12 @@ ImageFeaturesBridge::GetYUVHistograms(
 		{
 			const Magick::ColorYUV & color = image.pixelColor(x, y);
 			const double yyy = ( color.alpha() > 0.8 ) ? 1.0 : color.y();
-			n = static_cast<int>(floor(( yyy - yMin ) / yBinSize));
+			int n = static_cast<int>(floor(( yyy - yMin ) / yBinSize));
 			if (n >= kBinNumber) n = kBinNumber - 1;
 			if (n < 0) n = 0;
 			++realHistY[n];
 
-			t = static_cast<float>(color.u());
+			float t = static_cast<float>(color.u());
 			if (t < uMin) t = uMin;
 			if (t > uMax) t = uMax;
 

@@ -3,7 +3,7 @@
  Name        : FileTreeView.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -162,15 +162,14 @@ void
 FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 {
 	if (!iter) return;
-	auto row = **iter;
+	auto row = *iter;
 
-	const std::string & filePath = Glib::ustring((*iter)[m_columns.fullPath]);
+	const std::string filePath = Glib::ustring(row[m_columns.fullPath]);
 
-	auto it = row.children().begin();
-	while (it)
+	for (auto it = row.children().begin(); it; )
 	{
-		Gtk::TreeRow row = *it;
-		if (row[m_columns.fake])
+		Gtk::TreeRow childRow = *it;
+		if (childRow[m_columns.fake])
 		{
 			it = m_store->erase(it);
 		} else
@@ -201,19 +200,17 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 			{
 				allChecked = false;
 			}
-			if (!allChecked && !allUnchecked)
-				break;
+			if (!allChecked && !allUnchecked) break;
 		}
+
 		if (allUnchecked)
 		{
 			setCheck(row, CheckState_t::Unchecked, false, true);
-		} else
+		} else if (allChecked)
 		{
-			if (allChecked)
-			{
-				setCheck(row, CheckState_t::Checked, false, true);
-			}
+			setCheck(row, CheckState_t::Checked, false, true);
 		}
+
 	}
 }
 
@@ -316,10 +313,9 @@ FileTreeView::collectChilden(const std::string & parentPath, std::vector<FolderT
 	Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(parentPath);
 
 	Glib::RefPtr<Gio::FileEnumerator> child_enumeration = file->enumerate_children("standard::name,standard::is-hidden");
-	Glib::RefPtr<Gio::FileInfo> file_info;
 
 	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
-	while ( (file_info = child_enumeration->next_file()) )
+	while (auto file_info = child_enumeration->next_file())
 	{
 		if (!file_info) continue;
 		if (!m_showHiddenFiles && file_info->is_hidden()) continue;
@@ -364,14 +360,11 @@ FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool
 
 	(*iter)[m_columns.checkState] = checkState;
 
-	if (!noDown)
+	if (!noDown && (checkState != CheckState_t::Mixed))
 	{
-		if (checkState != CheckState_t::Mixed)
+		for (Gtk::TreeIter kid : iter->children())
 		{
-			for (Gtk::TreeIter kid : iter->children())
-			{
-				setCheck(kid, checkState, true, noDown);
-			}
+			setCheck(kid, checkState, true, noDown);
 		}
 	}
 
@@ -380,24 +373,10 @@ FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool
 		auto && parent = iter->parent();
 		if (parent)
 		{
-			bool all = true;
-
-			for (auto && it : parent->children())
-			{
-				if (getCheck(it) != checkState)
-				{
-					all = false;
-					break;
-				}
-			}
-
-			if (all)
-			{
-				setCheck(parent, checkState, noUp, true);
-			} else
-			{
-				setCheck(parent, CheckState_t::Mixed, noUp, true);
-			}
+			const auto & kids = parent->children();
+			const bool all = std::all_of(kids.begin(), kids.end(),
+				[this, checkState](auto it) { return getCheck(it) == checkState; });
+			setCheck(parent, all ? checkState : CheckState_t::Mixed, noUp, true);
 		}
 	}
 
@@ -434,15 +413,15 @@ FileTreeView::fillTreeRow(
 		Gtk::TreeRow & treeRow)
 {
 	if (!fileInfo) return;
-	const std::string & aFilePath = Glib::build_filename(path, fileInfo->get_name());
+	const std::string & filePath = Glib::build_filename(path, fileInfo->get_name());
 
 	treeRow[m_columns.fake] = false;
-	treeRow[m_columns.fullPath] = aFilePath;
+	treeRow[m_columns.fullPath] = filePath;
 	treeRow[m_columns.checkState] = CheckState_t::Unchecked;
 
 	if (fileInfo->get_file_type() == Gio::FILE_TYPE_DIRECTORY)
 	{
-		Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(aFilePath);
+		Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(filePath);
 		try
 		{
 			if (file && file->enumerate_children())

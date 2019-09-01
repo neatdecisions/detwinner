@@ -26,7 +26,7 @@ PermanentFileDeleter::removeFile(const std::string & filePath)
 	{
 		try
 		{
-			isFileDeleted = file->remove();
+			isFileDeleted = !file->query_exists() || file->remove();
 		} catch (const Glib::Error & e)
 		{
 			g_warning("Unable to delete file %s: %s", filePath.c_str(), e.what().c_str());
