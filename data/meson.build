@@ -26,7 +26,7 @@ endif
 appdata_file_validate = find_program ('appstream-util', required: false)
 if appdata_file_validate.found ()
     test ('validate-appdata', appdata_file_validate,
-          args: ['validate-relax', appdata.full_path ()])
+          args: ['validate-strict', appdata.full_path ()])
 endif
 
 install_man('detwinner.1')
