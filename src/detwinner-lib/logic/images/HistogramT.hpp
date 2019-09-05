@@ -32,7 +32,7 @@ public:
 	using BinValue_t = uint_least16_t;
 	static constexpr std::size_t kBinCount = BinNumber;
 
-	float compare(const HistogramT & hist) const
+	float compare(const HistogramT & hist) const noexcept
 	{
 		// Hassanat distance
 		float num = 0.0f;
@@ -44,12 +44,12 @@ public:
 		return num / (BinNumber - 1);
 	}
 
-	BinValue_t getBinValue(const std::size_t binNumber) const
+	BinValue_t getBinValue(const std::size_t binNumber) const noexcept
 	{
 		return (binNumber < BinNumber) ? bins[binNumber] : 0;
 	}
 
-	void setBinValue(const std::size_t binNumber, const BinValue_t value)
+	void setBinValue(const std::size_t binNumber, const BinValue_t value) noexcept
 	{
 		if (binNumber < BinNumber) bins[binNumber] = value;
 	}

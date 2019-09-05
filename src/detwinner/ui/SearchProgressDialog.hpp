@@ -64,8 +64,8 @@ private:
 	callbacks::SearchProgressCallback::Ptr_t m_progressItem;
 
 	std::future<logic::DuplicatesList_t> m_result;
-	bool m_switchedToFinish;
-	bool m_isPopulationInterrupted;
+	bool m_switchedToFinish = false;
+	bool m_isPopulationInterrupted = false;
 };
 
 

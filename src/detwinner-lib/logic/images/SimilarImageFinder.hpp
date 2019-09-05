@@ -41,8 +41,6 @@ public:
 		const unsigned short sensitivity,
 		const bool processRotations,
 		const callbacks::IImageFinderCallback::Ptr_t & callback) const;
-	SimilarImageFinder() = default;
-	SimilarImageFinder(const SimilarImageFinder&) = delete;
 
 private:
 	using FeaturesVector = std::vector<ImageFeatures>;

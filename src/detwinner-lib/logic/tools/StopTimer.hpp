@@ -31,9 +31,9 @@ public:
 	long long elapsed() const;
 
 private:
-	long long m_elapsed;
+	long long m_elapsed = 0ULL;
 	std::chrono::time_point<std::chrono::steady_clock> m_startTime;
-	bool m_stopped;
+	bool m_stopped = false;
 };
 
 

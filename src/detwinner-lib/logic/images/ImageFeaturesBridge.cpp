@@ -23,7 +23,7 @@ template <std::size_t BinCount>
 void
 ImageFeaturesBridge::NormalizeHistogramFromArrayT(
 	const std::array<std::size_t, BinCount> & realHist,
-	HistogramT<BinCount> & hist)
+	HistogramT<BinCount> & hist) noexcept
 {
 	for (std::size_t i = 0; i < BinCount; ++i)
 	{

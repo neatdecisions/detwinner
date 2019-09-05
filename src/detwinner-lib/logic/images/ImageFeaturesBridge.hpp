@@ -35,7 +35,7 @@ private:
 	template <std::size_t BinCount>
 	static void NormalizeHistogramFromArrayT(
 		const std::array<std::size_t, BinCount> & realHist,
-		HistogramT<BinCount> & hist);
+		HistogramT<BinCount> & hist) noexcept;
 
 	static void GetIntensityHistogram(
 			const Magick::Image & image,

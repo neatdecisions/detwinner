@@ -27,19 +27,10 @@ SimilarityCache::SimilarityCache(const std::size_t size) :
 
 //------------------------------------------------------------------------------
 void
-SimilarityCache::set(std::size_t i1, std::size_t i2, Distance_t val)
+SimilarityCache::set(std::size_t i1, std::size_t i2, Distance_t val) noexcept
 {
-	if (i1 >= m_size || i2 >= m_size)
-	{
-		assert(false);
-		return;
-	}
-
-	if (i1 == i2)
-	{
-		assert(false);
-		return;
-	}
+	if (i1 >= m_size || i2 >= m_size) return;
+	if (i1 == i2) return;
 
 	if (i1 > i2)
 	{
@@ -54,7 +45,7 @@ SimilarityCache::set(std::size_t i1, std::size_t i2, Distance_t val)
 
 //------------------------------------------------------------------------------
 Distance_t
-SimilarityCache::get(std::size_t i1, std::size_t i2) const
+SimilarityCache::get(std::size_t i1, std::size_t i2) const noexcept
 {
 	if (i1 >= m_size || i2 >= m_size)
 	{

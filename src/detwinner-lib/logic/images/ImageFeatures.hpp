@@ -33,7 +33,7 @@ struct ImageFeatures
 {
 	ImageFeatures(const unsigned int id, const float aspect);
 
-	unsigned int getId() const { return id; }
+	unsigned int getId() const noexcept { return id; }
 
 	static constexpr uint8_t kSectionCount = 4;
 	Histogram histY[kSectionCount];

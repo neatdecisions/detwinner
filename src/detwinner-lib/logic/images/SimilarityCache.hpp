@@ -29,10 +29,12 @@ class SimilarityCache
 public:
 	explicit SimilarityCache(const std::size_t size);
 	SimilarityCache(const SimilarityCache&) = delete;
+	SimilarityCache& operator=(const SimilarityCache&) = delete;
 	SimilarityCache(SimilarityCache&&) = default;
+	SimilarityCache& operator=(SimilarityCache&&) = default;
 	~SimilarityCache() noexcept = default;
-	void set(std::size_t i1, std::size_t i2, Distance_t val);
-	Distance_t get(std::size_t i1, std::size_t i2) const;
+	void set(std::size_t i1, std::size_t i2, Distance_t val) noexcept;
+	Distance_t get(std::size_t i1, std::size_t i2) const noexcept;
 protected:
 	const std::size_t m_size;
 	std::vector<Distance_t> m_matrix;

@@ -27,7 +27,7 @@ namespace images {
 //------------------------------------------------------------------------------
 template<typename T>
 void
-deleteFromVectorBySwap(std::vector<T> & vec, std::size_t i)
+deleteFromVectorBySwap(std::vector<T> & vec, std::size_t i) noexcept
 {
 	const std::size_t n = vec.size();
 	if (n == 0) return;

@@ -36,9 +36,7 @@ SearchProgressDialog::SearchProgressDialog(
 	m_labelDuplicatesFound("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
 	m_labelTimeSpent("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
 	m_searchSettings(searchSettings),
-	m_progressItem(callbacks::SearchProgressCallback::Create()),
-	m_switchedToFinish(false),
-	m_isPopulationInterrupted(false)
+	m_progressItem(callbacks::SearchProgressCallback::Create())
 {
 	m_progressBar.set_show_text(false);
 	m_progressBar.set_text(_("Paused"));

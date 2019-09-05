@@ -20,8 +20,9 @@ namespace logic {
 namespace images {
 
 
-constexpr unsigned int kMinimumFilesPerThread = 1000;
-
+namespace {
+	constexpr unsigned int kMinimumFilesPerThread = 1000;
+}
 
 //------------------------------------------------------------------------------
 ImageFeaturesBuilder::ImageFeaturesBuilder(
