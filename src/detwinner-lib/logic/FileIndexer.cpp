@@ -163,7 +163,7 @@ FileIndexer::getFileType(const std::string & filePath) const
 	}
 
 	std::error_code errorCode;
-	const fs::file_status fileStatus = fs::status(filePath, errorCode);
+	const fs::file_status fileStatus = fs::symlink_status(filePath, errorCode);
 	if (errorCode) return FileType_t::kUnknown;
 
 	if (fs::is_directory(fileStatus)) return FileType_t::kDirectory;
