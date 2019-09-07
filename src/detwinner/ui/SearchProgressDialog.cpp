@@ -268,7 +268,7 @@ SearchProgressDialog::switch_to_finish()
 				Gtk::Main::iteration(false);
 				if (m_isPopulationInterrupted)
 				{
-					response(atLeastOneAdded ? Gtk::RESPONSE_OK : Gtk::RESPONSE_NONE);
+					response(Gtk::RESPONSE_OK);
 					return;
 				}
 			}
