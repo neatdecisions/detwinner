@@ -3,7 +3,7 @@
  Name        : FileIndexer.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -158,8 +158,8 @@ FileIndexer::getFileType(const std::string & filePath) const
 
 	if (!m_settings.searchHiddenFiles)
 	{
-		const fs::path fp(filePath);
-		if (fp.filename().string().find(".") == 0) return FileType_t::kIgnored;
+		const std::string fileName = fs::path(filePath).filename().string();
+		if (!fileName.empty() && (fileName.front() == '.')) return FileType_t::kIgnored;
 	}
 
 	std::error_code errorCode;
@@ -193,21 +193,18 @@ FileIndexer::getFileType(const std::string & filePath) const
 			}
 		}
 
-		const unsigned long long fileSize = fs::file_size(filePath, errorCode);
-		if (errorCode) return FileType_t::kUnknown;
-		if ( m_settings.maxFileSize && (m_settings.maxFileSize.value() <= fileSize) ) return FileType_t::kIgnored;
-		if ( m_settings.minFileSize && (m_settings.minFileSize.value() >= fileSize) ) return FileType_t::kIgnored;
-
-		bool regexMatched = m_includedRegexps.empty();
-		for (auto && regex: m_includedRegexps)
+		if (m_settings.maxFileSize || m_settings.minFileSize)
 		{
-			if (std::regex_match(filePath, regex))
-			{
-				regexMatched = true;
-				break;
-			}
+			const unsigned long long fileSize = fs::file_size(filePath, errorCode);
+			if (errorCode) return FileType_t::kUnknown;
+			if ( m_settings.maxFileSize && (m_settings.maxFileSize.value() <= fileSize) ) return FileType_t::kIgnored;
+			if ( m_settings.minFileSize && (m_settings.minFileSize.value() >= fileSize) ) return FileType_t::kIgnored;
 		}
+
+		const bool regexMatched = m_includedRegexps.empty() || std::any_of(m_includedRegexps.begin(), m_includedRegexps.end(),
+				[&filePath](const auto & r) { return std::regex_match(filePath, r); });
 		if (!regexMatched) return FileType_t::kIgnored;
+
 		return FileType_t::kRegular;
 	}
 	return FileType_t::kUnknown;

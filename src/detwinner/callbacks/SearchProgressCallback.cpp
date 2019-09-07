@@ -3,7 +3,7 @@
  Name        : SearchProgressCallback.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ============================================================================
  */
@@ -14,6 +14,30 @@
 
 namespace detwinner {
 namespace callbacks {
+
+
+//------------------------------------------------------------------------------
+SearchProgressCallback::SearchProgressCallback() noexcept
+{
+	init();
+}
+
+
+//------------------------------------------------------------------------------
+void SearchProgressCallback::init() noexcept
+{
+	m_duplicateCount = 0;
+	m_groupCount = 0;
+	m_processedCount = 0;
+	m_processedSize = 0;
+	m_skippedCount = 0;
+	m_totalCount = 0;
+	m_duplicatesSize = 0;
+	m_wastedSize = 0;
+	m_stage = 0;
+	m_paused = false;
+	m_finished = false;
+}
 
 
 //------------------------------------------------------------------------------
@@ -34,7 +58,7 @@ SearchProgressCallback::getElapsedTime() const
 
 //------------------------------------------------------------------------------
 unsigned int
-SearchProgressCallback::getGroupCount() const
+SearchProgressCallback::getGroupCount() const noexcept
 {
 	return m_groupCount;
 }
@@ -42,7 +66,7 @@ SearchProgressCallback::getGroupCount() const
 
 //------------------------------------------------------------------------------
 unsigned int
-SearchProgressCallback::getDuplicateCount() const
+SearchProgressCallback::getDuplicateCount() const noexcept
 {
 	return m_duplicateCount;
 }
@@ -50,7 +74,7 @@ SearchProgressCallback::getDuplicateCount() const
 
 //------------------------------------------------------------------------------
 unsigned int
-SearchProgressCallback::getProcessedCount() const
+SearchProgressCallback::getProcessedCount() const noexcept
 {
 	return m_processedCount;
 }
@@ -58,7 +82,7 @@ SearchProgressCallback::getProcessedCount() const
 
 //------------------------------------------------------------------------------
 unsigned int
-SearchProgressCallback::getTotalCount() const
+SearchProgressCallback::getTotalCount() const noexcept
 {
 	return m_totalCount;
 }
@@ -66,7 +90,7 @@ SearchProgressCallback::getTotalCount() const
 
 //------------------------------------------------------------------------------
 unsigned int
-SearchProgressCallback::getSkippedCount() const
+SearchProgressCallback::getSkippedCount() const noexcept
 {
 	return m_skippedCount;
 }
@@ -74,7 +98,7 @@ SearchProgressCallback::getSkippedCount() const
 
 //------------------------------------------------------------------------------
 unsigned long long
-SearchProgressCallback::getProcessedSize() const
+SearchProgressCallback::getProcessedSize() const noexcept
 {
 	return m_processedSize;
 }
@@ -82,7 +106,7 @@ SearchProgressCallback::getProcessedSize() const
 
 //------------------------------------------------------------------------------
 unsigned long long
-SearchProgressCallback::getDuplicatesSize() const
+SearchProgressCallback::getDuplicatesSize() const noexcept
 {
 	return m_duplicatesSize;
 }
@@ -90,7 +114,7 @@ SearchProgressCallback::getDuplicatesSize() const
 
 //------------------------------------------------------------------------------
 unsigned long long
-SearchProgressCallback::getWastedSize() const
+SearchProgressCallback::getWastedSize() const noexcept
 {
 	return m_wastedSize;
 }
@@ -98,7 +122,7 @@ SearchProgressCallback::getWastedSize() const
 
 //------------------------------------------------------------------------------
 int
-SearchProgressCallback::getStage() const
+SearchProgressCallback::getStage() const noexcept
 {
 	return m_stage;
 }
@@ -106,7 +130,7 @@ SearchProgressCallback::getStage() const
 
 //------------------------------------------------------------------------------
 bool
-SearchProgressCallback::isPaused() const
+SearchProgressCallback::isPaused() const noexcept
 {
 	return m_paused;
 }
@@ -114,7 +138,7 @@ SearchProgressCallback::isPaused() const
 
 //------------------------------------------------------------------------------
 bool
-SearchProgressCallback::isFinished() const
+SearchProgressCallback::isFinished() const noexcept
 {
 	return m_finished;
 }
@@ -122,7 +146,7 @@ SearchProgressCallback::isFinished() const
 
 //------------------------------------------------------------------------------
 Glib::Dispatcher &
-SearchProgressCallback::accessDispatcher()
+SearchProgressCallback::accessDispatcher() noexcept
 {
 	return m_dispatcher;
 }
