@@ -185,9 +185,9 @@ DuplicatesTreeView::on_size_allocate(Gtk::Allocation & s)
 		const int width = s.get_width() - 2 * get_border_width() - get_column(1)->get_width();
 		if (width > 0)
 		{
-			get_column(0)->set_fixed_width(std::floor(0.35 * width));
-			get_column(2)->set_fixed_width(std::floor(0.35 * width));
-			get_column(3)->set_fixed_width(std::floor(0.1 * width));
+			get_column(0)->set_fixed_width(std::floor(0.35f * width));
+			get_column(2)->set_fixed_width(std::floor(0.35f * width));
+			get_column(3)->set_fixed_width(std::floor(0.1f * width));
 		}
 		m_adapted = true;
 	}
@@ -333,26 +333,24 @@ DuplicatesTreeView::on_render_filename(Gtk::CellRenderer * cellRenderer, const G
 	{
 		cellRenderer->set_property(kProperty_StrikeThrough, false);
 	}
-	if (iter->children() && !iter->children().empty())
+	const auto & kids = iter->children();
+	if (kids && !kids.empty())
 	{
-		unsigned long long maxSize = (*(iter->children().begin()))[m_columns.fileSize];
-		unsigned long long minSize = maxSize;
-
-		for (auto && kid: iter->children())
-		{
-			unsigned long long currentSize = (*kid)[m_columns.fileSize];
-			if (currentSize > maxSize) maxSize = currentSize;
-			if (currentSize < minSize) minSize = currentSize;
-		}
+		const auto mm = std::minmax_element(kids.begin(), kids.end(),
+			[this](const auto & v1, const auto & v2){
+				return v1[m_columns.fileSize] < v2[m_columns.fileSize];
+			});
+		const unsigned long long minSize = (*mm.first)[m_columns.fileSize];
+		const unsigned long long maxSize = (*mm.second)[m_columns.fileSize];
 
 		if (maxSize == minSize)
 		{
 			cellRenderer->set_property("text", Glib::ustring::compose(
-				_("%1 files, %2 each"), iter->children().size(), Glib::format_size(maxSize) ) );
+				_("%1 files, %2 each"), kids.size(), Glib::format_size(maxSize) ) );
 		} else
 		{
 			cellRenderer->set_property("text", Glib::ustring::compose(
-				_("%1 files, from %2 to %3"), iter->children().size(), Glib::format_size(minSize), Glib::format_size(maxSize)) );
+				_("%1 files, from %2 to %3"), kids.size(), Glib::format_size(minSize), Glib::format_size(maxSize)) );
 		}
 
 	} else
@@ -558,7 +556,7 @@ DuplicatesTreeView::on_cursor_changed()
 	auto iter = m_store->get_iter(path);
 	if (!iter) return;
 
-	Glib::ustring pathToEmit = getPreviewPath(iter);
+	const Glib::ustring pathToEmit = getPreviewPath(iter);
 
 	Glib::ustring pathToEmitLocked;
 	if (iter->parent() && (*iter->parent())[m_columns.locked])
@@ -776,8 +774,10 @@ DuplicatesTreeView::sort_func_total_size(const Gtk::TreeModel::iterator & l, con
 	if (!l) return -1;
 	if (!r) return 1;
 	if (l->parent() && (l->parent() == r->parent())) return 0;
-	if ((*l)[m_columns.fileSize] < (*r)[m_columns.fileSize]) return -1;
-	if ((*l)[m_columns.fileSize] > (*r)[m_columns.fileSize]) return 1;
+	const auto leftSize = (*l)[m_columns.fileSize];
+	const auto rightSize = (*r)[m_columns.fileSize];
+	if (leftSize < rightSize) return -1;
+	if (leftSize > rightSize) return 1;
 
 	return 0;
 }
@@ -791,8 +791,8 @@ DuplicatesTreeView::sort_func_single_file_size(const Gtk::TreeModel::iterator & 
 	if (!l) return -1;
 	if (!r) return 1;
 	if (l->parent() && (l->parent() == r->parent())) return 0;
-	unsigned long long leftSize = (l->children().empty()) ? 0 : (*l)[m_columns.fileSize] / l->children().size();
-	unsigned long long rightSize = (r->children().empty()) ? 0 : (*r)[m_columns.fileSize] / r->children().size();
+	const unsigned long long leftSize = (l->children().empty()) ? 0 : (*l)[m_columns.fileSize] / l->children().size();
+	const unsigned long long rightSize = (r->children().empty()) ? 0 : (*r)[m_columns.fileSize] / r->children().size();
 
 	if (leftSize < rightSize) return -1;
 	if (leftSize > rightSize) return 1;
