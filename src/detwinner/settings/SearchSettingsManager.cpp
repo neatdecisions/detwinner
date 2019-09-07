@@ -3,7 +3,7 @@
  Name        : SearchSettingsManager.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ==============================================================================
  */
@@ -20,22 +20,25 @@ namespace detwinner {
 namespace settings {
 
 
-const std::string SearchSettingsManager::kGroupName_Global = "Global";
-const std::string SearchSettingsManager::kGroupName_ExactDuplicates = "ExactDuplicates";
-const std::string SearchSettingsManager::kGroupName_SimilarImages = "SimilarImages";
-const std::string SearchSettingsManager::kFieldName_Sensitivity = "sensitivity";
-const std::string SearchSettingsManager::kFieldName_ProcessRotations = "processRotations";
-const std::string SearchSettingsManager::kFieldName_IncludedRegexps = "includedRegexps";
-const std::string SearchSettingsManager::kFieldName_MinFileSize_Enabled = "minFileSize.enabled";
-const std::string SearchSettingsManager::kFieldName_MinFileSize_Value = "minFileSize.value";
-const std::string SearchSettingsManager::kFieldName_MinFileSize_Unit = "minFileSize.unit";
-const std::string SearchSettingsManager::kFieldName_MaxFileSize_Enabled = "maxFileSize.enabled";
-const std::string SearchSettingsManager::kFieldName_MaxFileSize_Value = "maxFileSize.value";
-const std::string SearchSettingsManager::kFieldName_MaxFileSize_Unit = "maxFileSize.unit";
-const std::string SearchSettingsManager::kFieldName_AttributeReadOnly = "attributes.readOnly";
-const std::string SearchSettingsManager::kFieldName_AttributeHidden = "attributes.hidden";
-const std::string SearchSettingsManager::kFieldName_AttributeExecutable = "attributes.executable";
-const std::string SearchSettingsManager::kFieldName_DefaultSearchMode = "defaultSearchMode";
+namespace {
+	constexpr unsigned short kDefaultSensitivity = 85;
+	const std::string kGroupName_Global = "Global";
+	const std::string kGroupName_ExactDuplicates = "ExactDuplicates";
+	const std::string kGroupName_SimilarImages = "SimilarImages";
+	const std::string kFieldName_Sensitivity = "sensitivity";
+	const std::string kFieldName_ProcessRotations = "processRotations";
+	const std::string kFieldName_IncludedRegexps = "includedRegexps";
+	const std::string kFieldName_MinFileSize_Enabled = "minFileSize.enabled";
+	const std::string kFieldName_MinFileSize_Value = "minFileSize.value";
+	const std::string kFieldName_MinFileSize_Unit = "minFileSize.unit";
+	const std::string kFieldName_MaxFileSize_Enabled = "maxFileSize.enabled";
+	const std::string kFieldName_MaxFileSize_Value = "maxFileSize.value";
+	const std::string kFieldName_MaxFileSize_Unit = "maxFileSize.unit";
+	const std::string kFieldName_AttributeReadOnly = "attributes.readOnly";
+	const std::string kFieldName_AttributeHidden = "attributes.hidden";
+	const std::string kFieldName_AttributeExecutable = "attributes.executable";
+	const std::string kFieldName_DefaultSearchMode = "defaultSearchMode";
+}
 
 
 //------------------------------------------------------------------------------
@@ -186,7 +189,7 @@ void SearchSettingsManager::loadFileSizeSetting(
 				g_warning("Error when reading settings: %s", e.what().c_str());
 			}
 		}
-		if (settingsFile.has_key(groupName, fieldValue))
+		if (settingsFile.has_key(groupName, fieldUnit))
 		{
 			try
 			{
