@@ -56,7 +56,7 @@ SimilarImageFinder::updateNeighboursPartial(
 	std::set<std::size_t> outliers;
 	for (std::size_t i = startIndex; i < endIndex; ++i)
 	{
-		Cluster_t & cluster = clusters.at(i);
+		Cluster_t & cluster = clusters[i];
 		if (cluster.neighborDistance > maxDistance) continue;
 
 		if (cluster.id == mergedClusterId1) continue;
@@ -174,17 +174,9 @@ std::size_t
 SimilarImageFinder::findMinimalDistanceIndex(const std::vector<Cluster_t> & clusters) const
 {
 	assert(!clusters.empty());
-	Distance_t minDistance = clusters.front().neighborDistance;
-	std::size_t clusterPos1 = 0;
-	for (std::size_t i = 1; i < clusters.size(); ++i)
-	{
-		if (clusters[i].neighborDistance < minDistance)
-		{
-			minDistance = clusters[i].neighborDistance;
-			clusterPos1 = i;
-		}
-	}
-	return clusterPos1;
+	auto it = std::min_element(clusters.begin(), clusters.end(),
+		[](const Cluster_t & c1, const Cluster_t & c2) { return c1.neighborDistance < c2.neighborDistance; });
+	return std::distance(clusters.begin(), it);
 }
 
 
@@ -224,16 +216,9 @@ SimilarImageFinder::findIndexById(
 	const std::size_t id,
 	const std::size_t defaultValue) const
 {
-	std::size_t clusterPos = defaultValue;
-	for (std::size_t i = 0; i < clusters.size(); ++i)
-	{
-		if (clusters[i].id == id)
-		{
-			clusterPos = i;
-			break;
-		}
-	}
-	return clusterPos;
+	auto it = std::find_if(clusters.begin(), clusters.end(),
+			[&id](const Cluster_t & c) { return c.id == id; } );
+	return (it == clusters.end()) ? defaultValue : std::distance(clusters.begin(), it);
 }
 
 
@@ -277,7 +262,6 @@ SimilarImageFinder::clusterize(
 
 		if (!isOutlier)
 		{
-
 			Cluster_t cluster;
 			cluster.id = i;
 			cluster.items.insert(i);

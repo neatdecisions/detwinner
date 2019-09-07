@@ -44,9 +44,6 @@ struct ImageFeatures
 	float compare(const ImageFeatures & f, bool processRotations) const;
 
 private:
-	template <class Histogram_t>
-	float compareHistogram(const Histogram_t & h1, const Histogram_t & h2) const;
-
 	unsigned int id;
 	float aspect;
 };

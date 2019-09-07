@@ -97,7 +97,7 @@ ImageFeaturesBuilder::executeInternal(const std::size_t startIndex, const std::s
 	{
 		try
 		{
-			img.read(kResizeGeometry, m_fileNames.at(i));
+			img.read(kResizeGeometry, m_fileNames[i]);
 			imageFeatures.push_back(ImageFeaturesBridge::GetImageFeatures(img, i));
 		} catch (const Magick::Exception&)
 		{

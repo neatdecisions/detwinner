@@ -10,12 +10,11 @@
 
 #include <logic/images/ImageFeatures.hpp>
 
-#include <assert.h>
+#include <algorithm>
 #include <cmath>
 #include <limits>
-#include <vector>
 #include <numeric>
-
+#include <vector>
 
 namespace detwinner {
 namespace logic {
@@ -26,15 +25,6 @@ namespace images {
 ImageFeatures::ImageFeatures(const unsigned int id, const float aspect) :
 	id(id), aspect(aspect)
 {}
-
-
-//------------------------------------------------------------------------------
-template <class Histogram_t>
-float
-ImageFeatures::compareHistogram(const Histogram_t & h1, const Histogram_t & h2) const
-{
-	return h1.compare(h2);
-}
 
 
 //------------------------------------------------------------------------------
@@ -59,10 +49,10 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 		for (auto sectionIndex = 0; sectionIndex < kSectionCount; ++sectionIndex)
 		{
 			const std::size_t sectionIndex2 = (i + sectionIndex) % kSectionCount;
-			values[0] += compareHistogram(histY[sectionIndex], f.histY[sectionIndex2]);
-			values[1] += compareHistogram(histU[sectionIndex], f.histU[sectionIndex2]);
-			values[2] += compareHistogram(histV[sectionIndex], f.histV[sectionIndex2]);
-			values[3] += compareHistogram(histI[sectionIndex], f.histI[sectionIndex2]);
+			values[0] += histY[sectionIndex].compare(f.histY[sectionIndex2]);
+			values[1] += histU[sectionIndex].compare(f.histU[sectionIndex2]);
+			values[2] += histV[sectionIndex].compare(f.histV[sectionIndex2]);
+			values[3] += histI[sectionIndex].compare(f.histI[sectionIndex2]);
 		}
 
 		std::transform(values.begin(), values.end(), values.begin(), [](float v) { return v / 4.0f; } );
