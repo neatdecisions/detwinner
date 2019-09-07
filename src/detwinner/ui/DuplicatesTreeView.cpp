@@ -1512,10 +1512,10 @@ DuplicatesTreeView::TreeDeleteAction::updateResultStatus(Result_t stepStatus)
 				m_resultStatus = stepStatus;
 				break;
 			case Result_t::Failure:
-				if (m_resultStatus == Result_t::Success) m_resultStatus = Result_t::Mixed;
+				if (stepStatus == Result_t::Success) m_resultStatus = Result_t::Mixed;
 				break;
 			case Result_t::Success:
-				if (m_resultStatus == Result_t::Failure) m_resultStatus = Result_t::Mixed;
+				if (stepStatus == Result_t::Failure) m_resultStatus = Result_t::Mixed;
 				break;
 			case Result_t::Mixed:
 				break;
