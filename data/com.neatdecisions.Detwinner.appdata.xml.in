@@ -6,6 +6,7 @@
   <project_license>GPL-3.0+</project_license>
   <name>Detwinner</name>
   <summary>Find and remove duplicate files and similar images</summary>
+  <developer_name>Neat Decisions</developer_name>
   <description>
     <p>Detwinner is a tool to search and remove exact file duplicates and similar images.</p>
     <p>You can search for either exact duplicates (100% byte-to-byte match is ensured by the special hash function) or similar images (Detwinner generates groups of images that look alike using similarity level specified by you). You can also narrow your search by specifying file size, attributes and regular expressions.</p>
@@ -26,12 +27,23 @@
   </screenshots>
   <url type="homepage">https://neatdecisions.com/products/detwinner-linux/</url>
   <url type="bugtracker">https://github.com/neatdecisions/detwinner/issues</url>
+  <url type="donation">https://neatdecisions.com/products/detwinner-linux/donate.php</url>
   <update_contact>opensource@neatdecisions.com</update_contact>
   ​<translation type="gettext">com.neatdecisions.Detwinner</translation>
   <provides>
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.2.2" date="2019-09-08">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Ignore symlinks when comparing files</li>
+          <li>Properly resolve file deletion status</li>
+          <li>Overall performance improvements</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.1" date="2019-09-03">
       <description>
         <p>Minor release which only includes changes in the AppStream metadata.</p>

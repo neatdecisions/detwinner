@@ -1,6 +1,6 @@
 # Detwinner
 
-Detwinner is a tool for GNOME environment which allows searching and removing duplicate files and similar images.
+Detwinner is a tool for the Linux desktop which allows searching and removing duplicate files and similar images.
 
 ## Main functionalities
 
