@@ -20,9 +20,7 @@ namespace ui {
 
 
 //------------------------------------------------------------------------------
-FileTreeView::FileTreeView() :
-	m_store(Gtk::TreeStore::create(m_columns)),
-	m_showHiddenFiles(false)
+FileTreeView::FileTreeView() : m_store(Gtk::TreeStore::create(m_columns))
 {
 	set_model(m_store);
 

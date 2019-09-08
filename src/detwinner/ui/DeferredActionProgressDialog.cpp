@@ -19,7 +19,7 @@ namespace ui {
 DeferredActionProgressDialog::DeferredActionProgressDialog(
 	const Glib::ustring & title,
 	const callbacks::IDeferredAction::Ptr_t & action) :
-		m_action(action), m_cancelled(false)
+		m_action(action)
 {
 	init(title);
 }
@@ -31,8 +31,7 @@ DeferredActionProgressDialog::DeferredActionProgressDialog(
 	const callbacks::IDeferredAction::Ptr_t & action,
 	Gtk::Window & parent) :
 		Gtk::Dialog("", parent, true),
-		m_action(action),
-		m_cancelled(false)
+		m_action(action)
 {
 	init(title);
 }

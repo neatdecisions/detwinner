@@ -37,7 +37,7 @@ private:
 	void on_cancel_clicked();
 	callbacks::IDeferredAction::Ptr_t m_action;
 	Gtk::ProgressBar m_progressBar;
-	bool m_cancelled;
+	bool m_cancelled = false;
 };
 
 

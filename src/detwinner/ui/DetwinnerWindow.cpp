@@ -24,10 +24,7 @@ const Glib::ustring DetwinnerWindow::kName_SearchResults = "searchResults";
 
 //------------------------------------------------------------------------------
 DetwinnerWindow::DetwinnerWindow() :
-	m_refBuilder(Gtk::Builder::create()),
-	m_pHeaderBarOptions(nullptr),
-	m_pHeaderBarResults(nullptr),
-	m_pLabelSearchMode(nullptr)
+	m_refBuilder(Gtk::Builder::create())
 {
 	m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/toolbarResultsPane.glade");
 	m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/toolbarSearchPane.glade");

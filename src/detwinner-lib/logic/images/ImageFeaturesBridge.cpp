@@ -23,7 +23,7 @@ template <std::size_t BinCount>
 void
 ImageFeaturesBridge::NormalizeHistogramFromArrayT(
 	const std::array<std::size_t, BinCount> & realHist,
-	HistogramT<BinCount> & hist)
+	HistogramT<BinCount> & hist) noexcept
 {
 	for (std::size_t i = 0; i < BinCount; ++i)
 	{
@@ -48,7 +48,7 @@ ImageFeaturesBridge::GetIntensityHistogram(
 	}
 
 	constexpr int kBinNumber = HistogramI::kBinCount;
-	constexpr float kBinSize = 255.0 / kBinNumber;
+	constexpr float kBinSize = 255.0f / kBinNumber;
 
 	std::array<std::size_t, kBinNumber> realHistI{};
 
@@ -107,7 +107,7 @@ ImageFeaturesBridge::GetYUVHistograms(
 		for (unsigned int y = roi.yOff(); y < height; ++y)
 		{
 			const Magick::ColorYUV & color = image.pixelColor(x, y);
-			const double yyy = ( color.alpha() > 0.8 ) ? 1.0 : color.y();
+			const float yyy = ( color.alpha() > 0.8 ) ? 1.0 : color.y();
 			int n = static_cast<int>(floor(( yyy - yMin ) / yBinSize));
 			if (n >= kBinNumber) n = kBinNumber - 1;
 			if (n < 0) n = 0;
@@ -146,16 +146,18 @@ ImageFeaturesBridge::GetImageFeatures(Magick::Image & image, unsigned int id)
 	constexpr unsigned int kImageDimension = 128;
 	static const Magick::Geometry kResizeGeometry(kImageDimension, kImageDimension);
 
-	ImageFeatures feats(id, static_cast<float>(image.size().height()) / static_cast<float>(image.size().width()));
+	Magick::Geometry imageSize = image.size();
+	ImageFeatures feats(id, static_cast<float>(imageSize.height()) / static_cast<float>(imageSize.width()));
 
-	if (image.size().height() > kImageDimension || image.size().width() > kImageDimension)
+	if (imageSize.height() > kImageDimension || imageSize.width() > kImageDimension)
 	{
 		image.thumbnail(kResizeGeometry);
+		imageSize = image.size();
 	}
 
-	const unsigned int dw = image.size().width() / 2;
+	const unsigned int dw = imageSize.width() / 2;
 	const unsigned int dw1 = dw + 2 * dw % 2;
-	const unsigned int dh = image.size().height() / 2;
+	const unsigned int dh = imageSize.height() / 2;
 	const unsigned int dh1 = dh + 2 * dh % 2;
 
 	GetYUVHistograms(image, Magick::Geometry(dw, dh, 0, 0), feats.histY[0], feats.histU[0], feats.histV[0]);

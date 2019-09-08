@@ -13,7 +13,7 @@
 
 
 #include <array>
-#include <algorithm>
+#include <numeric>
 
 
 namespace detwinner {
@@ -32,24 +32,25 @@ public:
 	using BinValue_t = uint_least16_t;
 	static constexpr std::size_t kBinCount = BinNumber;
 
-	float compare(const HistogramT & hist) const
+	float compare(const HistogramT & hist) const noexcept
 	{
 		// Hassanat distance
-		float num = 0.0f;
-		for (size_t i = 0; i < BinNumber; ++i)
-		{
-			const auto & mm = std::minmax(bins[i], hist.bins[i]);
-			num += ( 1.0f - (1.0f + mm.first) / (1.0f + mm.second) );
-		}
-		return num / (BinNumber - 1);
+		constexpr auto aLbmAccumulator = [](float a, float b) { return a + b; };
+		constexpr auto aLbmTransformer = [](BinValue_t a, BinValue_t b) {
+			return ( a < b ? (1.0f + a) / (1.0f + b) :
+			                 (1.0f + b) / (1.0f + a) );
+		};
+
+		return (BinNumber - std::inner_product(bins.begin(), bins.end(), hist.bins.begin(), 0.0f,
+				aLbmAccumulator, aLbmTransformer)) / (BinNumber - 1);
 	}
 
-	BinValue_t getBinValue(const std::size_t binNumber) const
+	BinValue_t getBinValue(const std::size_t binNumber) const noexcept
 	{
 		return (binNumber < BinNumber) ? bins[binNumber] : 0;
 	}
 
-	void setBinValue(const std::size_t binNumber, const BinValue_t value)
+	void setBinValue(const std::size_t binNumber, const BinValue_t value) noexcept
 	{
 		if (binNumber < BinNumber) bins[binNumber] = value;
 	}

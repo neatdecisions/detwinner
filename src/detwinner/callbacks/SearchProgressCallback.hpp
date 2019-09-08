@@ -29,39 +29,25 @@ public:
 	using Ptr_t = std::shared_ptr<SearchProgressCallback>;
 	static Ptr_t Create();
 
-	unsigned int getGroupCount() const;
-	unsigned int getDuplicateCount() const;
-	unsigned int getProcessedCount() const;
-	unsigned int getTotalCount() const;
-	unsigned int getSkippedCount() const;
-	unsigned long long getProcessedSize() const;
-	unsigned long long getDuplicatesSize() const;
-	unsigned long long getWastedSize() const;
-	int getStage() const;
-	bool isPaused() const;
-	bool isFinished() const;
-	Glib::Dispatcher & accessDispatcher();
+	void init() noexcept;
+	SearchProgressCallback() noexcept;
+	SearchProgressCallback(const SearchProgressCallback&) = delete;
+	SearchProgressCallback& operator=(const SearchProgressCallback&) = delete;
+
+	unsigned int getGroupCount() const noexcept;
+	unsigned int getDuplicateCount() const noexcept;
+	unsigned int getProcessedCount() const noexcept;
+	unsigned int getTotalCount() const noexcept;
+	unsigned int getSkippedCount() const noexcept;
+	unsigned long long getProcessedSize() const noexcept;
+	unsigned long long getDuplicatesSize() const noexcept;
+	unsigned long long getWastedSize() const noexcept;
+	int getStage() const noexcept;
+	bool isPaused() const noexcept;
+	bool isFinished() const noexcept;
+	Glib::Dispatcher & accessDispatcher() noexcept;
 	long long getElapsedTime() const;
 
-	SearchProgressCallback() : m_groupCount(0), m_duplicateCount(0), m_processedCount(0),
-			m_totalCount(0), m_skippedCount(0), m_processedSize(0), m_duplicatesSize(0),
-			m_wastedSize(0), m_stage(0), m_paused(false), m_finished(false)
-	{}
-
-	void init()
-	{
-		m_duplicateCount = 0;
-		m_groupCount = 0;
-		m_processedCount = 0;
-		m_processedSize = 0;
-		m_skippedCount = 0;
-		m_totalCount = 0;
-		m_duplicatesSize = 0;
-		m_wastedSize = 0;
-		m_stage = 0;
-		m_paused = false;
-		m_finished = false;
-	}
 
 	virtual void onFileProcessed(const unsigned long long size) override;
 	virtual void updateProgress(unsigned int progress, unsigned int total) override;

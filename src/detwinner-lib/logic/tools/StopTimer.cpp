@@ -19,9 +19,7 @@ namespace tools {
 
 //------------------------------------------------------------------------------
 StopTimer::StopTimer() :
-	m_elapsed(0ULL),
-	m_startTime(std::chrono::steady_clock::now()),
-	m_stopped(false)
+	m_startTime(std::chrono::steady_clock::now())
 {}
 
 

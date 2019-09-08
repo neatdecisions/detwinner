@@ -3,7 +3,7 @@
  Name        : SearchSettingsManager.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -79,25 +79,6 @@ private:
 	SearchSettings m_similarImagesSettings;
 	const std::string m_settingsFilePath;
 	SearchSettings::SearchMode_t m_defaultMode;
-
-
-	static const std::string kGroupName_Global;
-	static const std::string kGroupName_ExactDuplicates;
-	static const std::string kGroupName_SimilarImages;
-	static const std::string kFieldName_Sensitivity;
-	static const std::string kFieldName_ProcessRotations;
-	static const std::string kFieldName_IncludedRegexps;
-	static const std::string kFieldName_MinFileSize_Enabled;
-	static const std::string kFieldName_MinFileSize_Value;
-	static const std::string kFieldName_MinFileSize_Unit;
-	static const std::string kFieldName_MaxFileSize_Value;
-	static const std::string kFieldName_MaxFileSize_Unit;
-	static const std::string kFieldName_MaxFileSize_Enabled;
-	static const std::string kFieldName_AttributeReadOnly;
-	static const std::string kFieldName_AttributeHidden;
-	static const std::string kFieldName_AttributeExecutable;
-	static const std::string kFieldName_DefaultSearchMode;
-	static constexpr unsigned short kDefaultSensitivity = 85;
 };
 
 

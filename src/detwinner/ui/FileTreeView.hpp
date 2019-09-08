@@ -83,7 +83,7 @@ private:
 	Glib::RefPtr<Gtk::TreeStore> m_store;
 
 	std::string m_basePath;
-	bool m_showHiddenFiles;
+	bool m_showHiddenFiles = false;
 };
 
 

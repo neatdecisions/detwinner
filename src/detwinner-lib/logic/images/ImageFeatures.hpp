@@ -33,7 +33,7 @@ struct ImageFeatures
 {
 	ImageFeatures(const unsigned int id, const float aspect);
 
-	unsigned int getId() const { return id; }
+	unsigned int getId() const noexcept { return id; }
 
 	static constexpr uint8_t kSectionCount = 4;
 	Histogram histY[kSectionCount];
@@ -44,9 +44,6 @@ struct ImageFeatures
 	float compare(const ImageFeatures & f, bool processRotations) const;
 
 private:
-	template <class Histogram_t>
-	float compareHistogram(const Histogram_t & h1, const Histogram_t & h2) const;
-
 	unsigned int id;
 	float aspect;
 };

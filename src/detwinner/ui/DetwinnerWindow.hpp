@@ -38,9 +38,9 @@ protected:
 	SearchOptionsPane m_SearchOptionsBox;
 	SearchResultsPane m_SearchResultsBox;
 	Glib::RefPtr<Gtk::Builder> m_refBuilder;
-	Gtk::HeaderBar * m_pHeaderBarOptions;
-	Gtk::HeaderBar * m_pHeaderBarResults;
-	Gtk::Label * m_pLabelSearchMode;
+	Gtk::HeaderBar * m_pHeaderBarOptions = nullptr;
+	Gtk::HeaderBar * m_pHeaderBarResults = nullptr;
+	Gtk::Label * m_pLabelSearchMode = nullptr;
 
 	static const Glib::ustring kName_SearchOptions;
 	static const Glib::ustring kName_SearchResults;
