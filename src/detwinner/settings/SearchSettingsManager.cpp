@@ -43,6 +43,8 @@ namespace {
 
 //------------------------------------------------------------------------------
 SearchSettingsManager::SearchSettingsManager(const std::string & settingsFilePath) :
+	m_exactDuplicatesSettings(createDefaultExactDuplicatesSettings()),
+	m_similarImagesSettings(createDefaultSimilarImagesSettings()),
 	m_settingsFilePath(settingsFilePath),
 	m_defaultMode(SearchSettings::SearchMode_t::kExactDuplicates)
 {}

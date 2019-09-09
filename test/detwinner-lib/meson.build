@@ -17,8 +17,9 @@ testsrc = [
 gmock_dep = dependency('gmock')
 gtest_dep = dependency('gtest')
 
-testexe = executable(
-    'testexe',
+
+test_detwinner_lib = executable(
+    'test_detwinner_lib',
     testsrc,
     include_directories : incdir,
     dependencies: [gtest_dep, gmock_dep, libLogic_dep],
@@ -26,5 +27,5 @@ testexe = executable(
     link_with : libLogic)
 
 # test execution
-test('Image search test', testexe,
+test('Detwinner - main logic unit tests', test_detwinner_lib,
     workdir: meson.current_source_dir())
