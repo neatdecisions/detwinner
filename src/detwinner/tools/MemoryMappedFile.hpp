@@ -3,7 +3,7 @@
  Name        : MemoryMappedFile.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -24,9 +24,9 @@ class MemoryMappedFile
 public:
 	explicit MemoryMappedFile(const std::string & filePath);
 	~MemoryMappedFile() noexcept;
-	bool valid() const;
-	unsigned long size() const;
-	const char * buffer() const;
+	bool valid() const noexcept;
+	unsigned long size() const noexcept;
+	const char * buffer() const noexcept;
 
 private:
 	class Impl;

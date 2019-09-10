@@ -8,7 +8,7 @@ namespace settings {
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManager, default_exact_duplicates)
+TEST(SearchSettingsManagerTest, default_exact_duplicates)
 {
 	SearchSettingsManager settingsManager("data/settings/settings.ini");
 	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kExactDuplicates);
@@ -25,7 +25,7 @@ TEST(SearchSettingsManager, default_exact_duplicates)
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManager, default_similar_images)
+TEST(SearchSettingsManagerTest, default_similar_images)
 {
 	SearchSettingsManager settingsManager("data/settings/settings.ini");
 	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kSimilarImages);
@@ -53,7 +53,7 @@ TEST(SearchSettingsManager, default_similar_images)
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManager, settings_ini_similar)
+TEST(SearchSettingsManagerTest, settings_ini_similar)
 {
 	SearchSettingsManager settingsManager("data/settings/settings.ini");
 	settingsManager.loadSettings();
@@ -79,7 +79,7 @@ TEST(SearchSettingsManager, settings_ini_similar)
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManager, settings_ini_exact)
+TEST(SearchSettingsManagerTest, settings_ini_exact)
 {
 	SearchSettingsManager settingsManager("data/settings/settings.ini");
 	settingsManager.loadSettings();
@@ -104,7 +104,7 @@ TEST(SearchSettingsManager, settings_ini_exact)
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManager, corrupted_ini_similar)
+TEST(SearchSettingsManagerTest, corrupted_ini_similar)
 {
 	SearchSettingsManager settingsManager("data/settings/corrupted.ini");
 	settingsManager.loadSettings();
@@ -130,7 +130,7 @@ TEST(SearchSettingsManager, corrupted_ini_similar)
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManager, corrupted_ini_exact)
+TEST(SearchSettingsManagerTest, corrupted_ini_exact)
 {
 	SearchSettingsManager settingsManager("data/settings/corrupted.ini");
 	settingsManager.loadSettings();

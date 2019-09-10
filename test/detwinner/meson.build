@@ -1,13 +1,17 @@
 testsrc = [
     'test.cpp',
-    'settings/SearchSettingsManagerTest.cpp'
+    'settings/SearchSettingsManagerTest.cpp',
+    'tools/MemoryMappedFileTest.cpp'
 ]
 
 gmock_dep = dependency('gmock')
 gtest_dep = dependency('gtest')
 
 # extract object files from the executable
-ssm_cpp = exe.extract_objects('settings/SearchSettingsManager.cpp')
+objects = [
+    exe.extract_objects('settings/SearchSettingsManager.cpp'),
+    exe.extract_objects('tools/MemoryMappedFile.cpp')
+]
 
 test_detwinner_exe = executable(
     'test_detwinner_exe',
@@ -16,7 +20,7 @@ test_detwinner_exe = executable(
     dependencies: [gtkmm_dep, gtest_dep, gmock_dep, libLogic_dep],
     cpp_args: ['-Wno-ignored-attributes','-std=c++17'],
     link_with : libLogic,
-    objects: ssm_cpp)
+    objects: objects)
 
 # test execution
 test('Detwinner - presentation layer unit tests', test_detwinner_exe,
