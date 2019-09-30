@@ -80,7 +80,7 @@ FilePreview::FilePreview() :
 
 //------------------------------------------------------------------------------
 void
-FilePreview::setFile(const std::string & filePath)
+FilePreview::setFileName(const std::string & filePath)
 {
 	if (!filePath.empty())
 	{

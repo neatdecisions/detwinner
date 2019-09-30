@@ -28,7 +28,15 @@ AutosizedImage::clear()
 void
 AutosizedImage::set(const std::string & filename)
 {
-	m_basePixBuf = Gdk::Pixbuf::create_from_file(filename);
+	auto pAnimation = Gdk::PixbufAnimation::create_from_file(filename);
+	if (pAnimation && pAnimation->is_static_image())
+	{
+		m_basePixBuf = pAnimation->get_static_image();
+	} else
+	{
+		m_basePixBuf.clear();
+		Gtk::Image::set(pAnimation);
+	}
 }
 
 
@@ -67,7 +75,7 @@ AutosizedImage::on_size_allocate(Gtk::Allocation& allocation)
 	if (m_basePixBuf)
 	{
 		if ( (m_basePixBuf->get_height() <= allocation.get_height()) &&
-				 (m_basePixBuf->get_width() <= allocation.get_width()) )
+		     (m_basePixBuf->get_width() <= allocation.get_width()) )
 		{
 			if (m_basePixBuf != get_pixbuf())
 			{
@@ -88,8 +96,8 @@ AutosizedImage::on_size_allocate(Gtk::Allocation& allocation)
 				height = allocation.get_height();
 				width = height / kImageAspectRatio;
 			}
-			const Glib::RefPtr<const Gdk::Pixbuf> pPixBuf = get_pixbuf();
-			if (!pPixBuf || (pPixBuf->get_width() != width) || (pPixBuf->get_height() != height))
+			const Glib::RefPtr<const Gdk::Pixbuf> pExistingPixBuf = get_pixbuf();
+			if (!pExistingPixBuf || (pExistingPixBuf->get_width() != width) || (pExistingPixBuf->get_height() != height))
 			{
 				Gtk::Image::set(m_basePixBuf->scale_simple(width, height, Gdk::INTERP_BILINEAR));
 			}

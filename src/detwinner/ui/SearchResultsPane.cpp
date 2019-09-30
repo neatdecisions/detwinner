@@ -276,8 +276,8 @@ SearchResultsPane::init()
 	m_treeView.clear();
 	if (m_refActionSortBy) m_refActionSortBy->change_state(0);
 	if (m_refActionSortAscending) m_refActionSortAscending->change_state(false);
-	m_filePreviewLeft.setFile("");
-	m_filePreviewRight.setFile("");
+	m_filePreviewLeft.setFileName("");
+	m_filePreviewRight.setFileName("");
 	m_previewPanel.remove(m_filePreviewRight);
 }
 
@@ -323,11 +323,11 @@ SearchResultsPane::on_duplicate_selected(const Glib::ustring & filePath, const G
 	if (filePath == filePathLocked)
 	{
 		m_previewPanel.remove(m_filePreviewRight);
-		m_filePreviewLeft.setFile(filePath);
+		m_filePreviewLeft.setFileName(filePath);
 	} else
 	{
-		m_filePreviewLeft.setFile(filePathLocked);
-		m_filePreviewRight.setFile(filePath);
+		m_filePreviewRight.setFileName(filePath);
+		m_filePreviewLeft.setFileName(filePathLocked);
 		m_previewPanel.pack2(m_filePreviewRight, true, true);
 		int handleWidth = 0;
 		m_previewPanel.get_style_property("handle-size", handleWidth);
