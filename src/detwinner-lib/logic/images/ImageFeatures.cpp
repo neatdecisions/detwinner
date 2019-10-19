@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <numeric>
 #include <vector>
 
@@ -31,8 +30,11 @@ ImageFeatures::ImageFeatures(const unsigned int id, const float aspect) :
 float
 ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 {
+	// no need to use numeric_limits here, we only need a rough estimation
+	constexpr float kAspectPrecision = 0.01f;
 	const bool isOrientationSame = ( (aspect > 1.0f) && (f.aspect > 1.0f) ) ||
-	                               ( (aspect < 1.0f) && (f.aspect < 1.0f) );
+	                               ( (aspect < 1.0f) && (f.aspect < 1.0f) ) ||
+	                               (std::fabs(aspect - f.aspect) < kAspectPrecision);
 
 	constexpr auto lambdaAvgCorrelation = [](const std::array<float, 4> & values) {
 		constexpr std::array<float, 4> kFactors = { 1.0f, 1.0f, 1.0f, 1.0f };
