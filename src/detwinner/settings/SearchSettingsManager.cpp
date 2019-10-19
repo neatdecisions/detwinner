@@ -21,7 +21,6 @@ namespace settings {
 
 
 namespace {
-	constexpr unsigned short kDefaultSensitivity = 85;
 	const std::string kGroupName_Global = "Global";
 	const std::string kGroupName_ExactDuplicates = "ExactDuplicates";
 	const std::string kGroupName_SimilarImages = "SimilarImages";
