@@ -19,8 +19,9 @@ namespace images {
 //==============================================================================
 struct ImageFeaturesBuilderTest : public ::testing::Test
 {
-	ImageFeaturesBuilderTest()	: m_feat1(ImageFeaturesTestFactory::CreateFeatures_1()),
-	                      m_feat2(ImageFeaturesTestFactory::CreateFeatures_2())
+	ImageFeaturesBuilderTest() :
+		m_feat1(ImageFeaturesTestFactory::CreateFeatures_1()),
+		m_feat2(ImageFeaturesTestFactory::CreateFeatures_2())
 	{}
 
 	ImageFeatures m_feat1;
