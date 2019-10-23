@@ -58,9 +58,7 @@ ImageFeaturesBridge::GetIntensityHistogram(
 		for (unsigned int y = roi.yOff(); y < height; ++y)
 		{
 			const Magick::Color & color = image.pixelColor(x, y);
-			int n = static_cast<int>(std::floor(( color.intensity() ) / kBinSize));
-			if (n >= kBinNumber) n = kBinNumber - 1;
-			if (n < 0) n = 0;
+			const int n = std::clamp(static_cast<int>(std::floor(( color.intensity() ) / kBinSize)), 0, kBinNumber - 1);
 			++realHistI[n];
 		}
 	}
