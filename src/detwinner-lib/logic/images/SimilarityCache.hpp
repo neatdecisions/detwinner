@@ -3,7 +3,7 @@
  Name        : SimilarityCache.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ============================================================================
  */
@@ -36,7 +36,7 @@ public:
 	void set(std::size_t i1, std::size_t i2, Distance_t val) noexcept;
 	Distance_t get(std::size_t i1, std::size_t i2) const noexcept;
 protected:
-	const std::size_t m_size;
+	std::size_t m_size;
 	std::vector<Distance_t> m_matrix;
 };
 

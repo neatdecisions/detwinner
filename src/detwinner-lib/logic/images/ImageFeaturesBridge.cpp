@@ -11,6 +11,7 @@
 #include <logic/images/ImageFeaturesBridge.hpp>
 
 #include <cmath>
+#include <algorithm>
 
 
 namespace detwinner {
@@ -44,11 +45,11 @@ ImageFeaturesBridge::GetIntensityHistogram(
 
 	if (width > image.size().width() || height > image.size().height())
 	{
-		throw "Logic exception";
+		throw std::logic_error("Logic exception");
 	}
 
 	constexpr int kBinNumber = HistogramI::kBinCount;
-	constexpr float kBinSize = 255.0f / kBinNumber;
+	constexpr float kBinSize = MaxRGBFloat / kBinNumber;
 
 	std::array<std::size_t, kBinNumber> realHistI{};
 
@@ -57,9 +58,7 @@ ImageFeaturesBridge::GetIntensityHistogram(
 		for (unsigned int y = roi.yOff(); y < height; ++y)
 		{
 			const Magick::Color & color = image.pixelColor(x, y);
-			int n = static_cast<int>(std::floor(( color.intensity() ) / kBinSize));
-			if (n >= kBinNumber) n = kBinNumber - 1;
-			if (n < 0) n = 0;
+			const int n = std::clamp(static_cast<int>(std::floor(( color.intensity() ) / kBinSize)), 0, kBinNumber - 1);
 			++realHistI[n];
 		}
 	}
@@ -76,26 +75,25 @@ ImageFeaturesBridge::GetYUVHistograms(
 	Histogram & histU,
 	Histogram & histV)
 {
-	constexpr float yMax = 1.0f;
-	constexpr float uMax = 0.436f;
-	constexpr float vMax = 0.615f;
-	constexpr float yMin = 0.0f;
-	constexpr float uMin = -uMax;
-	constexpr float vMin = -vMax;
+	constexpr float kMaxY = 1.0f;
+	constexpr float kMaxU = 0.436f;
+	constexpr float kMaxV = 0.615f;
+	constexpr float kMinY = 0.0f;
+	constexpr float kMinU = -kMaxU;
+	constexpr float kMinV = -kMaxV;
 
 	constexpr int kBinNumber = Histogram::kBinCount;
 
-	constexpr float yBinSize = (yMax - yMin) / kBinNumber;
-	constexpr float uBinSize = (uMax - uMin) / kBinNumber;
-	constexpr float vBinSize = (vMax - vMin) / kBinNumber;
+	constexpr float kBinSizeY = (kMaxY - kMinY) / kBinNumber;
+	constexpr float kBinSizeU = (kMaxU - kMinU) / kBinNumber;
+	constexpr float kBinSizeV = (kMaxV - kMinV) / kBinNumber;
 
 	const unsigned int width = roi.xOff() + roi.width();
 	const unsigned int height = roi.yOff() + roi.height();
 
-
 	if (width > image.size().width() || height > image.size().height())
 	{
-		throw "Unknown error";
+		throw std::logic_error("Unknown error");
 	}
 
 	std::array<std::size_t, kBinNumber> realHistY {};
@@ -106,29 +104,19 @@ ImageFeaturesBridge::GetYUVHistograms(
 	{
 		for (unsigned int y = roi.yOff(); y < height; ++y)
 		{
-			const Magick::ColorYUV & color = image.pixelColor(x, y);
-			const float yyy = ( color.alpha() > 0.8 ) ? 1.0 : color.y();
-			int n = static_cast<int>(floor(( yyy - yMin ) / yBinSize));
-			if (n >= kBinNumber) n = kBinNumber - 1;
-			if (n < 0) n = 0;
+			const Magick::ColorYUV color = image.pixelColor(x, y);
+			if (color.alpha() > 0.8) continue;
+
+			const float valY = std::clamp(static_cast<float>(color.y()), kMinY, kMaxY);
+			int n = std::clamp(static_cast<int>(std::floor((valY - kMinY) / kBinSizeY)), 0, kBinNumber - 1);
 			++realHistY[n];
 
-			float t = static_cast<float>(color.u());
-			if (t < uMin) t = uMin;
-			if (t > uMax) t = uMax;
-
-			n = static_cast<int>(std::floor(( t - uMin ) / uBinSize));
-			if (n >= kBinNumber) n = kBinNumber - 1;
-			if (n < 0) n = 0;
+			const float valU = std::clamp(static_cast<float>(color.u()), kMinU, kMaxU);
+			n = std::clamp(static_cast<int>(std::floor((valU - kMinU) / kBinSizeU)), 0, kBinNumber - 1);
 			++realHistU[n];
 
-			t = static_cast<float>(color.v());
-			if (t < vMin) t = vMin;
-			if (t > vMax) t = vMax;
-
-			n = static_cast<int>(floor(( t - vMin ) / vBinSize));
-			if (n >= kBinNumber) n = kBinNumber - 1;
-			if (n < 0) n = 0;
+			const float valV = std::clamp(static_cast<float>(color.v()), kMinV, kMaxV);
+			n = std::clamp(static_cast<int>(std::floor(( valV - kMinV ) / kBinSizeV)), 0, kBinNumber - 1);
 			++realHistV[n];
 		}
 	}
@@ -160,17 +148,25 @@ ImageFeaturesBridge::GetImageFeatures(Magick::Image & image, unsigned int id)
 	const unsigned int dh = imageSize.height() / 2;
 	const unsigned int dh1 = dh + 2 * dh % 2;
 
-	GetYUVHistograms(image, Magick::Geometry(dw, dh, 0, 0), feats.histY[0], feats.histU[0], feats.histV[0]);
-	GetYUVHistograms(image, Magick::Geometry(dw, dh, dw1, 0), feats.histY[1], feats.histU[1], feats.histV[1]);
-	GetYUVHistograms(image, Magick::Geometry(dw, dh, dw1, dh1), feats.histY[2], feats.histU[2], feats.histV[2]);
-	GetYUVHistograms(image, Magick::Geometry(dw, dh, 0, dh1), feats.histY[3], feats.histU[3], feats.histV[3]);
+	const Magick::Geometry section1(dw, dh, 0, 0);
+	const Magick::Geometry section2(dw, dh, dw1, 0);
+	const Magick::Geometry section3(dw, dh, dw1, dh1);
+	const Magick::Geometry section4(dw, dh, 0, dh1);
+	image.normalize();
 
+	GetYUVHistograms(image, section1, feats.histY[0], feats.histU[0], feats.histV[0]);
+	GetYUVHistograms(image, section2, feats.histY[1], feats.histU[1], feats.histV[1]);
+	GetYUVHistograms(image, section3, feats.histY[2], feats.histU[2], feats.histV[2]);
+	GetYUVHistograms(image, section4, feats.histY[3], feats.histU[3], feats.histV[3]);
+
+
+	image.type(Magick::GrayscaleType);
 	image.edge();
 
-	GetIntensityHistogram(image, Magick::Geometry(dw, dh, 0, 0), feats.histI[0]);
-	GetIntensityHistogram(image, Magick::Geometry(dw, dh, dw1, 0), feats.histI[1]);
-	GetIntensityHistogram(image, Magick::Geometry(dw, dh, dw1, dh1), feats.histI[2]);
-	GetIntensityHistogram(image, Magick::Geometry(dw, dh, 0, dh1), feats.histI[3]);
+	GetIntensityHistogram(image, section1, feats.histI[0]);
+	GetIntensityHistogram(image, section2, feats.histI[1]);
+	GetIntensityHistogram(image, section3, feats.histI[2]);
+	GetIntensityHistogram(image, section4, feats.histI[3]);
 
 	return feats;
 }

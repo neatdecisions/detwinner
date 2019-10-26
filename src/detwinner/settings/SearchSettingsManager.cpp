@@ -21,7 +21,6 @@ namespace settings {
 
 
 namespace {
-	constexpr unsigned short kDefaultSensitivity = 85;
 	const std::string kGroupName_Global = "Global";
 	const std::string kGroupName_ExactDuplicates = "ExactDuplicates";
 	const std::string kGroupName_SimilarImages = "SimilarImages";
@@ -43,6 +42,8 @@ namespace {
 
 //------------------------------------------------------------------------------
 SearchSettingsManager::SearchSettingsManager(const std::string & settingsFilePath) :
+	m_exactDuplicatesSettings(createDefaultExactDuplicatesSettings()),
+	m_similarImagesSettings(createDefaultSimilarImagesSettings()),
 	m_settingsFilePath(settingsFilePath),
 	m_defaultMode(SearchSettings::SearchMode_t::kExactDuplicates)
 {}

@@ -96,10 +96,7 @@ TEST_F(DuplicateImageFinderTest, images_80_rotations)
 		EXPECT_CALL(*m_pMockedCallback, updateProgress(1, 5)).Times(1).RetiresOnSaturation();
 		EXPECT_CALL(*m_pMockedCallback, updateProgress(2, 5)).Times(1).RetiresOnSaturation();
 		EXPECT_CALL(*m_pMockedCallback, updateProgress(3, 5)).Times(1).RetiresOnSaturation();
-		// last pass for is not called for 4th
-		if (i != 0) {
-			EXPECT_CALL(*m_pMockedCallback, updateProgress(4, 5)).Times(1).RetiresOnSaturation();
-		}
+		EXPECT_CALL(*m_pMockedCallback, updateProgress(4, 5)).Times(1).RetiresOnSaturation();
 		EXPECT_CALL(*m_pMockedCallback, updateProgress(5, 5)).Times(1).RetiresOnSaturation();
 	}
 
@@ -126,7 +123,7 @@ TEST_F(DuplicateImageFinderTest, images_80_rotations)
 TEST_F(DuplicateImageFinderTest, images_70_rotations)
 {
 	FileSearchSettings settings;
-	settings.sensitivity = 70;
+	settings.sensitivity = 69;
 	settings.processRotations = true;
 	const std::vector<std::string> folders = { "data/images" };
 
@@ -209,11 +206,10 @@ TEST_F(DuplicateImageFinderTest, images_70_no_rotations)
 
 	const DuplicatesList_t result = m_finder.find(folders, settings, m_pMockedCallback);
 	ASSERT_EQ(1UL, result.size());
-	EXPECT_EQ(4UL, result[0].files.size());
+	EXPECT_EQ(3UL, result[0].files.size());
 
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "gm-125x80.gif"));
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "gm-125x80.png"));
-	EXPECT_TRUE(FileInfosContainFileName(result[0], "gm-125x80t.png"));
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "gm-654x418t.png"));
 }
 

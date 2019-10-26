@@ -3,7 +3,7 @@
  Name        : Types.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -20,7 +20,7 @@ namespace images {
 
 
 using Distance_t = uint_least8_t;
-constexpr auto DISTANCE_T_MAX = INT_LEAST8_MAX;
+constexpr auto DISTANCE_T_MAX = UINT_LEAST8_MAX;
 
 
 }}}

@@ -32,16 +32,16 @@ struct ImageFeaturesTest : public ::testing::Test
 //------------------------------------------------------------------------------
 TEST_F(ImageFeaturesTest, no_rotations)
 {
-	EXPECT_FLOAT_EQ(0.26696506f, m_feat1.compare(m_feat2, false));
-	EXPECT_FLOAT_EQ(0.26696506f, m_feat2.compare(m_feat1, false));
+	EXPECT_FLOAT_EQ(0.39387715f, m_feat1.compare(m_feat2, false));
+	EXPECT_FLOAT_EQ(0.39387715f, m_feat2.compare(m_feat1, false));
 }
 
 
 //------------------------------------------------------------------------------
 TEST_F(ImageFeaturesTest, rotations)
 {
-	EXPECT_FLOAT_EQ(0.19910894f, m_feat1.compare(m_feat2, true));
-	EXPECT_FLOAT_EQ(0.19910894f, m_feat2.compare(m_feat1, true));
+	EXPECT_FLOAT_EQ(0.30430472f, m_feat1.compare(m_feat2, true));
+	EXPECT_FLOAT_EQ(0.30430472f, m_feat2.compare(m_feat1, true));
 }
 
 

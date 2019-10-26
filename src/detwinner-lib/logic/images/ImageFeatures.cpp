@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <numeric>
 #include <vector>
 
@@ -31,10 +30,13 @@ ImageFeatures::ImageFeatures(const unsigned int id, const float aspect) :
 float
 ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 {
+	// no need to use numeric_limits here, we only need a rough estimation
+	constexpr float kAspectPrecision = 0.01f;
 	const bool isOrientationSame = ( (aspect > 1.0f) && (f.aspect > 1.0f) ) ||
-	                               ( (aspect < 1.0f) && (f.aspect < 1.0f) );
+	                               ( (aspect < 1.0f) && (f.aspect < 1.0f) ) ||
+	                               (std::fabs(aspect - f.aspect) < kAspectPrecision);
 
-	constexpr auto lambdaAvgCorrelation = [](const std::array<float, 4> & values) {
+	constexpr auto lambdaAvgSimilarity = [](const std::array<float, 4> & values) {
 		constexpr std::array<float, 4> kFactors = { 1.0f, 1.0f, 1.0f, 1.0f };
 		static const float kSum = std::accumulate(kFactors.begin(), kFactors.end(), 0.0f);
 		return std::inner_product(values.begin(), values.end(), kFactors.begin(), 0.0f) / kSum;
@@ -57,7 +59,7 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 
 		std::transform(values.begin(), values.end(), values.begin(), [](float v) { return v / 4.0f; } );
 
-		const float b = lambdaAvgCorrelation(values);
+		const float b = lambdaAvgSimilarity(values);
 
 		if (b < minVal) minVal = b;
 		if (!processRotations) break;

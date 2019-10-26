@@ -27,7 +27,7 @@ src = [
 
 incdir = include_directories('.', '../misc')
 
-executable(
+exe = executable(
     'detwinner',
     src,
     dependencies: [gtkmm_dep, libLogic_dep],

@@ -25,7 +25,7 @@ namespace tools {
 class MemoryMappedFile::Impl
 {
 public:
-	explicit Impl(const std::string & fileName) : m_pMappedFile(nullptr)
+	explicit Impl(const std::string & fileName) noexcept : m_pMappedFile(nullptr)
 	{
 		GError * gError = nullptr;
 		m_pMappedFile = g_mapped_file_new(fileName.c_str(), false, &gError);
@@ -38,9 +38,9 @@ public:
 	}
 
 	~Impl() noexcept { if (m_pMappedFile) g_mapped_file_unref(m_pMappedFile); }
-	const char * buffer() const { return g_mapped_file_get_contents(m_pMappedFile); }
-	unsigned long size() const { return g_mapped_file_get_length(m_pMappedFile); }
-	bool valid() const { return m_pMappedFile != nullptr; }
+	const char * buffer() const noexcept { return m_pMappedFile == nullptr ? nullptr : g_mapped_file_get_contents(m_pMappedFile); }
+	unsigned long size() const noexcept { return m_pMappedFile == nullptr ? 0UL : g_mapped_file_get_length(m_pMappedFile); }
+	bool valid() const noexcept { return m_pMappedFile != nullptr; }
 
 private:
 	mutable GMappedFile * m_pMappedFile;
@@ -65,7 +65,7 @@ MemoryMappedFile::~MemoryMappedFile() noexcept = default;
 
 //------------------------------------------------------------------------------
 bool
-MemoryMappedFile::valid() const
+MemoryMappedFile::valid() const noexcept
 {
 	return m_pImpl->valid();
 }
@@ -73,7 +73,7 @@ MemoryMappedFile::valid() const
 
 //------------------------------------------------------------------------------
 unsigned long
-MemoryMappedFile::size() const
+MemoryMappedFile::size() const noexcept
 {
 	return m_pImpl->size();
 }
@@ -81,7 +81,7 @@ MemoryMappedFile::size() const
 
 //------------------------------------------------------------------------------
 const char *
-MemoryMappedFile::buffer() const
+MemoryMappedFile::buffer() const noexcept
 {
 	return m_pImpl->buffer();
 }

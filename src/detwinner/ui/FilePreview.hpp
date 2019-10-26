@@ -23,10 +23,10 @@ class FilePreview : public Gtk::Box
 {
 public:
 	FilePreview();
-	void setFile(const std::string & filePath);
-	void reload();
+	void setFileName(const std::string & filePath);
 
 private:
+	void reload();
 	Glib::ustring buildHexPreview(const char * buffer, unsigned long size) const;
 
 	std::string m_filePath;

@@ -63,8 +63,8 @@ TEST_F(SimilarityCacheBuilderTest, execute_basic_rotations)
 		ImageFeaturesTestFactory::CreateFeatures_2()
 	};
 	SimilarityCache cache = SimilarityCacheBuilder(imageFeatures, true, nullptr).execute();
-	EXPECT_EQ(19U, cache.get(0, 1));
-	EXPECT_EQ(19U, cache.get(1, 0));
+	EXPECT_EQ(30U, cache.get(0, 1));
+	EXPECT_EQ(30U, cache.get(1, 0));
 	EXPECT_EQ(100U, cache.get(1, 2));
 	EXPECT_EQ(0U, cache.get(1, 1));
 }
@@ -88,8 +88,8 @@ TEST_F(SimilarityCacheBuilderTest, execute_basic_no_rotations)
 	EXPECT_CALL(*pMockedCallback, similarImagesFound(_, _, 0)).Times(0);
 
 	SimilarityCache cache = SimilarityCacheBuilder(imageFeatures, false, pMockedCallback).execute();
-	EXPECT_EQ(26U, cache.get(0, 1));
-	EXPECT_EQ(26U, cache.get(1, 0));
+	EXPECT_EQ(39U, cache.get(0, 1));
+	EXPECT_EQ(39U, cache.get(1, 0));
 	EXPECT_EQ(100U, cache.get(1, 2));
 	EXPECT_EQ(0U, cache.get(1, 1));
 }
