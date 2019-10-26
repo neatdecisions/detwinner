@@ -34,6 +34,15 @@
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.3.0" date="2019-10-26">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Proper preview of the animated GIFs</li>
+          <li>Improvements for the similar images search</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.2" date="2019-09-08">
       <description>
         <p>Main changes in this version:</p>
