@@ -45,17 +45,6 @@ public:
 				aLbmAccumulator, aLbmTransformer)) / (BinNumber - 1);
 	}
 
-	BinValue_t getBinValue(const std::size_t binNumber) const noexcept
-	{
-		return (binNumber < BinNumber) ? bins[binNumber] : 0;
-	}
-
-	void setBinValue(const std::size_t binNumber, const BinValue_t value) noexcept
-	{
-		if (binNumber < BinNumber) bins[binNumber] = value;
-	}
-
-private:
 	std::array<BinValue_t, BinNumber> bins{};
 };
 
