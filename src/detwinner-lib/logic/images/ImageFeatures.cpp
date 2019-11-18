@@ -30,12 +30,6 @@ ImageFeatures::ImageFeatures(const unsigned int id, const float aspect) :
 float
 ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 {
-	// no need to use numeric_limits here, we only need a rough estimation
-	constexpr float kAspectPrecision = 0.01f;
-	const bool isOrientationSame = ( (aspect > 1.0f) && (f.aspect > 1.0f) ) ||
-	                               ( (aspect < 1.0f) && (f.aspect < 1.0f) ) ||
-	                               (std::fabs(aspect - f.aspect) < kAspectPrecision);
-
 	constexpr auto lambdaAvgSimilarity = [](const std::array<float, 4> & values) {
 		constexpr std::array<float, 4> kFactors = { 1.0f, 1.0f, 1.0f, 1.0f };
 		static const float kSum = std::accumulate(kFactors.begin(), kFactors.end(), 0.0f);
@@ -44,6 +38,7 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 
 	std::array<float, 4> values{};
 	float minVal = 2.0f;
+	float isMinValueForSameRotation = true;
 	const size_t nRot = processRotations ? kSectionCount : 1;
 	for (std::size_t i = 0; i < nRot; ++i)
 	{
@@ -59,21 +54,26 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 
 		std::transform(values.begin(), values.end(), values.begin(), [](float v) { return v / 4.0f; } );
 
-		const float b = lambdaAvgSimilarity(values);
+		const float similarity = lambdaAvgSimilarity(values);
 
-		if (b < minVal) minVal = b;
-		if (!processRotations) break;
+		if (similarity < minVal)
+		{
+			minVal = similarity;
+			isMinValueForSameRotation = (i % 2 == 0);
+		}
 	}
 
-	// TODO: in case of rotation, use the aspect depending on the rotation angle
-	// avoid false positives on the images with completely different aspect ratio
-	const float normalizedAspect2 = (!processRotations || isOrientationSame) ? f.aspect : 1.0f / f.aspect;
+	if ( (aspect > 0.0f) && (f.aspect > 0.0f) )
+	{
+		const float normalizedAspect = isMinValueForSameRotation ? f.aspect : 1.0f / f.aspect;
 
-	const float aspectMultiplier = aspect > normalizedAspect2 ?
-		aspect / normalizedAspect2 :
-		normalizedAspect2 / aspect;
+		const float aspectMultiplier = aspect > normalizedAspect ?
+			aspect / normalizedAspect :
+			normalizedAspect / aspect;
+		minVal *= aspectMultiplier;
+	}
 
-	return minVal * aspectMultiplier;
+	return minVal;
 }
 
 
