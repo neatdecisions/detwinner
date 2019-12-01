@@ -34,6 +34,14 @@
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.3.1" date="2019-12-01">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Improved handling of image rotations</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.0" date="2019-10-26">
       <description>
         <p>Main changes in this version:</p>
