@@ -44,13 +44,13 @@ ImageFeatures ImageFeaturesTestFactory::CreateFeatures_1()
 	{
 		for (std::size_t i = 0; i < Histogram::kBinCount; ++i)
 		{
-			feat1.histY[j].setBinValue(i, yHistograms1[j][i]);
-			feat1.histU[j].setBinValue(i, uHistograms1[j][i]);
-			feat1.histV[j].setBinValue(i, vHistograms1[j][i]);
+			feat1.histY[j].bins = yHistograms1[j];
+			feat1.histU[j].bins = uHistograms1[j];
+			feat1.histV[j].bins = vHistograms1[j];
 		}
 		for (std::size_t i = 0; i < HistogramI::kBinCount; ++i)
 		{
-			feat1.histI[j].setBinValue(i, iHistograms1[j][i]);
+			feat1.histI[j].bins = iHistograms1[j];
 		}
 	}
 
@@ -94,13 +94,13 @@ ImageFeatures ImageFeaturesTestFactory::CreateFeatures_2()
 	{
 		for (std::size_t i = 0; i < Histogram::kBinCount; ++i)
 		{
-			feat2.histY[j].setBinValue(i, yHistograms2[j][i]);
-			feat2.histU[j].setBinValue(i, uHistograms2[j][i]);
-			feat2.histV[j].setBinValue(i, vHistograms2[j][i]);
+			feat2.histY[j].bins = yHistograms2[j];
+			feat2.histU[j].bins = uHistograms2[j];
+			feat2.histV[j].bins = vHistograms2[j];
 		}
 		for (std::size_t i = 0; i < HistogramI::kBinCount; ++i)
 		{
-			feat2.histI[j].setBinValue(i, iHistograms2[j][i]);
+			feat2.histI[j].bins = iHistograms2[j];
 		}
 	}
 

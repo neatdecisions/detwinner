@@ -3,7 +3,7 @@
  Name        : ImageFeaturesBridge.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -32,11 +32,6 @@ public:
 	~ImageFeaturesBridge() = delete;
 
 private:
-	template <std::size_t BinCount>
-	static void NormalizeHistogramFromArrayT(
-		const std::array<std::size_t, BinCount> & realHist,
-		HistogramT<BinCount> & hist) noexcept;
-
 	static void GetIntensityHistogram(
 			const Magick::Image & image,
 			const Magick::Geometry & roi,

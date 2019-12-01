@@ -20,20 +20,6 @@ namespace images {
 
 
 //------------------------------------------------------------------------------
-template <std::size_t BinCount>
-void
-ImageFeaturesBridge::NormalizeHistogramFromArrayT(
-	const std::array<std::size_t, BinCount> & realHist,
-	HistogramT<BinCount> & hist) noexcept
-{
-	for (std::size_t i = 0; i < BinCount; ++i)
-	{
-		hist.setBinValue(i, realHist[i]);
-	}
-}
-
-
-//------------------------------------------------------------------------------
 void
 ImageFeaturesBridge::GetIntensityHistogram(
 	const Magick::Image & image,
@@ -51,18 +37,16 @@ ImageFeaturesBridge::GetIntensityHistogram(
 	constexpr int kBinNumber = HistogramI::kBinCount;
 	constexpr float kBinSize = MaxRGBFloat / kBinNumber;
 
-	std::array<std::size_t, kBinNumber> realHistI{};
-
+	std::fill(histI.bins.begin(), histI.bins.end(), 0U);
 	for (unsigned int x = roi.xOff(); x < width; ++x)
 	{
 		for (unsigned int y = roi.yOff(); y < height; ++y)
 		{
 			const Magick::Color & color = image.pixelColor(x, y);
 			const int n = std::clamp(static_cast<int>(std::floor(( color.intensity() ) / kBinSize)), 0, kBinNumber - 1);
-			++realHistI[n];
+			++histI.bins[n];
 		}
 	}
-	NormalizeHistogramFromArrayT(realHistI, histI);
 }
 
 
@@ -96,9 +80,9 @@ ImageFeaturesBridge::GetYUVHistograms(
 		throw std::logic_error("Unknown error");
 	}
 
-	std::array<std::size_t, kBinNumber> realHistY {};
-	std::array<std::size_t, kBinNumber> realHistU {};
-	std::array<std::size_t, kBinNumber> realHistV {};
+	std::fill(histY.bins.begin(), histY.bins.end(), 0U);
+	std::fill(histU.bins.begin(), histU.bins.end(), 0U);
+	std::fill(histV.bins.begin(), histV.bins.end(), 0U);
 
 	for (unsigned int x = roi.xOff(); x < width; ++x)
 	{
@@ -109,21 +93,17 @@ ImageFeaturesBridge::GetYUVHistograms(
 
 			const float valY = std::clamp(static_cast<float>(color.y()), kMinY, kMaxY);
 			int n = std::clamp(static_cast<int>(std::floor((valY - kMinY) / kBinSizeY)), 0, kBinNumber - 1);
-			++realHistY[n];
+			++histY.bins[n];
 
 			const float valU = std::clamp(static_cast<float>(color.u()), kMinU, kMaxU);
 			n = std::clamp(static_cast<int>(std::floor((valU - kMinU) / kBinSizeU)), 0, kBinNumber - 1);
-			++realHistU[n];
+			++histU.bins[n];
 
 			const float valV = std::clamp(static_cast<float>(color.v()), kMinV, kMaxV);
 			n = std::clamp(static_cast<int>(std::floor(( valV - kMinV ) / kBinSizeV)), 0, kBinNumber - 1);
-			++realHistV[n];
+			++histV.bins[n];
 		}
 	}
-
-	NormalizeHistogramFromArrayT(realHistY, histY);
-	NormalizeHistogramFromArrayT(realHistU, histU);
-	NormalizeHistogramFromArrayT(realHistV, histV);
 }
 
 
@@ -158,7 +138,6 @@ ImageFeaturesBridge::GetImageFeatures(Magick::Image & image, unsigned int id)
 	GetYUVHistograms(image, section2, feats.histY[1], feats.histU[1], feats.histV[1]);
 	GetYUVHistograms(image, section3, feats.histY[2], feats.histU[2], feats.histV[2]);
 	GetYUVHistograms(image, section4, feats.histY[3], feats.histU[3], feats.histV[3]);
-
 
 	image.type(Magick::GrayscaleType);
 	image.edge();
