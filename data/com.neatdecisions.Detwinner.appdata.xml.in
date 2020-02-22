@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2018-2019 Neat Decisions <opensource@neatdecisions.com> -->
+<!-- Copyright 2018-2020 Neat Decisions <opensource@neatdecisions.com> -->
 <component type="desktop-application">
   <id>com.neatdecisions.Detwinner</id>
   <metadata_license>CC0-1.0</metadata_license>
@@ -34,6 +34,14 @@
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.3.2" date="2020-02-22">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Added Dutch translation (thanks to Vistaus)</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.1" date="2019-12-01">
       <description>
         <p>Main changes in this version:</p>
