@@ -289,7 +289,7 @@ msgstr "<b>Dimensioni file:</b> "
 
 #: src/detwinner/ui/FilePreview.cpp:29
 msgid "<b>Modified:</b> "
-msgstr "<B>Modifica:</b> "
+msgstr "<b>Modifica:</b> "
 
 #: src/detwinner/ui/FilePreview.cpp:205
 msgid ""
@@ -322,7 +322,7 @@ msgstr "In pausa"
 
 #: src/detwinner/ui/SearchProgressDialog.cpp:55
 msgid "<b>Stage:</b> "
-msgstr "<B>Fase:</b> "
+msgstr "<b>Fase:</b> "
 
 #: src/detwinner/ui/SearchProgressDialog.cpp:56
 msgid "<b>Total files processed:</b> "
