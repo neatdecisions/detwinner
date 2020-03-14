@@ -261,7 +261,7 @@ msgstr "Percorso"
 
 #: src/detwinner/ui/DuplicatesTreeView.cpp:98
 msgid "Size"
-msgstr "DImensione"
+msgstr "Dimensione"
 
 #: src/detwinner/ui/DuplicatesTreeView.cpp:105
 msgid "Resolution"
