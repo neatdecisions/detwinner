@@ -202,7 +202,7 @@ msgstr "Informazioni su Detwinner"
 
 #: resources/ui/toolbarSearchPane.glade:138
 msgid "Search for: "
-msgstr "Search per: "
+msgstr "Ricerca per: "
 
 #: resources/ui/toolbarSearchPane.glade:160
 #: resources/ui/toolbarSearchPane.glade:272
