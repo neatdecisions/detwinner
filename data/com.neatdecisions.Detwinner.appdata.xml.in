@@ -34,6 +34,14 @@
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.3.3" date="2020-03-14">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Added Italian translation (thanks to Albano Battistella)</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.2" date="2020-02-22">
       <description>
         <p>Main changes in this version:</p>
