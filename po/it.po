@@ -113,7 +113,7 @@ msgstr "Mantenere con la risoluzione più bassa"
 #: resources/ui/duplicateTreeViewMenu.ui:72
 #: resources/ui/toolbarResultsPane.glade:290
 msgid "Keep with the highest resolution"
-msgstr "Mantenere con la risoluzione più bassa"
+msgstr "Mantenere con la risoluzione più alta"
 
 #: resources/ui/duplicateTreeViewMenu.ui:81
 #: resources/ui/toolbarResultsPane.glade:47
