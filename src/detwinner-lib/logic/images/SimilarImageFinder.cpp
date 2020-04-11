@@ -3,7 +3,7 @@
  Name        : SimilarImageFinder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -64,18 +64,17 @@ SimilarImageFinder::updateNeighboursPartial(
 		{
 			cluster.neighborId = mergedClusterId1;
 			cluster.neighborDistance = cache.get(cluster.id, mergedClusterId1);
-			for (auto && subcluster: clusters)
+			for (const auto & subcluster: clusters)
 			{
-				assert(subcluster.id != mergedClusterId2);
 				if ( (subcluster.id == mergedClusterId1) || (subcluster.id == cluster.id) ) continue;
-				Distance_t dist = cache.get(cluster.id, subcluster.id);
+				const Distance_t dist = cache.get(cluster.id, subcluster.id);
 				if (dist < cluster.neighborDistance)
 				{
 					cluster.neighborDistance = dist;
 					cluster.neighborId = subcluster.id;
 				}
 			}
-			if ( (cluster.neighborDistance > maxDistance) )
+			if (cluster.neighborDistance > maxDistance)
 			{
 				outliers.insert(i);
 			}
@@ -105,11 +104,11 @@ SimilarImageFinder::updateNeighbours(
 				std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, 0, clusters.size(), std::ref(clusters) ) );
 	} else
 	{
-		for (auto && aIndexPair: parallelIndexes)
+		for (const auto & indexPair: parallelIndexes)
 		{
 			futures.push_back( std::async(std::launch::async,
 					&SimilarImageFinder::updateNeighboursPartial, this,
-					std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, aIndexPair.first, aIndexPair.second, std::ref(clusters) ) );
+					std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, indexPair.first, indexPair.second, std::ref(clusters) ) );
 		}
 	}
 
@@ -173,7 +172,6 @@ SimilarImageFinder::addClusterToResult(
 std::size_t
 SimilarImageFinder::findMinimalDistanceIndex(const std::vector<Cluster_t> & clusters) const
 {
-	assert(!clusters.empty());
 	auto it = std::min_element(clusters.begin(), clusters.end(),
 		[](const Cluster_t & c1, const Cluster_t & c2) { return c1.neighborDistance < c2.neighborDistance; });
 	return std::distance(clusters.begin(), it);
@@ -260,17 +258,12 @@ SimilarImageFinder::clusterize(
 			}
 		}
 
-		if (!isOutlier)
-		{
-			Cluster_t cluster;
-			cluster.id = i;
-			cluster.items.insert(i);
-			cluster.neighborDistance = minDistance;
-			cluster.neighborId = neighborId;
-			clusters.push_back(std::move(cluster));
-		} else
+		if (isOutlier)
 		{
 			if (callback) callback->imgOrganizingProgress(++progress, count);
+		} else
+		{
+			clusters.emplace_back(i, neighborId, minDistance, i);
 		}
 	}
 

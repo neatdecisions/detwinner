@@ -3,7 +3,7 @@
  Name        : SimilarImageFinder.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -47,6 +47,9 @@ private:
 
 	struct Cluster_t
 	{
+		Cluster_t() = default;
+		Cluster_t(std::size_t id, std::size_t neighborId, Distance_t neighborDistance, std::size_t firstItemId) :
+			id(id), neighborId(neighborId), neighborDistance(neighborDistance), items({firstItemId}) {}
 		std::size_t id = 0;
 		std::size_t neighborId = 0;
 		Distance_t neighborDistance = 0;
@@ -94,8 +97,8 @@ private:
 	std::set<std::size_t> updateNeighboursPartial(
 			const SimilarityCache & cache,
 			const Distance_t maxDistance,
-			const std::size_t iMergedClusterId1,
-			const std::size_t iMergedClusterId2,
+			const std::size_t mergedClusterId1,
+			const std::size_t mergedClusterId2,
 			const std::size_t startIndex,
 			const std::size_t endIndex,
 			std::vector<Cluster_t> & clusters) const;

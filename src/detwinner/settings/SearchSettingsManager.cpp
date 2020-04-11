@@ -3,7 +3,7 @@
  Name        : SearchSettingsManager.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ==============================================================================
  */
@@ -158,9 +158,7 @@ SearchSettingsManager::createDefaultSimilarImagesSettings() const
 SearchSettings
 SearchSettingsManager::createDefaultExactDuplicatesSettings() const
 {
-	SearchSettings result;
-	result.searchMode = SearchSettings::SearchMode_t::kExactDuplicates;
-	return result;
+	return SearchSettings();
 }
 
 
