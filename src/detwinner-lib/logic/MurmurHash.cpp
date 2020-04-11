@@ -66,16 +66,16 @@ fmix ( uint32_t h )
 bool
 MurmurHash::GetHash(const std::string & fileName, std::string & hash)
 {
+	std::ifstream f(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
+
+	if (!f) return false;
+
 	constexpr uint32_t seed = 5;
 	constexpr std::streamsize FILE_READ_BUFFER_SIZE = 4096;
 
 	uint8_t key[FILE_READ_BUFFER_SIZE];
 
 	uint32_t out[4];
-
-	std::ifstream f(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
-
-	if (!f) return false;
 
 	size_t len = 0, l = 0;
 

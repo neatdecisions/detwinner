@@ -3,7 +3,7 @@
  Name        : SearchResultsPane.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -89,8 +89,6 @@ SearchResultsPane::execute_duplicate_action(const Glib::ustring & label, callbac
 	freeze_notify();
 
 	Glib::Timer timer;
-
-	timer.start();
 	while (action->processNext())
 	{
 		if (timer.elapsed() > 0.2)

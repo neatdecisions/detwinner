@@ -3,7 +3,7 @@
  Name        : DuplicatesTreeView.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -325,14 +325,7 @@ DuplicatesTreeView::on_render_filename(Gtk::CellRenderer * cellRenderer, const G
 {
 	if (cellRenderer ==  nullptr || !iter) return;
 	CheckState_t checkState = getCheck(iter);
-	static const Glib::ustring kProperty_StrikeThrough("strikethrough");
-	if (checkState == CheckState_t::Checked)
-	{
-		cellRenderer->set_property(kProperty_StrikeThrough, true);
-	} else
-	{
-		cellRenderer->set_property(kProperty_StrikeThrough, false);
-	}
+	cellRenderer->set_property("strikethrough", checkState == CheckState_t::Checked);
 	const auto & kids = iter->children();
 	if (kids && !kids.empty())
 	{
@@ -1300,14 +1293,7 @@ DuplicatesTreeView::TreeSelect_Bulk_t::processNext()
 		states.insert(newCheck);
 		m_tree.setCheck(file, newCheck, true, true);
 	}
-
-	if (states.size() == 1)
-	{
-		m_tree.setCheck(m_iter, *states.begin(), true, true);
-	} else
-	{
-		m_tree.setCheck(m_iter, CheckState_t::Mixed, true, true);
-	}
+	m_tree.setCheck(m_iter, (states.size() == 1) ? *states.begin() : CheckState_t::Mixed, true, true);
 
 	++m_currentItem;
 	return static_cast<bool>(++m_iter);
@@ -1366,8 +1352,8 @@ DuplicatesTreeView::TreePopulateAction::processNext()
 	{
 		auto t = *m_tree.m_store->append(treeRow->children());
 
-		Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(duplicateFile.name);
-		Glib::RefPtr<Gio::FileInfo> fileInfo = file->query_info("time::modified");
+		const Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(duplicateFile.name);
+		const Glib::RefPtr<Gio::FileInfo> fileInfo = file->query_info("time::modified");
 
 		if (fileInfo->has_attribute(G_FILE_ATTRIBUTE_TIME_MODIFIED))
 		{

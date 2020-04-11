@@ -3,7 +3,7 @@
  Name        : ImageFeatures.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -38,7 +38,7 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 
 	std::array<float, 4> values{};
 	float minVal = 2.0f;
-	float isMinValueForSameRotation = true;
+	bool isMinValueForSameRotation = true;
 	const size_t nRot = processRotations ? kSectionCount : 1;
 	for (std::size_t i = 0; i < nRot; ++i)
 	{
