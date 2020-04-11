@@ -28,12 +28,22 @@
   <url type="homepage">https://neatdecisions.com/products/detwinner-linux/</url>
   <url type="bugtracker">https://github.com/neatdecisions/detwinner/issues</url>
   <url type="donation">https://neatdecisions.com/products/detwinner-linux/donate.php</url>
+  <url type="translate">https://poeditor.com/join/project/WvJERjmf1r</url>
   <update_contact>opensource@neatdecisions.com</update_contact>
   ​<translation type="gettext">com.neatdecisions.Detwinner</translation>
   <provides>
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.3.4" date="2020-04-12">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Translation updates</li>
+          <li>Some minor under-the-hood improvements</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.3" date="2020-03-14">
       <description>
         <p>Main changes in this version:</p>
