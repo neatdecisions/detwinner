@@ -378,8 +378,7 @@ DuplicatesTreeView::on_render_update_time(Gtk::CellRenderer * cellRenderer, cons
 		cellRenderer->set_property("text", Glib::ustring(""));
 	} else
 	{
-		const Glib::DateTime & aDateTime = (*iter)[m_columns.updateTime];
-		cellRenderer->set_property("text", aDateTime.format("%x %X"));
+		cellRenderer->set_property("text", getUpdateTime(iter).format("%x %X"));
 	}
 }
 
@@ -453,6 +452,23 @@ DuplicatesTreeView::extractFullPath(const Gtk::TreeIter & iter) const
 	return (*iter)[m_columns.filePath];
 }
 
+
+//------------------------------------------------------------------------------
+Glib::DateTime
+DuplicatesTreeView::getUpdateTime(const Gtk::TreeIter & iter)
+{
+	auto row = *iter;
+	if (!static_cast<Glib::DateTime>(row[m_columns.updateTime]))
+	{
+		const Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(extractFullPath(iter));
+		const Glib::RefPtr<Gio::FileInfo> fileInfo = file->query_info("time::modified");
+		if (fileInfo->has_attribute(G_FILE_ATTRIBUTE_TIME_MODIFIED))
+		{
+			row[m_columns.updateTime] = Glib::DateTime::create_now_local(fileInfo->get_attribute_uint64(G_FILE_ATTRIBUTE_TIME_MODIFIED));
+		}
+	}
+	return row[m_columns.updateTime];
+}
 
 //------------------------------------------------------------------------------
 bool
@@ -836,7 +852,7 @@ DuplicatesTreeView::ISmartSelector::Ptr_t
 DuplicatesTreeView::createSmartSelector_KeepEarliestModified()
 {
 	auto lambda = [this](const Gtk::TreeModel::iterator & l, const Gtk::TreeModel::iterator & r) {
-		return r->get_value(m_columns.updateTime).compare(l->get_value(m_columns.updateTime)) > 0;
+		return getUpdateTime(r).compare(getUpdateTime(l)) > 0;
 	};
 	return std::make_shared<SmartSelector_t>(lambda);
 }
@@ -847,7 +863,7 @@ DuplicatesTreeView::ISmartSelector::Ptr_t
 DuplicatesTreeView::createSmartSelector_KeepLatestModified()
 {
 	auto lambda = [this](const Gtk::TreeModel::iterator & l, const Gtk::TreeModel::iterator & r) {
-		return r->get_value(m_columns.updateTime).compare(l->get_value(m_columns.updateTime)) < 0;
+		return getUpdateTime(r).compare(getUpdateTime(l)) < 0;
 	};
 	return std::make_shared<SmartSelector_t>(lambda);
 }
@@ -1340,42 +1356,40 @@ DuplicatesTreeView::TreePopulateAction::processNext()
 	}
 
 	beginBatch();
-	const logic::DuplicateContainer & duplicateGroup = m_values[m_currentItem];
-	Gtk::TreeRow treeRow = *m_tree.m_store->prepend();
 
-	treeRow[m_tree.m_columns.checkState] = CheckState_t::Unchecked;
-	treeRow[m_tree.m_columns.locked] = true;
-
-	unsigned long long totalSize = 0;
-	bool locked = true;
-	for (auto && duplicateFile: duplicateGroup.files)
+	constexpr std::chrono::milliseconds kMaxDuration(500);
+	auto currentTime = std::chrono::steady_clock::now();
+	while ( (m_currentItem < m_values.size()) &&
+	        ( (std::chrono::steady_clock::now() - currentTime) < kMaxDuration) )
 	{
-		auto t = *m_tree.m_store->append(treeRow->children());
+		const logic::DuplicateContainer & duplicateGroup = m_values[m_currentItem];
+		Gtk::TreeRow treeRow = *m_tree.m_store->append();
 
-		const Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(duplicateFile.name);
-		const Glib::RefPtr<Gio::FileInfo> fileInfo = file->query_info("time::modified");
+		treeRow[m_tree.m_columns.checkState] = CheckState_t::Unchecked;
+		treeRow[m_tree.m_columns.locked] = true;
 
-		if (fileInfo->has_attribute(G_FILE_ATTRIBUTE_TIME_MODIFIED))
+		unsigned long long totalSize = 0;
+		bool locked = true;
+		for (const auto & duplicateFile: duplicateGroup.files)
 		{
-			t[m_tree.m_columns.updateTime] = Glib::DateTime::create_now_local(fileInfo->get_attribute_uint64(G_FILE_ATTRIBUTE_TIME_MODIFIED));
-		}
+			auto t = *m_tree.m_store->append(treeRow->children());
+			t[m_tree.m_columns.checkState] = CheckState_t::Unchecked;
+			t[m_tree.m_columns.filePath] = duplicateFile.name;
+			t[m_tree.m_columns.fileSize] = duplicateFile.size;
+			if (duplicateFile.imageResolution)
+			{
+				t[m_tree.m_columns.width] = duplicateFile.imageResolution->width;
+				t[m_tree.m_columns.height] = duplicateFile.imageResolution->height;
+			}
+			t[m_tree.m_columns.locked] = locked;
+			locked = false;
 
-		t[m_tree.m_columns.checkState] = CheckState_t::Unchecked;
-		t[m_tree.m_columns.filePath] = duplicateFile.name;
-		t[m_tree.m_columns.fileSize] = duplicateFile.size;
-		if (duplicateFile.imageResolution)
-		{
-			t[m_tree.m_columns.width] = duplicateFile.imageResolution->width;
-			t[m_tree.m_columns.height] = duplicateFile.imageResolution->height;
+			totalSize += duplicateFile.size;
 		}
-		t[m_tree.m_columns.locked] = locked;
-		locked = false;
+		treeRow[m_tree.m_columns.fileSize] = totalSize;
 
-		totalSize += duplicateFile.size;
+		++m_currentItem;
 	}
-	treeRow[m_tree.m_columns.fileSize] = totalSize;
-
-	++m_currentItem;
 	return true;
 }
 

@@ -3,7 +3,7 @@
  Name        : DuplicatesTreeView.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -160,6 +160,7 @@ private:
 
 	Glib::ustring getPreviewPath(const Gtk::TreeIter & iter) const;
 	Glib::ustring extractFullPath(const Gtk::TreeIter & iter) const;
+	Glib::DateTime getUpdateTime(const Gtk::TreeIter & iter);
 	bool isDuplicateFileIter(const Gtk::TreeIter & iter) const;
 	Gtk::TreeIter getSelectedIter() const;
 
