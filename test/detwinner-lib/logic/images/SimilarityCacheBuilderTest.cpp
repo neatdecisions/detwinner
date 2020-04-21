@@ -65,7 +65,7 @@ TEST_F(SimilarityCacheBuilderTest, execute_basic_rotations)
 	SimilarityCache cache = SimilarityCacheBuilder(imageFeatures, true, nullptr).execute();
 	EXPECT_EQ(30U, cache.get(0, 1));
 	EXPECT_EQ(30U, cache.get(1, 0));
-	EXPECT_EQ(100U, cache.get(1, 2));
+	EXPECT_EQ(DISTANCE_T_MAX, cache.get(1, 2));
 	EXPECT_EQ(0U, cache.get(1, 1));
 }
 
@@ -90,7 +90,7 @@ TEST_F(SimilarityCacheBuilderTest, execute_basic_no_rotations)
 	SimilarityCache cache = SimilarityCacheBuilder(imageFeatures, false, pMockedCallback).execute();
 	EXPECT_EQ(39U, cache.get(0, 1));
 	EXPECT_EQ(39U, cache.get(1, 0));
-	EXPECT_EQ(100U, cache.get(1, 2));
+	EXPECT_EQ(DISTANCE_T_MAX, cache.get(1, 2));
 	EXPECT_EQ(0U, cache.get(1, 1));
 }
 

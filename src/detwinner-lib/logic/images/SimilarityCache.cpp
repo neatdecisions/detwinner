@@ -3,7 +3,7 @@
  Name        : SimilarityCache.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -41,7 +41,7 @@ SimilarityCache::set(std::size_t i1, std::size_t i2, Distance_t val) noexcept
 Distance_t
 SimilarityCache::get(std::size_t i1, std::size_t i2) const noexcept
 {
-	if (i1 >= m_size || i2 >= m_size) return 100U;
+	if (i1 >= m_size || i2 >= m_size) return DISTANCE_T_MAX;
 	if (i1 == i2) return 0U;
 
 	const auto mm = std::minmax(i1, i2);

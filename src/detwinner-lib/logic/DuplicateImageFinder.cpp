@@ -3,7 +3,7 @@
  Name        : DuplicateImageFinder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -48,22 +48,19 @@ DuplicateImageFinder::find(
 	FileToProcessReceiver filesToProcess;
 	FileIndexer(searchSettings).performIndexing(folderList, filesToProcess, searchProcessCallback);
 
-	images::DuplicateImageResult res = images::SimilarImageFinder().find(
+	const images::DuplicateImageResult similarImages = images::SimilarImageFinder().find(
 			filesToProcess.fileNames,
 			searchSettings.sensitivity.value_or(kDefaultSensitivity),
 			searchSettings.processRotations.value_or(kDefaultProcessRotations),
 			std::make_shared<callbacks::ImageFinderCallback>(searchProcessCallback));
 
-	DuplicatesList_t result;
-	result.reserve(res.size());
-
-	for (const auto & vec : res)
+	const std::size_t resultSize = similarImages.size();
+	DuplicatesList_t result(resultSize);
+	for (std::size_t i = 0; i < resultSize; ++i)
 	{
-		DuplicateContainer container;
-		const auto imageCount = vec.size();
-		container.files.reserve(imageCount);
-
-		for (const images::ImageInfo & imageInfo : vec)
+		DuplicateContainer & container = result[i];
+		container.files.reserve(similarImages[i].size());
+		for (const images::ImageInfo & imageInfo : similarImages[i])
 		{
 			container.files.emplace_back(
 					imageInfo.fileSize,
@@ -71,7 +68,6 @@ DuplicateImageFinder::find(
 					imageInfo.width,
 					imageInfo.height);
 		}
-		result.push_back(std::move(container));
 	}
 	if (searchProcessCallback) searchProcessCallback->onFinish();
 	return result;

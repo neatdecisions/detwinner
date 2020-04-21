@@ -3,7 +3,7 @@
  Name        : SimilarityCacheBuilder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -119,8 +119,8 @@ SimilarityCacheBuilder::calculateDistanceCache(
 	{
 		for (std::size_t j = i + 1; j < sz; ++j)
 		{
-			const float val = 100.0f * m_imageFeatures[i].compare(m_imageFeatures[j], m_processRotations);
-			cache.set(i, j, val > DISTANCE_T_MAX ? DISTANCE_T_MAX : val);
+			const int val = 100.0f * m_imageFeatures[i].compare(m_imageFeatures[j], m_processRotations);
+			cache.set(i, j, std::min(val, DISTANCE_T_MAX));
 		}
 
 		if (m_callback)
