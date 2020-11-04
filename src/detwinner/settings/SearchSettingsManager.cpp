@@ -261,7 +261,7 @@ SearchSettingsManager::loadCommonSettings(
 
 	settings.searchReadOnly = readBoolean(settingsFile, groupName, kFieldName_AttributeReadOnly, true);
 	settings.searchHidden = readBoolean(settingsFile, groupName, kFieldName_AttributeHidden, false);
-	settings.searchExecutable = readBoolean(settingsFile, groupName, kFieldName_AttributeExecutable, false);
+	settings.searchExecutable = readBoolean(settingsFile, groupName, kFieldName_AttributeExecutable, true);
 }
 
 

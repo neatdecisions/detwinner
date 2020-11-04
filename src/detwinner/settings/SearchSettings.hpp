@@ -56,7 +56,7 @@ struct SearchSettings
 	std::vector<std::string> filenameRegexps;
 	bool searchReadOnly = true;
 	bool searchHidden = false;
-	bool searchExecutable = false;
+	bool searchExecutable = true;
 };
 
 
