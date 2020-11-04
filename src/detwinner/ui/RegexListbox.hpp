@@ -3,7 +3,7 @@
  Name        : RegexListbox.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -21,7 +21,7 @@ namespace ui {
 class RegexListbox : public Gtk::ListBox
 {
 public:
-	RegexListbox();
+	RegexListbox(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade);
 	std::vector<std::string> getRegexps() const;
 	void populateRegexps(const std::vector<std::string> & iRegexps);
 	void addLine();

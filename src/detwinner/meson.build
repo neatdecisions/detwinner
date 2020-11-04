@@ -33,6 +33,7 @@ exe = executable(
     dependencies: [gtkmm_dep, libLogic_dep],
     include_directories : [incdir, configuration_inc],
     cpp_args: ['-Wno-ignored-attributes','-std=c++17'],
+    c_args: ['-Wno-overlength-strings'],
     link_with: [libLogic],
     install: true)
 

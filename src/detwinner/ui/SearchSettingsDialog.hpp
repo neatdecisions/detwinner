@@ -3,7 +3,7 @@
  Name        : SearchSettingsDialog.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -24,58 +24,54 @@ namespace ui {
 class SearchSettingsDialog : public Gtk::Dialog
 {
 public:
-	SearchSettingsDialog(Gtk::Window & parent, const settings::SearchSettings & settings);
-	settings::SearchSettings getSettings() const;
-
-protected:
-	virtual void on_response(int response_id) override;
+	SearchSettingsDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
+	settings::SearchSettings getSettings(settings::SearchSettings::SearchMode_t mode) const;
+	void init(settings::SearchSettings::SearchMode_t mode,
+	          const settings::SearchSettings & exactDuplicatesSettings,
+	          const settings::SearchSettings & similarImagesSettings);
 
 private:
-	void on_filesize_min_toggled();
-	void on_filesize_max_toggled();
-	void on_add_regex_line_clicked();
-	void on_regex_listbox_changed();
+	struct CommonWidgets
+	{
+		Gtk::CheckButton * m_checkMinFileSize = nullptr;
+		Gtk::CheckButton * m_checkMaxFileSize = nullptr;
+		Gtk::SpinButton * m_spinMinFileSize = nullptr;
+		Gtk::SpinButton * m_spinMaxFileSize = nullptr;
 
-	void populateViewFromModel();
-	void populateModelFromView();
+		Gtk::ComboBoxText * m_comboMinFileSize = nullptr;
+		Gtk::ComboBoxText * m_comboMaxFileSize = nullptr;
 
-	void configureGrid(Gtk::Grid & grid);
+		Gtk::CheckButton * m_checkReadOnlyFiles = nullptr;
+		Gtk::CheckButton * m_checkHiddenFiles = nullptr;
+		Gtk::CheckButton * m_checkExecutableFiles = nullptr;
+		Gtk::Label * m_labelRegexps = nullptr;
+		RegexListbox * m_listboxRegex = nullptr;
+		Gtk::Button * m_btnAddRegex = nullptr;
+	};
+
+	void on_filesize_min_toggled(CommonWidgets & widgets);
+	void on_filesize_max_toggled(CommonWidgets & widgets);
+	void on_add_regex_line_clicked(CommonWidgets & widgets);
+	void on_regex_listbox_changed(CommonWidgets & widgets);
+
+	void populateCommonWidgets(const settings::SearchSettings & settings, CommonWidgets & widgets);
+	void populateCommonSettings(const CommonWidgets & widgets, settings::SearchSettings & settings) const;
 
 	void setUnitComboboxValue(const settings::SearchSettings::FileSizeUnit_t value, Gtk::ComboBoxText & combobox);
 	settings::SearchSettings::FileSizeUnit_t getUnitComboboxValue(const Gtk::ComboBoxText & combobox) const;
 
-	settings::SearchSettings m_settings;
+	void setupWidgets(CommonWidgets & widgets);
 
-	Gtk::Label m_labelSimilarImages;
-	Gtk::Label m_labelSimilarity;
-	Gtk::SpinButton m_spinSimilarity;
-	Gtk::CheckButton m_checkRotations;
+	Glib::RefPtr<Gtk::Builder> m_builder;
 
-	Gtk::Label m_labelFileSize;
-	Gtk::CheckButton m_checkMinFileSize;
-	Gtk::CheckButton m_checkMaxFileSize;
-	Gtk::SpinButton m_spinMinFileSize;
-	Gtk::SpinButton m_spinMaxFileSize;
+	Gtk::StackSwitcher * m_stackSwitcher = nullptr;
+	Gtk::SpinButton * m_spinSimilarity = nullptr;
+	Gtk::CheckButton * m_checkRotations = nullptr;
+	CommonWidgets m_widgetsExactDuplicates;
+	CommonWidgets m_widgetsSimilarImages;
 
-	Gtk::Label m_labelFileAttributes;
-	Gtk::ComboBoxText m_comboMinFileSize;
-	Gtk::ComboBoxText m_comboMaxFileSize;
-
-	Gtk::CheckButton m_checkReadOnlyFiles;
-	Gtk::CheckButton m_checkHiddenFiles;
-	Gtk::CheckButton m_checkExecutableFiles;
-
-	Gtk::Grid m_grid1;
-	Gtk::Grid m_grid2;
-	Gtk::Grid m_grid3;
-	Gtk::Grid m_grid4;
-
-	Gtk::Label m_labelRegexps;
-	RegexListbox m_listboxRegex;
-
-	Gtk::Button * m_btnOk;
-
-	Gtk::ScrolledWindow m_scrolledWindow;
+	Gtk::Button * m_btnOk = nullptr;
+	Gtk::Button * m_btnCancel = nullptr;
 };
 
 

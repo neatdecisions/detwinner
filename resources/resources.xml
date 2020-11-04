@@ -5,5 +5,6 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/toolbarResultsPane.glade</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/duplicateTreeViewMenu.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/regexHelperMenu.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/settingsDialog.ui</file>
   </gresource>
 </gresources>
