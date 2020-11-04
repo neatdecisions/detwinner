@@ -33,12 +33,15 @@
 
 # IDE
 .vscode
+*.ui~
+*.glade~
 
 # Translations
 *.mo
 
 # Build folders
 build
+builddir
 dist
 Debug
 DebugOptimized

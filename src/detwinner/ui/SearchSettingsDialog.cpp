@@ -3,7 +3,7 @@
  Name        : SearchSettingsDialog.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -18,195 +18,109 @@ namespace ui {
 
 
 //------------------------------------------------------------------------------
-SearchSettingsDialog::SearchSettingsDialog(Gtk::Window & parent, const settings::SearchSettings & settings) :
-		Gtk::Dialog(_("Settings"), parent, true),
-		m_settings(settings),
-		m_labelSimilarImages(_("<b>Similar images</b>"), Gtk::ALIGN_START),
-		m_labelSimilarity(_("Similarity level:")),
-		m_checkRotations(_("Take rotations into account")),
-		m_labelFileSize(_("<b>File size</b>"), Gtk::ALIGN_START),
-		m_checkMinFileSize(_("Greater than:")),
-		m_checkMaxFileSize(_("Smaller than:")),
-		m_labelFileAttributes(_("<b>File attributes</b>"), Gtk::ALIGN_START),
-		m_checkReadOnlyFiles(_("Read only")),
-		m_checkHiddenFiles(_("Hidden")),
-		m_checkExecutableFiles(_("Executable")),
-		m_labelRegexps(_("<b>File path regexps</b>"), Gtk::ALIGN_START),
-		m_btnOk(add_button(_("OK"), Gtk::RESPONSE_OK))
+SearchSettingsDialog::SearchSettingsDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
+		Gtk::Dialog(cobject),
+		m_builder(builder)
 {
-	add_button(_("Cancel"), Gtk::RESPONSE_CANCEL);
-	get_content_area()->set_border_width(12);
-	get_content_area()->set_spacing(6);
+	const std::map<Glib::ustring, CommonWidgets&> widgetMap = {
+		{"ED", m_widgetsExactDuplicates},
+		{"SI", m_widgetsSimilarImages}
+	};
+	m_builder->get_widget("stackSwitcher", m_stackSwitcher);
+	m_builder->get_widget("btnOK", m_btnOk);
+	m_builder->get_widget("btnCancel", m_btnCancel);
+	m_btnOk->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &SearchSettingsDialog::on_response), Gtk::RESPONSE_OK));
+	m_btnCancel->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &SearchSettingsDialog::on_response), Gtk::RESPONSE_CANCEL));
 
-	configureGrid(m_grid1);
-	configureGrid(m_grid2);
-	configureGrid(m_grid3);
-	configureGrid(m_grid4);
+	m_builder->get_widget("spinSimilarity", m_spinSimilarity);
+	m_builder->get_widget("chkRotations", m_checkRotations);
 
-	if (m_settings.searchMode != settings::SearchSettings::SearchMode_t::kSimilarImages)
-	{
-		m_settings.imageSettings = stdx::nullopt;
+	for (auto & kv: widgetMap) {
+		m_builder->get_widget("chkGreaterThan" + kv.first, kv.second.m_checkMinFileSize);
+		m_builder->get_widget("chkSmallerThan" + kv.first, kv.second.m_checkMaxFileSize);
+		m_builder->get_widget("spinGreaterThan" + kv.first, kv.second.m_spinMinFileSize);
+		m_builder->get_widget("spinSmallerThan" + kv.first, kv.second.m_spinMaxFileSize);
+		m_builder->get_widget("comboGreaterThan" + kv.first, kv.second.m_comboMinFileSize);
+		m_builder->get_widget("comboSmallerThan" + kv.first, kv.second.m_comboMaxFileSize);
+		m_builder->get_widget("chkReadOnly" + kv.first, kv.second.m_checkReadOnlyFiles);
+		m_builder->get_widget("chkHidden" + kv.first, kv.second.m_checkHiddenFiles);
+		m_builder->get_widget("chkExecutable" + kv.first, kv.second.m_checkExecutableFiles);
+		m_builder->get_widget("lblRegex" + kv.first, kv.second.m_labelRegexps);
+		m_builder->get_widget("btnAddRegex" + kv.first, kv.second.m_btnAddRegex);
+		m_builder->get_widget_derived("listRegex" + kv.first, kv.second.m_listboxRegex);
+		setupWidgets(kv.second);
 	}
-
-	if (m_settings.imageSettings)
-	{
-		m_labelSimilarImages.set_use_markup(true);
-		m_grid1.attach(m_labelSimilarImages, 0, 0, 2, 1);
-
-		m_spinSimilarity.set_range(1, 100);
-		m_spinSimilarity.set_increments(1, 10);
-		m_spinSimilarity.set_halign(Gtk::ALIGN_END);
-
-		m_grid1.attach(m_labelSimilarity, 0, 1, 1, 1);
-		m_grid1.attach(m_spinSimilarity, 1, 1, 1, 1);
-
-		m_labelSimilarity.set_margin_start(6);
-		m_labelSimilarity.set_halign(Gtk::ALIGN_START);
-
-		m_checkRotations.set_margin_start(6);
-		m_grid1.attach(m_checkRotations, 0, 2, 2, 1);
-
-		get_content_area()->pack_start(m_grid1, Gtk::PACK_SHRINK);
-	} else
-	{
-		m_labelSimilarity.hide();
-		m_spinSimilarity.hide();
-		m_checkRotations.hide();
-	}
-
-	for (auto && pSpinner: std::vector<Gtk::SpinButton*>{&m_spinMinFileSize, &m_spinMaxFileSize})
-	{
-		pSpinner->set_increments(1, 100);
-		pSpinner->set_range(0, 1000000);
-	}
-
-	for (auto && pCombo: std::vector<Gtk::ComboBoxText*>{&m_comboMinFileSize, &m_comboMaxFileSize})
-	{
-		pCombo->append(_("B"));
-		pCombo->append(_("KB"));
-		pCombo->append(_("MB"));
-		pCombo->append(_("GB"));
-		pCombo->set_active_text(_("B"));
-	}
-
-	m_labelFileSize.set_use_markup(true);
-	m_grid2.attach(m_labelFileSize, 0, 0, 3, 1);
-
-	m_checkMinFileSize.set_margin_start(6);
-	m_spinMinFileSize.set_halign(Gtk::ALIGN_END);
-	m_grid2.attach(m_checkMinFileSize, 0, 1, 1, 1);
-	m_grid2.attach(m_spinMinFileSize, 1, 1, 1, 1);
-	m_grid2.attach(m_comboMinFileSize, 2, 1, 1, 1);
-
-	m_checkMaxFileSize.set_margin_start(6);
-	m_spinMaxFileSize.set_halign(Gtk::ALIGN_END);
-	m_grid2.attach(m_checkMaxFileSize, 0, 2, 1, 1);
-	m_grid2.attach(m_spinMaxFileSize, 1, 2, 1, 1);
-	m_grid2.attach(m_comboMaxFileSize, 2, 2, 1, 1);
-
-	m_labelFileAttributes.set_use_markup(true);
-	m_grid3.attach(m_labelFileAttributes, 0, 0, 2, 1);
-	m_checkReadOnlyFiles.set_margin_start(6);
-	m_checkHiddenFiles.set_margin_start(6);
-	m_checkExecutableFiles.set_margin_start(6);
-	m_grid3.attach(m_checkReadOnlyFiles, 0, 1, 1, 1);
-	m_grid3.attach(m_checkHiddenFiles, 0, 2, 1, 1);
-	m_grid3.attach(m_checkExecutableFiles, 0, 3, 1, 1);
-
-	m_checkMinFileSize.signal_toggled().connect(sigc::mem_fun(*this, &SearchSettingsDialog::on_filesize_min_toggled));
-	m_checkMaxFileSize.signal_toggled().connect(sigc::mem_fun(*this, &SearchSettingsDialog::on_filesize_max_toggled));
-
-	get_content_area()->pack_start(m_grid2, Gtk::PACK_SHRINK);
-	get_content_area()->pack_start(m_grid3, Gtk::PACK_SHRINK);
-
-	m_listboxRegex.on_input_status_changed().connect(sigc::mem_fun(*this, &SearchSettingsDialog::on_regex_listbox_changed));
-	auto pButton = Gtk::manage(new Gtk::Button(""));
-	pButton->signal_clicked().connect(sigc::mem_fun(*this, &SearchSettingsDialog::on_add_regex_line_clicked));
-	pButton->set_halign(Gtk::ALIGN_END);
-	pButton->set_image_from_icon_name("list-add-symbolic");
-	pButton->set_relief(Gtk::RELIEF_NONE);
-	pButton->set_always_show_image(true);
-	m_labelRegexps.set_use_markup(true);
-	m_listboxRegex.set_hexpand(true);
-	m_grid4.attach(m_labelRegexps, 0, 0, 2, 1);
-	m_grid4.attach(*pButton, 2, 0, 1, 1);
+}
 
 
-	m_scrolledWindow.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
-	m_scrolledWindow.set_min_content_height(100);
-	m_scrolledWindow.add(m_listboxRegex);
-	m_scrolledWindow.set_shadow_type(Gtk::SHADOW_IN);
+//------------------------------------------------------------------------------
+void
+SearchSettingsDialog::setupWidgets(CommonWidgets & widgets)
+{
+	widgets.m_listboxRegex->on_input_status_changed().connect(
+		sigc::bind<CommonWidgets&>(sigc::mem_fun(*this, &SearchSettingsDialog::on_regex_listbox_changed), sigc::ref(widgets)));
+	widgets.m_btnAddRegex->signal_clicked().connect(
+		sigc::bind<CommonWidgets&>(sigc::mem_fun(*this, &SearchSettingsDialog::on_add_regex_line_clicked), sigc::ref(widgets)));
 
-	m_grid4.attach(m_scrolledWindow, 0, 1, 3, 1);
+	widgets.m_checkMinFileSize->signal_toggled().connect(
+		sigc::bind<CommonWidgets&>(sigc::mem_fun(*this, &SearchSettingsDialog::on_filesize_min_toggled), sigc::ref(widgets)));
 
-	get_content_area()->pack_end(m_grid4, Gtk::PACK_EXPAND_WIDGET);
+	widgets.m_checkMaxFileSize->signal_toggled().connect(
+		sigc::bind<CommonWidgets&>(sigc::mem_fun(*this, &SearchSettingsDialog::on_filesize_max_toggled), sigc::ref(widgets)));
+}
 
-	populateViewFromModel();
-	on_regex_listbox_changed();
+
+//------------------------------------------------------------------------------
+void
+SearchSettingsDialog::init(
+		settings::SearchSettings::SearchMode_t mode,
+		const settings::SearchSettings & exactDuplicatesSettings,
+		const settings::SearchSettings & similarImagesSettings)
+{
+	m_stackSwitcher->get_stack()->set_visible_child(
+		mode == settings::SearchSettings::SearchMode_t::kSimilarImages ? "pageSimilarImages" : "pageExactDuplicates");
+	populateCommonWidgets(exactDuplicatesSettings, m_widgetsExactDuplicates);
+	populateCommonWidgets(similarImagesSettings, m_widgetsSimilarImages);
+	m_spinSimilarity->set_value(similarImagesSettings.imageSettings->sensitivity);
+	m_checkRotations->set_active(similarImagesSettings.imageSettings->processRotations);
 	show_all_children();
-	resize(1, 1);
 }
 
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::configureGrid(Gtk::Grid & grid)
+SearchSettingsDialog::on_filesize_min_toggled(CommonWidgets & widgets)
 {
-	grid.set_border_width(6);
-	grid.set_margin_bottom(0);
-	grid.set_margin_top(0);
-	grid.set_margin_start(0);
-	grid.set_margin_end(0);
-	grid.set_column_spacing(12);
-	grid.set_row_spacing(6);
+	widgets.m_spinMinFileSize->set_sensitive(widgets.m_checkMinFileSize->get_active());
+	widgets.m_comboMinFileSize->set_sensitive(widgets.m_checkMinFileSize->get_active());
 }
 
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::on_filesize_min_toggled()
+SearchSettingsDialog::on_filesize_max_toggled(CommonWidgets & widgets)
 {
-	m_spinMinFileSize.set_sensitive(m_checkMinFileSize.get_active());
-	m_comboMinFileSize.set_sensitive(m_checkMinFileSize.get_active());
+	widgets.m_spinMaxFileSize->set_sensitive(widgets.m_checkMaxFileSize->get_active());
+	widgets.m_comboMaxFileSize->set_sensitive(widgets.m_checkMaxFileSize->get_active());
 }
 
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::on_filesize_max_toggled()
+SearchSettingsDialog::on_add_regex_line_clicked(CommonWidgets & widgets)
 {
-	m_spinMaxFileSize.set_sensitive(m_checkMaxFileSize.get_active());
-	m_comboMaxFileSize.set_sensitive(m_checkMaxFileSize.get_active());
+	widgets.m_listboxRegex->addLine();
 }
 
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::on_add_regex_line_clicked()
+SearchSettingsDialog::on_regex_listbox_changed(CommonWidgets & widgets)
 {
-	m_listboxRegex.addLine();
-}
-
-
-//------------------------------------------------------------------------------
-void
-SearchSettingsDialog::on_regex_listbox_changed()
-{
-	m_btnOk->set_sensitive(m_listboxRegex.isInputValid());
-	m_labelRegexps.set_text(Glib::ustring::compose(_("<b>File path regexps</b> (%1 in total)"), m_listboxRegex.get_children().size()));
-	m_labelRegexps.set_use_markup(true);
-}
-
-
-//------------------------------------------------------------------------------
-void
-SearchSettingsDialog::on_response(int response_id)
-{
-	if (response_id == Gtk::RESPONSE_OK)
-	{
-		populateModelFromView();
-	}
-	Gtk::Dialog::on_response(response_id);
+	m_btnOk->set_sensitive(widgets.m_listboxRegex->isInputValid());
+	m_stackSwitcher->set_sensitive(widgets.m_listboxRegex->isInputValid());
+	widgets.m_labelRegexps->set_text(Glib::ustring::compose(_("<b>File path regexps</b> (%1 in total)"), widgets.m_listboxRegex->get_children().size()));
+	widgets.m_labelRegexps->set_use_markup(true);
 }
 
 
@@ -247,81 +161,83 @@ SearchSettingsDialog::getUnitComboboxValue(const Gtk::ComboBoxText & combobox) c
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::populateViewFromModel()
+SearchSettingsDialog::populateCommonWidgets(const settings::SearchSettings & settings, CommonWidgets & widgets)
 {
-	if (m_settings.imageSettings)
+	if (settings.minFileSize)
 	{
-		m_spinSimilarity.set_value(m_settings.imageSettings->sensitivity);
-		m_checkRotations.set_active(m_settings.imageSettings->processRotations);
-	}
-
-	if (m_settings.minFileSize)
-	{
-		m_checkMinFileSize.set_active(m_settings.minFileSize->enabled);
-		m_spinMinFileSize.set_sensitive(m_settings.minFileSize->enabled);
-		m_comboMinFileSize.set_sensitive(m_settings.minFileSize->enabled);
-		m_spinMinFileSize.set_value(m_settings.minFileSize->size);
-		setUnitComboboxValue(m_settings.minFileSize->unit, m_comboMinFileSize);
+		widgets.m_checkMinFileSize->set_active(settings.minFileSize->enabled);
+		widgets.m_spinMinFileSize->set_sensitive(settings.minFileSize->enabled);
+		widgets.m_comboMinFileSize->set_sensitive(settings.minFileSize->enabled);
+		widgets.m_spinMinFileSize->set_value(settings.minFileSize->size);
+		setUnitComboboxValue(settings.minFileSize->unit, *widgets.m_comboMinFileSize);
 	} else
 	{
-		m_spinMinFileSize.set_sensitive(false);
-		m_comboMinFileSize.set_sensitive(false);
+		widgets.m_spinMinFileSize->set_sensitive(false);
+		widgets.m_comboMinFileSize->set_sensitive(false);
 	}
 
-	if (m_settings.maxFileSize)
+	if (settings.maxFileSize)
 	{
-		m_checkMaxFileSize.set_active(m_settings.maxFileSize->enabled);
-		m_spinMaxFileSize.set_sensitive(m_settings.maxFileSize->enabled);
-		m_comboMaxFileSize.set_sensitive(m_settings.maxFileSize->enabled);
-		m_spinMaxFileSize.set_value(m_settings.maxFileSize->size);
-		setUnitComboboxValue(m_settings.maxFileSize->unit, m_comboMaxFileSize);
+		widgets.m_checkMaxFileSize->set_active(settings.maxFileSize->enabled);
+		widgets.m_spinMaxFileSize->set_sensitive(settings.maxFileSize->enabled);
+		widgets.m_comboMaxFileSize->set_sensitive(settings.maxFileSize->enabled);
+		widgets.m_spinMaxFileSize->set_value(settings.maxFileSize->size);
+		setUnitComboboxValue(settings.maxFileSize->unit, *widgets.m_comboMaxFileSize);
 	} else
 	{
-		m_spinMaxFileSize.set_sensitive(false);
-		m_comboMaxFileSize.set_sensitive(false);
+		widgets.m_spinMaxFileSize->set_sensitive(false);
+		widgets.m_comboMaxFileSize->set_sensitive(false);
 	}
 
-	m_checkReadOnlyFiles.set_active(m_settings.searchReadOnly);
-	m_checkHiddenFiles.set_active(m_settings.searchHidden);
-	m_checkExecutableFiles.set_active(m_settings.searchExecutable);
+	widgets.m_checkReadOnlyFiles->set_active(settings.searchReadOnly);
+	widgets.m_checkHiddenFiles->set_active(settings.searchHidden);
+	widgets.m_checkExecutableFiles->set_active(settings.searchExecutable);
 
-	m_listboxRegex.populateRegexps(m_settings.filenameRegexps);
+	widgets.m_listboxRegex->populateRegexps(settings.filenameRegexps);
+	on_regex_listbox_changed(widgets);
 }
 
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::populateModelFromView()
+SearchSettingsDialog::populateCommonSettings(const CommonWidgets & widgets,
+		settings::SearchSettings & settings) const
 {
-	if (m_settings.imageSettings)
-	{
-		if (m_spinSimilarity.is_visible()) m_settings.imageSettings->sensitivity = m_spinSimilarity.get_value();
-		if (m_checkRotations.is_visible()) m_settings.imageSettings->processRotations = m_checkRotations.get_active();
-	}
+	settings.minFileSize = settings::SearchSettings::FileSizeSetting_t();
+	settings.minFileSize->enabled = widgets.m_checkMinFileSize->get_active();
+	settings.minFileSize->size = widgets.m_spinMinFileSize->get_value_as_int();
+	settings.minFileSize->unit = getUnitComboboxValue(*widgets.m_comboMinFileSize);
 
-	m_settings.minFileSize = settings::SearchSettings::FileSizeSetting_t();
-	m_settings.minFileSize->enabled = m_checkMinFileSize.get_active();
-	m_settings.minFileSize->size = m_spinMinFileSize.get_value_as_int();
-	m_settings.minFileSize->unit = getUnitComboboxValue(m_comboMinFileSize);
+	settings.maxFileSize = settings::SearchSettings::FileSizeSetting_t();
+	settings.maxFileSize->enabled = widgets.m_checkMaxFileSize->get_active();
+	settings.maxFileSize->size = widgets.m_spinMaxFileSize->get_value_as_int();
+	settings.maxFileSize->unit = getUnitComboboxValue(*widgets.m_comboMaxFileSize);
 
-	m_settings.maxFileSize = settings::SearchSettings::FileSizeSetting_t();
-	m_settings.maxFileSize->enabled = m_checkMaxFileSize.get_active();
-	m_settings.maxFileSize->size = m_spinMaxFileSize.get_value_as_int();
-	m_settings.maxFileSize->unit = getUnitComboboxValue(m_comboMaxFileSize);
+	settings.searchReadOnly = widgets.m_checkReadOnlyFiles->get_active();
+	settings.searchHidden = widgets.m_checkHiddenFiles->get_active();
+	settings.searchExecutable = widgets.m_checkExecutableFiles->get_active();
 
-	m_settings.searchReadOnly = m_checkReadOnlyFiles.get_active();
-	m_settings.searchHidden = m_checkHiddenFiles.get_active();
-	m_settings.searchExecutable = m_checkExecutableFiles.get_active();
-
-	m_settings.filenameRegexps = m_listboxRegex.getRegexps();
+	settings.filenameRegexps = widgets.m_listboxRegex->getRegexps();
 }
 
 
 //------------------------------------------------------------------------------
 settings::SearchSettings
-SearchSettingsDialog::getSettings() const
+SearchSettingsDialog::getSettings(settings::SearchSettings::SearchMode_t mode) const
 {
-	return m_settings;
+	settings::SearchSettings settings;
+	settings.searchMode = mode;
+	if (settings.searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
+	{
+		settings.imageSettings = settings::SearchSettings::ImageSettings_t();
+		settings.imageSettings->sensitivity = m_spinSimilarity->get_value();
+		settings.imageSettings->processRotations = m_checkRotations->get_active();
+		populateCommonSettings(m_widgetsSimilarImages, settings);
+	} else
+	{
+		populateCommonSettings(m_widgetsExactDuplicates, settings);
+	}
+	return settings;
 }
 
 

@@ -3,7 +3,7 @@
  Name        : SearchOptionsPane.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -30,6 +30,7 @@ SearchOptionsPane::SearchOptionsPane() :
 	m_refActionGroup->add_action("reload", sigc::mem_fun(*this, &SearchOptionsPane::on_refresh_clicked));
 	m_refActionGroup->add_action("searchSettingsExactDuplicates", sigc::mem_fun(*this, &SearchOptionsPane::on_search_settings_exact_duplicates_clicked));
 	m_refActionGroup->add_action("searchSettingsSimilarImages", sigc::mem_fun(*this, &SearchOptionsPane::on_search_settings_similar_images_clicked));
+	m_refActionGroup->add_action("searchSettingsDefault", sigc::mem_fun(*this, &SearchOptionsPane::on_search_settings_default_clicked));
 
 	m_refActionShowHidden = m_refActionGroup->add_action_bool("showHiddenFiles", sigc::mem_fun(*this, &SearchOptionsPane::on_show_hidden_toggled));
 	m_refActionSearchMode = m_refActionGroup->add_action_radio_integer("searchMode", sigc::mem_fun(*this, &SearchOptionsPane::on_search_mode_changed), 0);
@@ -176,18 +177,24 @@ SearchOptionsPane::on_show_hidden_toggled()
 void
 SearchOptionsPane::show_search_settings_dialog(settings::SearchSettings::SearchMode_t mode)
 {
+	Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_resource("/com/neatdecisions/detwinner/ui/settingsDialog.ui");
+	SearchSettingsDialog * tempPtr = nullptr;
+	builder->get_widget_derived("SettingsDialog", tempPtr);
+	g_assert_nonnull(tempPtr);
+	std::unique_ptr<SearchSettingsDialog> pDialog(tempPtr);
+	pDialog->init(mode,
+		m_searchSettingsManager.getSearchSettings(settings::SearchSettings::SearchMode_t::kExactDuplicates),
+		m_searchSettingsManager.getSearchSettings(settings::SearchSettings::SearchMode_t::kSimilarImages));
 	Gtk::Widget * pParent = get_toplevel();
 	if (pParent && pParent->get_is_toplevel())
 	{
-		SearchSettingsDialog settingsDialog(
-				dynamic_cast<Gtk::Window&>(*pParent),
-				m_searchSettingsManager.getSearchSettings(mode));
-
-		if (settingsDialog.run() == Gtk::RESPONSE_OK)
-		{
-			m_searchSettingsManager.setSearchSettings(settingsDialog.getSettings());
-			m_searchSettingsManager.saveSettings();
-		}
+		pDialog->set_transient_for(dynamic_cast<Gtk::Window&>(*pParent));
+	}
+	if (pDialog->run() == Gtk::RESPONSE_OK)
+	{
+		m_searchSettingsManager.setSearchSettings(pDialog->getSettings(settings::SearchSettings::SearchMode_t::kExactDuplicates));
+		m_searchSettingsManager.setSearchSettings(pDialog->getSettings(settings::SearchSettings::SearchMode_t::kSimilarImages));
+		m_searchSettingsManager.saveSettings();
 	}
 }
 
@@ -207,5 +214,12 @@ SearchOptionsPane::on_search_settings_exact_duplicates_clicked()
 	show_search_settings_dialog(settings::SearchSettings::SearchMode_t::kExactDuplicates);
 }
 
+
+//------------------------------------------------------------------------------
+void
+SearchOptionsPane::on_search_settings_default_clicked()
+{
+	show_search_settings_dialog(m_searchSettingsManager.getDefaultMode());
+}
 
 }}

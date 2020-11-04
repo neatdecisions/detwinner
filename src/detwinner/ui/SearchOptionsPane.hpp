@@ -3,7 +3,7 @@
  Name        : SearchOptionsPane.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -39,6 +39,7 @@ private:
 	void on_refresh_clicked();
 	void on_show_hidden_toggled();
 	void on_search_mode_changed(int iValue);
+	void on_search_settings_default_clicked();
 	void on_search_settings_similar_images_clicked();
 	void on_search_settings_exact_duplicates_clicked();
 	void show_search_settings_dialog(settings::SearchSettings::SearchMode_t mode);

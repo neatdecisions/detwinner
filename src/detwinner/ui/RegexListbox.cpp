@@ -3,7 +3,7 @@
  Name        : RegexListbox.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -23,8 +23,8 @@ namespace ui {
 // RegexListbox
 //==============================================================================
 
-//------------------------------------------------------------------------------
-RegexListbox::RegexListbox()
+RegexListbox::RegexListbox(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>&) :
+		Gtk::ListBox(cobject)
 {
 	set_selection_mode(Gtk::SELECTION_NONE);
 	set_can_focus(true); // for GtkEntry to be able to get rid of focus on Enter
