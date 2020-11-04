@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: detwinner\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-18 20:24+0200\n"
-"PO-Revision-Date: 2019-08-18 23:30+0200\n"
+"POT-Creation-Date: 2020-11-04 18:55+0100\n"
+"PO-Revision-Date: 2020-11-04 19:22+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: ua\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: data/com.neatdecisions.Detwinner.appdata.xml.in:7
 #: data/com.neatdecisions.Detwinner.desktop.in:3
-#: src/detwinner/DetwinnerApp.cpp:26 src/detwinner/DetwinnerApp.cpp:107
+#: src/detwinner/DetwinnerApp.cpp:26 src/detwinner/DetwinnerApp.cpp:105
 msgid "Detwinner"
 msgstr "Detwinner"
 
@@ -27,13 +27,49 @@ msgstr "Detwinner"
 msgid "Find and remove duplicate files and similar images"
 msgstr "Пошук та вилучення однакових файлів і подібних зображень"
 
-#: data/com.neatdecisions.Detwinner.appdata.xml.in:10
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:9
+msgid "Neat Decisions"
+msgstr "Neat Decisions"
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:11
 msgid ""
 "Detwinner is a tool to search and remove exact file duplicates and similar "
 "images."
 msgstr ""
 "Detwinner — це програма, яка дозволяє знаходити та видаляти однакові файли і "
 "схожі зображення."
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:12
+msgid ""
+"You can search for either exact duplicates (100% byte-to-byte match is "
+"ensured by the special hash function) or similar images (Detwinner generates "
+"groups of images that look alike using similarity level specified by you). "
+"You can also narrow your search by specifying file size, attributes and "
+"regular expressions."
+msgstr ""
+"Ви можете шукати точні дублікати (100% збіг забезпечується спеціальною "
+"функцією хешування) або подібні зображення (Detwinner генерує групи "
+"зображень, які виглядають однаково, використовуючи вказаний вами рівень "
+"подібності). Ви також можете звузити пошук, вказавши розмір файлу, його "
+"атрибути та регекспи."
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:13
+msgid ""
+"Smart selection tools provide numerous options for batch selection of files "
+"which should be deleted. Instant preview allows you to be confident in your "
+"choice."
+msgstr ""
+"Інтелектуальні інструменти вибору надають численні параметри пакетного "
+"вибору файлів для видалення. Миттєвий попередній перегляд дозволяє бути "
+"впевненим у вашому виборі."
+
+#: data/com.neatdecisions.Detwinner.appdata.xml.in:14
+msgid ""
+"Files can be deleted permanently, to the trash bin or moved to the backup "
+"folder."
+msgstr ""
+"Файли можна видалити назавжди, до смітника або перемістити до папки з "
+"резервними копіями."
 
 #: data/com.neatdecisions.Detwinner.desktop.in:4
 msgid "Find and remove duplicate files"
@@ -42,10 +78,6 @@ msgstr "Пошук та вилучення однакових файлів"
 #: data/com.neatdecisions.Detwinner.desktop.in:6
 msgid "disk;filesystem;"
 msgstr "disk;filesystem;"
-
-#: data/com.neatdecisions.Detwinner.desktop.in:9
-msgid "com.neatdecisions.Detwinner"
-msgstr "com.neatdecisions.Detwinner"
 
 #: resources/ui/duplicateTreeViewMenu.ui:6
 msgid "Open"
@@ -197,41 +229,118 @@ msgid "Show hidden files"
 msgstr "Показати приховані файли"
 
 #: resources/ui/toolbarSearchPane.glade:111
-msgid "About Detwinner"
-msgstr "Про Detwinner"
-
-#: resources/ui/toolbarSearchPane.glade:138
-msgid "Search for: "
-msgstr "Шукати: "
-
-#: resources/ui/toolbarSearchPane.glade:160
-#: resources/ui/toolbarSearchPane.glade:272
-#: src/detwinner/ui/DetwinnerWindow.cpp:107
-msgid "Exact duplicates"
-msgstr "Точні дублікати"
-
-#: resources/ui/toolbarSearchPane.glade:196
-msgid "Start search"
-msgstr "Почати пошук"
-
-#: resources/ui/toolbarSearchPane.glade:255
-#: resources/ui/toolbarSearchPane.glade:289
-#: src/detwinner/ui/SearchSettingsDialog.cpp:22
+#: resources/ui/toolbarSearchPane.glade:178
+#: resources/ui/toolbarSearchPane.glade:212
 msgid "Settings"
 msgstr "Налаштування"
 
-#: resources/ui/toolbarSearchPane.glade:306
+#: resources/ui/toolbarSearchPane.glade:136
+msgid "About Detwinner"
+msgstr "Про Detwinner"
+
+#: resources/ui/toolbarSearchPane.glade:199
+#: resources/ui/toolbarSearchPane.glade:293 resources/ui/settingsDialog.ui:387
 #: src/detwinner/ui/DetwinnerWindow.cpp:104
+msgid "Exact duplicates"
+msgstr "Точні дублікати"
+
+#: resources/ui/toolbarSearchPane.glade:233 resources/ui/settingsDialog.ui:412
+#: resources/ui/settingsDialog.ui:740 src/detwinner/ui/DetwinnerWindow.cpp:101
 msgid "Similar images"
 msgstr "Подібні зображення"
 
-#: src/detwinner/DetwinnerApp.cpp:109
+#: resources/ui/toolbarSearchPane.glade:274
+msgid "Search for: "
+msgstr "Шукати: "
+
+#: resources/ui/toolbarSearchPane.glade:329
+msgid "Start search"
+msgstr "Почати пошук"
+
+#: resources/ui/settingsDialog.ui:59 src/detwinner/ui/SearchResultsPane.cpp:413
+msgid "OK"
+msgstr "ОК"
+
+#: resources/ui/settingsDialog.ui:72
+#: src/detwinner/tools/BackupFileDeleter.cpp:45
+#: src/detwinner/ui/SearchResultsPane.cpp:412
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: resources/ui/settingsDialog.ui:131 resources/ui/settingsDialog.ui:484
+msgid "File size"
+msgstr "Розмір файлів"
+
+#: resources/ui/settingsDialog.ui:144 resources/ui/settingsDialog.ui:497
+msgid "Greater than:"
+msgstr "Більше ніж:"
+
+#: resources/ui/settingsDialog.ui:173 resources/ui/settingsDialog.ui:526
+msgid "Smaller than:"
+msgstr "Менше ніж:"
+
+#: resources/ui/settingsDialog.ui:207 resources/ui/settingsDialog.ui:225
+#: resources/ui/settingsDialog.ui:560 resources/ui/settingsDialog.ui:578
+#: resources/ui/settingsDialog.ui:765
+#: src/detwinner/ui/SearchSettingsDialog.cpp:144
+msgid "B"
+msgstr "байтів"
+
+#: resources/ui/settingsDialog.ui:208 resources/ui/settingsDialog.ui:226
+#: resources/ui/settingsDialog.ui:561 resources/ui/settingsDialog.ui:579
+#: resources/ui/settingsDialog.ui:768
+#: src/detwinner/ui/SearchSettingsDialog.cpp:141
+#: src/detwinner/ui/SearchSettingsDialog.cpp:157
+msgid "KB"
+msgstr "кБ"
+
+#: resources/ui/settingsDialog.ui:209 resources/ui/settingsDialog.ui:227
+#: resources/ui/settingsDialog.ui:562 resources/ui/settingsDialog.ui:580
+#: resources/ui/settingsDialog.ui:771
+#: src/detwinner/ui/SearchSettingsDialog.cpp:138
+#: src/detwinner/ui/SearchSettingsDialog.cpp:156
+msgid "MB"
+msgstr "МБ"
+
+#: resources/ui/settingsDialog.ui:210 resources/ui/settingsDialog.ui:228
+#: resources/ui/settingsDialog.ui:563 resources/ui/settingsDialog.ui:581
+#: resources/ui/settingsDialog.ui:774
+#: src/detwinner/ui/SearchSettingsDialog.cpp:135
+#: src/detwinner/ui/SearchSettingsDialog.cpp:155
+msgid "GB"
+msgstr "ГБ"
+
+#: resources/ui/settingsDialog.ui:255 resources/ui/settingsDialog.ui:681
+msgid "File attributes"
+msgstr "Атрибути файлів"
+
+#: resources/ui/settingsDialog.ui:267 resources/ui/settingsDialog.ui:693
+msgid "Read only"
+msgstr "Тільки для читання"
+
+#: resources/ui/settingsDialog.ui:280 resources/ui/settingsDialog.ui:706
+msgid "Hidden"
+msgstr "Приховані"
+
+#: resources/ui/settingsDialog.ui:293 resources/ui/settingsDialog.ui:719
+msgid "Executable"
+msgstr "Виконувані"
+
+#: resources/ui/settingsDialog.ui:428
+msgid "Similarity level:"
+msgstr "Рівень подібності:"
+
+#: resources/ui/settingsDialog.ui:451
+msgid "Take rotations into account"
+msgstr "Враховувати обертання"
+
+#: src/detwinner/DetwinnerApp.cpp:107
 msgid "Neat duplicate file finder"
 msgstr "Охайний шукач дублікатів"
 
-#: src/detwinner/DetwinnerApp.cpp:115
+#: src/detwinner/DetwinnerApp.cpp:113
 msgid "translator-credits"
-msgstr ""
+msgstr "Neat Decisions"
 
 #: src/detwinner/tools/BackupFileDeleter.cpp:39
 msgid "File with this name already exists. What should we do?"
@@ -244,12 +353,6 @@ msgstr "Перезаписати"
 #: src/detwinner/tools/BackupFileDeleter.cpp:44
 msgid "Skip"
 msgstr "Пропустити"
-
-#: src/detwinner/tools/BackupFileDeleter.cpp:45
-#: src/detwinner/ui/SearchResultsPane.cpp:414
-#: src/detwinner/ui/SearchSettingsDialog.cpp:37
-msgid "Cancel"
-msgstr "Скасувати"
 
 #: src/detwinner/ui/DuplicatesTreeView.cpp:71
 msgid "Name"
@@ -271,11 +374,11 @@ msgstr "Роздільність"
 msgid "Updated"
 msgstr "Змінений"
 
-#: src/detwinner/ui/DuplicatesTreeView.cpp:351
+#: src/detwinner/ui/DuplicatesTreeView.cpp:342
 msgid "%1 files, %2 each"
 msgstr "%1 файлів, %2 кожен"
 
-#: src/detwinner/ui/DuplicatesTreeView.cpp:355
+#: src/detwinner/ui/DuplicatesTreeView.cpp:346
 msgid "%1 files, from %2 to %3"
 msgstr "%1 файлів, від %2 до %3"
 
@@ -312,103 +415,103 @@ msgid "Stop"
 msgstr "Стоп"
 
 #: src/detwinner/ui/SearchProgressDialog.cpp:32
-#: src/detwinner/ui/SearchProgressDialog.cpp:224
+#: src/detwinner/ui/SearchProgressDialog.cpp:222
 msgid "Pause"
 msgstr "Пауза"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:44
+#: src/detwinner/ui/SearchProgressDialog.cpp:42
 msgid "Paused"
 msgstr "Призупинено"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:55
+#: src/detwinner/ui/SearchProgressDialog.cpp:53
 msgid "<b>Stage:</b> "
 msgstr "<b>Етап:</b> "
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:56
+#: src/detwinner/ui/SearchProgressDialog.cpp:54
 msgid "<b>Total files processed:</b> "
 msgstr "<b>Оброблено файлів:</b> "
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:57
+#: src/detwinner/ui/SearchProgressDialog.cpp:55
 msgid "<b>Skipped files:</b> "
 msgstr "<b>Пропущено файлів:</b> "
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:58
+#: src/detwinner/ui/SearchProgressDialog.cpp:56
 msgid "<b>Duplicates found:</b> "
 msgstr "<b>Знайдено дублікатів:</b> "
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:59
+#: src/detwinner/ui/SearchProgressDialog.cpp:57
 msgid "<b>Time spent:</b> "
 msgstr "<b>Витрачено часу:</b> "
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:151
+#: src/detwinner/ui/SearchProgressDialog.cpp:149
 msgid "(1/4) Indexing…"
 msgstr "(1/4) Індексування…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:154
+#: src/detwinner/ui/SearchProgressDialog.cpp:152
 msgid "(2/4) Examining images…"
 msgstr "(2/4) Вивчення зображень…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:157
+#: src/detwinner/ui/SearchProgressDialog.cpp:155
 msgid "(3/4) Comparing images…"
 msgstr "(3/4) Порівняння зображень…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:160
+#: src/detwinner/ui/SearchProgressDialog.cpp:158
 msgid "(4/4) Organizing images…"
 msgstr "(4/4) Сортування зображень…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:170
+#: src/detwinner/ui/SearchProgressDialog.cpp:168
 msgid "(1/2) Indexing…"
 msgstr "(1/2) Індексування…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:173
+#: src/detwinner/ui/SearchProgressDialog.cpp:171
 msgid "(2/2) Comparing…"
 msgstr "(2/2) Порівняння…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:180
+#: src/detwinner/ui/SearchProgressDialog.cpp:178
 msgid "%1 of %2"
 msgstr "%1 із %2"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:184
+#: src/detwinner/ui/SearchProgressDialog.cpp:182
 msgid "%1 in %2 groups (total size: %3, can be freed: %4)"
 msgstr "%1 у %2 групах (загальний розмір: %3, можливо очистити: %4)"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:220
+#: src/detwinner/ui/SearchProgressDialog.cpp:218
 msgid "Continue"
 msgstr "Продовжити"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:254
+#: src/detwinner/ui/SearchProgressDialog.cpp:252
 msgid "Preparing results…"
 msgstr "Підготовка результатів…"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:258
+#: src/detwinner/ui/SearchProgressDialog.cpp:256
 msgid "Abort"
 msgstr "Скасувати"
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:281
+#: src/detwinner/ui/SearchProgressDialog.cpp:279
 msgid "Finished."
 msgstr "Закінчено."
 
-#: src/detwinner/ui/SearchProgressDialog.cpp:282
+#: src/detwinner/ui/SearchProgressDialog.cpp:280
 msgid "Close"
 msgstr "Закрити"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:123
-#: src/detwinner/ui/SearchResultsPane.cpp:131
-#: src/detwinner/ui/SearchResultsPane.cpp:139
-#: src/detwinner/ui/SearchResultsPane.cpp:147
-#: src/detwinner/ui/SearchResultsPane.cpp:155
-#: src/detwinner/ui/SearchResultsPane.cpp:163
-#: src/detwinner/ui/SearchResultsPane.cpp:171
-#: src/detwinner/ui/SearchResultsPane.cpp:179
-#: src/detwinner/ui/SearchResultsPane.cpp:187
-#: src/detwinner/ui/SearchResultsPane.cpp:195
-#: src/detwinner/ui/SearchResultsPane.cpp:203
-#: src/detwinner/ui/SearchResultsPane.cpp:211
-#: src/detwinner/ui/SearchResultsPane.cpp:219
+#: src/detwinner/ui/SearchResultsPane.cpp:121
+#: src/detwinner/ui/SearchResultsPane.cpp:129
+#: src/detwinner/ui/SearchResultsPane.cpp:137
+#: src/detwinner/ui/SearchResultsPane.cpp:145
+#: src/detwinner/ui/SearchResultsPane.cpp:153
+#: src/detwinner/ui/SearchResultsPane.cpp:161
+#: src/detwinner/ui/SearchResultsPane.cpp:169
+#: src/detwinner/ui/SearchResultsPane.cpp:177
+#: src/detwinner/ui/SearchResultsPane.cpp:185
+#: src/detwinner/ui/SearchResultsPane.cpp:193
+#: src/detwinner/ui/SearchResultsPane.cpp:201
+#: src/detwinner/ui/SearchResultsPane.cpp:209
+#: src/detwinner/ui/SearchResultsPane.cpp:217
 msgid "Selecting…"
 msgstr "Виділення…"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:292
+#: src/detwinner/ui/SearchResultsPane.cpp:290
 msgid ""
 "Remaining %1 duplicates in %2 groups (total size: %3, could be potentially "
 "freed: %4)"
@@ -416,12 +519,12 @@ msgstr ""
 "Залишається %1 дублікатів у %2 групах (загальний розмір: %3, можливо "
 "очистити: %4)"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:371
+#: src/detwinner/ui/SearchResultsPane.cpp:369
 msgid "Selected files will be permanently removed. Continue?"
 msgstr "Обрані файли будуть остаточно вилучені. Продовжити?"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:375
-#: src/detwinner/ui/SearchResultsPane.cpp:396
+#: src/detwinner/ui/SearchResultsPane.cpp:373
+#: src/detwinner/ui/SearchResultsPane.cpp:394
 msgid ""
 "Warning: you have selected all files in one or more duplicate groups. This "
 "means that all these files will be deleted."
@@ -429,109 +532,45 @@ msgstr ""
 "Увага: обрано всі файли у одній або декількох групах. Це означає, что всі ці "
 "файли будуть вилучені."
 
-#: src/detwinner/ui/SearchResultsPane.cpp:383
+#: src/detwinner/ui/SearchResultsPane.cpp:381
 msgid "Deleting…"
 msgstr "Вилучення…"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:392
+#: src/detwinner/ui/SearchResultsPane.cpp:390
 msgid "Selected files will be moved to trash. Continue?"
 msgstr "Обрані файли будуть переміщені у смітник. Продовжити?"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:404
+#: src/detwinner/ui/SearchResultsPane.cpp:402
 msgid "Moving to trash…"
 msgstr "Переміщення у смітник…"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:413
+#: src/detwinner/ui/SearchResultsPane.cpp:411
 msgid "Select a backup folder"
 msgstr "Обрати теку"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:415
-#: src/detwinner/ui/SearchSettingsDialog.cpp:35
-msgid "OK"
-msgstr "ОК"
-
-#: src/detwinner/ui/SearchResultsPane.cpp:424
+#: src/detwinner/ui/SearchResultsPane.cpp:422
 msgid "Moving…"
 msgstr "Переміщення…"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:439
+#: src/detwinner/ui/SearchResultsPane.cpp:437
 msgid "Some of the files could not be deleted"
 msgstr "Неможливо видалити деякі файли"
 
-#: src/detwinner/ui/SearchResultsPane.cpp:440
+#: src/detwinner/ui/SearchResultsPane.cpp:438
 msgid ""
 "Please verify that sufficient permissions have been granted for your account."
 msgstr ""
 "Переконайтесь, що для вашого облікового запису надано достатньо дозволів."
 
-#: src/detwinner/ui/SearchSettingsDialog.cpp:24
-msgid "<b>Similar images</b>"
-msgstr "<b>Схожі зображення</b>"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:25
-msgid "Similarity level:"
-msgstr "Рівень подібності:"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:26
-msgid "Take rotations into account"
-msgstr "Враховувати обертання"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:27
-msgid "<b>File size</b>"
-msgstr "<b>Розмір файлів</b>"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:28
-msgid "Greater than:"
-msgstr "Більше ніж:"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:29
-msgid "Smaller than:"
-msgstr "Менше ніж:"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:30
-msgid "<b>File attributes</b>"
-msgstr "<b>Атрибути файлів</b>"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:31
-msgid "Read only"
-msgstr "Тільки для читання"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:32
-msgid "Hidden"
-msgstr "Приховані"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:33
-msgid "Executable"
-msgstr "Виконувані"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:34
-msgid "<b>File path regexps</b>"
-msgstr "<b>Регулярні вирази</b>"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:85
-#: src/detwinner/ui/SearchSettingsDialog.cpp:89
-#: src/detwinner/ui/SearchSettingsDialog.cpp:230
-msgid "B"
-msgstr "байтів"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:86
-#: src/detwinner/ui/SearchSettingsDialog.cpp:227
-#: src/detwinner/ui/SearchSettingsDialog.cpp:243
-msgid "KB"
-msgstr "кБ"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:87
-#: src/detwinner/ui/SearchSettingsDialog.cpp:224
-#: src/detwinner/ui/SearchSettingsDialog.cpp:242
-msgid "MB"
-msgstr "МБ"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:88
-#: src/detwinner/ui/SearchSettingsDialog.cpp:221
-#: src/detwinner/ui/SearchSettingsDialog.cpp:241
-msgid "GB"
-msgstr "ГБ"
-
-#: src/detwinner/ui/SearchSettingsDialog.cpp:196
+#: src/detwinner/ui/SearchSettingsDialog.cpp:122
 msgid "<b>File path regexps</b> (%1 in total)"
 msgstr "<b>Регулярні вирази</b> (%1 загалом)"
+
+#~ msgid "com.neatdecisions.Detwinner"
+#~ msgstr "com.neatdecisions.Detwinner"
+
+#~ msgid "<b>Similar images</b>"
+#~ msgstr "<b>Схожі зображення</b>"
+
+#~ msgid "<b>File path regexps</b>"
+#~ msgstr "<b>Регулярні вирази</b>"

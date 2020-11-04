@@ -4,6 +4,7 @@ resources/ui/duplicateTreeViewMenu.ui
 resources/ui/regexHelperMenu.ui
 resources/ui/toolbarResultsPane.glade
 resources/ui/toolbarSearchPane.glade
+resources/ui/settingsDialog.ui
 src/detwinner/DetwinnerApp.cpp
 src/detwinner/tools/BackupFileDeleter.cpp
 src/detwinner/ui/DetwinnerWindow.cpp
