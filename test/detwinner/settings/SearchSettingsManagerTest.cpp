@@ -20,7 +20,7 @@ TEST(SearchSettingsManagerTest, default_exact_duplicates)
 	EXPECT_TRUE(searchSettings.filenameRegexps.empty());
 	EXPECT_TRUE(searchSettings.searchReadOnly);
 	EXPECT_FALSE(searchSettings.searchHidden);
-	EXPECT_FALSE(searchSettings.searchExecutable);
+	EXPECT_TRUE(searchSettings.searchExecutable);
 }
 
 
@@ -48,7 +48,7 @@ TEST(SearchSettingsManagerTest, default_similar_images)
 	EXPECT_EQ(searchSettings.filenameRegexps[8], ".*?\\.[jJ][pP][eE]$");
 	EXPECT_TRUE(searchSettings.searchReadOnly);
 	EXPECT_FALSE(searchSettings.searchHidden);
-	EXPECT_FALSE(searchSettings.searchExecutable);
+	EXPECT_TRUE(searchSettings.searchExecutable);
 }
 
 
@@ -125,7 +125,7 @@ TEST(SearchSettingsManagerTest, corrupted_ini_similar)
 	EXPECT_TRUE(searchSettings.filenameRegexps.empty());
 	EXPECT_TRUE(searchSettings.searchReadOnly);
 	EXPECT_TRUE(searchSettings.searchHidden);
-	EXPECT_FALSE(searchSettings.searchExecutable);
+	EXPECT_TRUE(searchSettings.searchExecutable);
 }
 
 
