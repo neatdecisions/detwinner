@@ -35,6 +35,19 @@
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.4.0" date="2020-11-05">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Redesigned settings dialog</li>
+          <li>Faster result preparation</li>
+          <li>For the new installations, include executable files in search by default</li>
+          <li>Swedish translation (thanks to Åke Engelbrektson)</li>
+          <li>Finnish translation (thanks to Jiri Grönroos)</li>
+          <li>Polish translation (thanks to Garbulix)</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.4" date="2020-04-12">
       <description>
         <p>Main changes in this version:</p>
