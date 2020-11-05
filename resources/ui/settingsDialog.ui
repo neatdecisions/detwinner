@@ -362,6 +362,8 @@
                               <object class="GtkListBox" id="listRegexED">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                               </object>
                             </child>
                           </object>
@@ -647,6 +649,8 @@
                               <object class="GtkListBox" id="listRegexSI">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                               </object>
                             </child>
                           </object>
