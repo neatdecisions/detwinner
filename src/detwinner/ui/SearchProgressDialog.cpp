@@ -3,7 +3,7 @@
  Name        : SearchProgressDialog.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -35,7 +35,7 @@ SearchProgressDialog::SearchProgressDialog(
 	m_labelSkipped("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
 	m_labelDuplicatesFound("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
 	m_labelTimeSpent("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_searchSettings(searchSettings),
+	m_searchMode(searchSettings.searchMode),
 	m_progressItem(callbacks::SearchProgressCallback::Create())
 {
 	m_progressBar.set_show_text(false);
@@ -91,31 +91,30 @@ SearchProgressDialog::SearchProgressDialog(
 	m_refreshConnection = Glib::signal_timeout().connect(sigc::mem_fun(*this, &SearchProgressDialog::on_timeout), 1000);
 
 	// convert SearchSettings to FileSearchSettings
+	const settings::SearchSettings::CommonSettings & commonSettings = (m_searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages) ?
+		searchSettings.similarImagesSettings :
+		searchSettings.exactDuplicatesSettings;
 	logic::FileSearchSettings fileSearchSettings;
-	fileSearchSettings.searchReadOnlyFiles = m_searchSettings.searchReadOnly;
-	fileSearchSettings.searchHiddenFiles = m_searchSettings.searchHidden;
-	fileSearchSettings.searchExecutableFiles = m_searchSettings.searchExecutable;
-	fileSearchSettings.filenameRegexps = m_searchSettings.filenameRegexps;
-	if (m_searchSettings.minFileSize && m_searchSettings.minFileSize->enabled)
+	fileSearchSettings.searchReadOnlyFiles = commonSettings.searchReadOnly;
+	fileSearchSettings.searchHiddenFiles = commonSettings.searchHidden;
+	fileSearchSettings.searchExecutableFiles = commonSettings.searchExecutable;
+	fileSearchSettings.filenameRegexps = commonSettings.filenameRegexps;
+	if (commonSettings.minFileSize && commonSettings.minFileSize->enabled)
 	{
-		fileSearchSettings.minFileSize = m_searchSettings.minFileSize->size *
-			( std::pow(10ULL, static_cast<unsigned int>(m_searchSettings.minFileSize->unit) * 3ULL) );
+		fileSearchSettings.minFileSize = commonSettings.minFileSize->size *
+			( std::pow(10ULL, static_cast<unsigned int>(commonSettings.minFileSize->unit) * 3ULL) );
 	}
 
-	if (m_searchSettings.maxFileSize && m_searchSettings.maxFileSize->enabled)
+	if (commonSettings.maxFileSize && commonSettings.maxFileSize->enabled)
 	{
-		fileSearchSettings.maxFileSize = m_searchSettings.maxFileSize->size *
-			( std::pow(10ULL, static_cast<unsigned int>(m_searchSettings.maxFileSize->unit) * 3ULL) );
+		fileSearchSettings.maxFileSize = commonSettings.maxFileSize->size *
+			( std::pow(10ULL, static_cast<unsigned int>(commonSettings.maxFileSize->unit) * 3ULL) );
 	}
 
-	if (m_searchSettings.imageSettings)
+	if (m_searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
 	{
-		fileSearchSettings.sensitivity = m_searchSettings.imageSettings->sensitivity;
-		fileSearchSettings.processRotations = m_searchSettings.imageSettings->processRotations;
-	}
-
-	if (m_searchSettings.searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
-	{
+		fileSearchSettings.sensitivity = searchSettings.imageSettings.sensitivity;
+		fileSearchSettings.processRotations = searchSettings.imageSettings.processRotations;
 		auto threadLambda = [pathsToSearch, fileSearchSettings, this]() {
 			return logic::DuplicateImageFinder().find(pathsToSearch, fileSearchSettings, m_progressItem);
 		};
@@ -141,7 +140,7 @@ SearchProgressDialog::~SearchProgressDialog() noexcept
 void
 SearchProgressDialog::update_indicators()
 {
-	if (m_searchSettings.searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
+	if (m_searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
 	{
 		switch (m_progressItem->getStage())
 		{

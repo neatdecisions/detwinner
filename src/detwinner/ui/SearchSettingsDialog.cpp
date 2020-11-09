@@ -74,15 +74,17 @@ SearchSettingsDialog::setupWidgets(CommonWidgets & widgets)
 void
 SearchSettingsDialog::init(
 		settings::SearchSettings::SearchMode_t mode,
-		const settings::SearchSettings & exactDuplicatesSettings,
-		const settings::SearchSettings & similarImagesSettings)
+		const settings::SearchSettings & searchSettings)
 {
+	// searchSettings.searchMode -> what is selected in the UI;
+	// mode                      -> which settings page to show
+	m_searchMode = searchSettings.searchMode;
 	m_stackSwitcher->get_stack()->set_visible_child(
 		mode == settings::SearchSettings::SearchMode_t::kSimilarImages ? "pageSimilarImages" : "pageExactDuplicates");
-	populateCommonWidgets(exactDuplicatesSettings, m_widgetsExactDuplicates);
-	populateCommonWidgets(similarImagesSettings, m_widgetsSimilarImages);
-	m_spinSimilarity->set_value(similarImagesSettings.imageSettings->sensitivity);
-	m_checkRotations->set_active(similarImagesSettings.imageSettings->processRotations);
+	populateCommonWidgets(searchSettings.exactDuplicatesSettings, m_widgetsExactDuplicates);
+	populateCommonWidgets(searchSettings.similarImagesSettings, m_widgetsSimilarImages);
+	m_spinSimilarity->set_value(searchSettings.imageSettings.sensitivity);
+	m_checkRotations->set_active(searchSettings.imageSettings.processRotations);
 	show_all_children();
 }
 
@@ -161,7 +163,9 @@ SearchSettingsDialog::getUnitComboboxValue(const Gtk::ComboBoxText & combobox) c
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::populateCommonWidgets(const settings::SearchSettings & settings, CommonWidgets & widgets)
+SearchSettingsDialog::populateCommonWidgets(
+		const settings::SearchSettings::CommonSettings & settings,
+		CommonWidgets & widgets)
 {
 	if (settings.minFileSize)
 	{
@@ -200,8 +204,9 @@ SearchSettingsDialog::populateCommonWidgets(const settings::SearchSettings & set
 
 //------------------------------------------------------------------------------
 void
-SearchSettingsDialog::populateCommonSettings(const CommonWidgets & widgets,
-		settings::SearchSettings & settings) const
+SearchSettingsDialog::populateCommonSettings(
+		const CommonWidgets & widgets,
+		settings::SearchSettings::CommonSettings & settings) const
 {
 	settings.minFileSize = settings::SearchSettings::FileSizeSetting_t();
 	settings.minFileSize->enabled = widgets.m_checkMinFileSize->get_active();
@@ -223,20 +228,14 @@ SearchSettingsDialog::populateCommonSettings(const CommonWidgets & widgets,
 
 //------------------------------------------------------------------------------
 settings::SearchSettings
-SearchSettingsDialog::getSettings(settings::SearchSettings::SearchMode_t mode) const
+SearchSettingsDialog::getSettings() const
 {
 	settings::SearchSettings settings;
-	settings.searchMode = mode;
-	if (settings.searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
-	{
-		settings.imageSettings = settings::SearchSettings::ImageSettings_t();
-		settings.imageSettings->sensitivity = m_spinSimilarity->get_value();
-		settings.imageSettings->processRotations = m_checkRotations->get_active();
-		populateCommonSettings(m_widgetsSimilarImages, settings);
-	} else
-	{
-		populateCommonSettings(m_widgetsExactDuplicates, settings);
-	}
+	settings.searchMode = m_searchMode;
+	settings.imageSettings.sensitivity = m_spinSimilarity->get_value();
+	settings.imageSettings.processRotations = m_checkRotations->get_active();
+	populateCommonSettings(m_widgetsSimilarImages, settings.similarImagesSettings);
+	populateCommonSettings(m_widgetsExactDuplicates, settings.exactDuplicatesSettings);
 	return settings;
 }
 

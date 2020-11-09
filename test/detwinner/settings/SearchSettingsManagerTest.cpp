@@ -8,148 +8,110 @@ namespace settings {
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManagerTest, default_exact_duplicates)
+TEST(SearchSettingsManagerTest, default)
 {
 	SearchSettingsManager settingsManager("data/settings/settings.ini");
-	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kExactDuplicates);
-	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, settingsManager.getDefaultMode());
+	const auto searchSettings = settingsManager.getSearchSettings();
 	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, searchSettings.searchMode);
-	EXPECT_FALSE(searchSettings.imageSettings);
-	EXPECT_FALSE(searchSettings.minFileSize);
-	EXPECT_FALSE(searchSettings.maxFileSize);
-	EXPECT_TRUE(searchSettings.filenameRegexps.empty());
-	EXPECT_TRUE(searchSettings.searchReadOnly);
-	EXPECT_FALSE(searchSettings.searchHidden);
-	EXPECT_TRUE(searchSettings.searchExecutable);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.minFileSize);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.maxFileSize);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.filenameRegexps.empty());
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.searchReadOnly);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.searchHidden);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.searchExecutable);
+
+	EXPECT_EQ(85, searchSettings.imageSettings.sensitivity);
+	EXPECT_TRUE(searchSettings.imageSettings.processRotations);
+	EXPECT_FALSE(searchSettings.similarImagesSettings.minFileSize);
+	EXPECT_FALSE(searchSettings.similarImagesSettings.maxFileSize);
+	ASSERT_EQ(9UL, searchSettings.similarImagesSettings.filenameRegexps.size());
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[0], ".*?\\.[jJ][pP][gG]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[1], ".*?\\.[jJ][pP][eE][gG]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[2], ".*?\\.[pP][nN][gG]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[3], ".*?\\.[gG][iI][fF]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[4], ".*?\\.[bB][mM][pP]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[5], ".*?\\.[tT][iI][fF]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[6], ".*?\\.[dD][iI][bB]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[7], ".*?\\.[pP][cC][xX]$");
+	EXPECT_EQ(searchSettings.similarImagesSettings.filenameRegexps[8], ".*?\\.[jJ][pP][eE]$");
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchReadOnly);
+	EXPECT_FALSE(searchSettings.similarImagesSettings.searchHidden);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchExecutable);
 }
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManagerTest, default_similar_images)
-{
-	SearchSettingsManager settingsManager("data/settings/settings.ini");
-	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kSimilarImages);
-	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, settingsManager.getDefaultMode());
-	EXPECT_EQ(SearchSettings::SearchMode_t::kSimilarImages, searchSettings.searchMode);
-	ASSERT_TRUE(searchSettings.imageSettings);
-	EXPECT_EQ(85, searchSettings.imageSettings.value().sensitivity);
-	EXPECT_TRUE(searchSettings.imageSettings.value().processRotations);
-	EXPECT_FALSE(searchSettings.minFileSize);
-	EXPECT_FALSE(searchSettings.maxFileSize);
-	ASSERT_EQ(9UL, searchSettings.filenameRegexps.size());
-	EXPECT_EQ(searchSettings.filenameRegexps[0], ".*?\\.[jJ][pP][gG]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[1], ".*?\\.[jJ][pP][eE][gG]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[2], ".*?\\.[pP][nN][gG]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[3], ".*?\\.[gG][iI][fF]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[4], ".*?\\.[bB][mM][pP]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[5], ".*?\\.[tT][iI][fF]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[6], ".*?\\.[dD][iI][bB]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[7], ".*?\\.[pP][cC][xX]$");
-	EXPECT_EQ(searchSettings.filenameRegexps[8], ".*?\\.[jJ][pP][eE]$");
-	EXPECT_TRUE(searchSettings.searchReadOnly);
-	EXPECT_FALSE(searchSettings.searchHidden);
-	EXPECT_TRUE(searchSettings.searchExecutable);
-}
-
-
-//------------------------------------------------------------------------------
-TEST(SearchSettingsManagerTest, settings_ini_similar)
+TEST(SearchSettingsManagerTest, settings_ini)
 {
 	SearchSettingsManager settingsManager("data/settings/settings.ini");
 	settingsManager.loadSettings();
-	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kSimilarImages);
-	EXPECT_EQ(SearchSettings::SearchMode_t::kSimilarImages, settingsManager.getDefaultMode());
+	const auto searchSettings = settingsManager.getSearchSettings();
 	EXPECT_EQ(SearchSettings::SearchMode_t::kSimilarImages, searchSettings.searchMode);
-	ASSERT_TRUE(searchSettings.imageSettings);
-	EXPECT_EQ(80, searchSettings.imageSettings.value().sensitivity);
-	EXPECT_FALSE(searchSettings.imageSettings.value().processRotations);
-	EXPECT_TRUE(searchSettings.minFileSize);
-	EXPECT_FALSE(searchSettings.minFileSize.value().enabled);
-	EXPECT_EQ(0ULL, searchSettings.minFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.minFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.maxFileSize);
-	EXPECT_TRUE(searchSettings.maxFileSize.value().enabled);
-	EXPECT_EQ(1ULL, searchSettings.maxFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kMB, searchSettings.maxFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.filenameRegexps.empty());
-	EXPECT_FALSE(searchSettings.searchReadOnly);
-	EXPECT_TRUE(searchSettings.searchHidden);
-	EXPECT_TRUE(searchSettings.searchExecutable);
+	EXPECT_EQ(80, searchSettings.imageSettings.sensitivity);
+	EXPECT_FALSE(searchSettings.imageSettings.processRotations);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.minFileSize);
+	EXPECT_FALSE(searchSettings.similarImagesSettings.minFileSize.value().enabled);
+	EXPECT_EQ(0ULL, searchSettings.similarImagesSettings.minFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.similarImagesSettings.minFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.maxFileSize);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.maxFileSize.value().enabled);
+	EXPECT_EQ(1ULL, searchSettings.similarImagesSettings.maxFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kMB, searchSettings.similarImagesSettings.maxFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.filenameRegexps.empty());
+	EXPECT_FALSE(searchSettings.similarImagesSettings.searchReadOnly);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchHidden);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchExecutable);
+
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.minFileSize);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.minFileSize.value().enabled);
+	EXPECT_EQ(150ULL, searchSettings.exactDuplicatesSettings.minFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kKB, searchSettings.exactDuplicatesSettings.minFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.maxFileSize);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.maxFileSize.value().enabled);
+	EXPECT_EQ(0ULL, searchSettings.exactDuplicatesSettings.maxFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.exactDuplicatesSettings.maxFileSize.value().unit);
+	ASSERT_EQ(1ULL, searchSettings.exactDuplicatesSettings.filenameRegexps.size());
+	EXPECT_EQ(".*?", searchSettings.exactDuplicatesSettings.filenameRegexps[0]);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.searchReadOnly);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.searchHidden);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.searchExecutable);
 }
 
 
 //------------------------------------------------------------------------------
-TEST(SearchSettingsManagerTest, settings_ini_exact)
-{
-	SearchSettingsManager settingsManager("data/settings/settings.ini");
-	settingsManager.loadSettings();
-	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kExactDuplicates);
-	EXPECT_EQ(SearchSettings::SearchMode_t::kSimilarImages, settingsManager.getDefaultMode());
-	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, searchSettings.searchMode);
-	EXPECT_FALSE(searchSettings.imageSettings);
-	EXPECT_TRUE(searchSettings.minFileSize);
-	EXPECT_FALSE(searchSettings.minFileSize.value().enabled);
-	EXPECT_EQ(150ULL, searchSettings.minFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kKB, searchSettings.minFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.maxFileSize);
-	EXPECT_FALSE(searchSettings.maxFileSize.value().enabled);
-	EXPECT_EQ(0ULL, searchSettings.maxFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.maxFileSize.value().unit);
-	ASSERT_EQ(1ULL, searchSettings.filenameRegexps.size());
-	EXPECT_EQ(".*?", searchSettings.filenameRegexps[0]);
-	EXPECT_TRUE(searchSettings.searchReadOnly);
-	EXPECT_FALSE(searchSettings.searchHidden);
-	EXPECT_TRUE(searchSettings.searchExecutable);
-}
-
-
-//------------------------------------------------------------------------------
-TEST(SearchSettingsManagerTest, corrupted_ini_similar)
+TEST(SearchSettingsManagerTest, corrupted_ini)
 {
 	SearchSettingsManager settingsManager("data/settings/corrupted.ini");
 	settingsManager.loadSettings();
-	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kSimilarImages);
-	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, settingsManager.getDefaultMode());
-	EXPECT_EQ(SearchSettings::SearchMode_t::kSimilarImages, searchSettings.searchMode);
-	ASSERT_TRUE(searchSettings.imageSettings);
-	EXPECT_EQ(85, searchSettings.imageSettings.value().sensitivity);
-	EXPECT_TRUE(searchSettings.imageSettings.value().processRotations);
-	EXPECT_TRUE(searchSettings.minFileSize);
-	EXPECT_FALSE(searchSettings.minFileSize.value().enabled);
-	EXPECT_EQ(0ULL, searchSettings.minFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kKB, searchSettings.minFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.maxFileSize);
-	EXPECT_TRUE(searchSettings.maxFileSize.value().enabled);
-	EXPECT_EQ(-1, searchSettings.maxFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.maxFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.filenameRegexps.empty());
-	EXPECT_TRUE(searchSettings.searchReadOnly);
-	EXPECT_TRUE(searchSettings.searchHidden);
-	EXPECT_TRUE(searchSettings.searchExecutable);
-}
-
-
-//------------------------------------------------------------------------------
-TEST(SearchSettingsManagerTest, corrupted_ini_exact)
-{
-	SearchSettingsManager settingsManager("data/settings/corrupted.ini");
-	settingsManager.loadSettings();
-	const auto searchSettings = settingsManager.getSearchSettings(SearchSettings::SearchMode_t::kExactDuplicates);
-	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, settingsManager.getDefaultMode());
+	const auto searchSettings = settingsManager.getSearchSettings();
 	EXPECT_EQ(SearchSettings::SearchMode_t::kExactDuplicates, searchSettings.searchMode);
-	EXPECT_FALSE(searchSettings.imageSettings);
-	EXPECT_TRUE(searchSettings.minFileSize);
-	EXPECT_FALSE(searchSettings.minFileSize.value().enabled);
-	EXPECT_EQ(150ULL, searchSettings.minFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.minFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.maxFileSize);
-	EXPECT_FALSE(searchSettings.maxFileSize.value().enabled);
-	EXPECT_EQ(0ULL, searchSettings.maxFileSize.value().size);
-	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.maxFileSize.value().unit);
-	EXPECT_TRUE(searchSettings.filenameRegexps.empty());
-	EXPECT_TRUE(searchSettings.searchReadOnly);
-	EXPECT_FALSE(searchSettings.searchHidden);
-	EXPECT_TRUE(searchSettings.searchExecutable);
+	EXPECT_EQ(85, searchSettings.imageSettings.sensitivity);
+	EXPECT_TRUE(searchSettings.imageSettings.processRotations);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.minFileSize);
+	EXPECT_FALSE(searchSettings.similarImagesSettings.minFileSize.value().enabled);
+	EXPECT_EQ(0ULL, searchSettings.similarImagesSettings.minFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kKB, searchSettings.similarImagesSettings.minFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.maxFileSize);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.maxFileSize.value().enabled);
+	EXPECT_EQ(-1, searchSettings.similarImagesSettings.maxFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.similarImagesSettings.maxFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.filenameRegexps.empty());
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchReadOnly);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchHidden);
+	EXPECT_TRUE(searchSettings.similarImagesSettings.searchExecutable);
+
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.minFileSize);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.minFileSize.value().enabled);
+	EXPECT_EQ(150ULL, searchSettings.exactDuplicatesSettings.minFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.exactDuplicatesSettings.minFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.maxFileSize);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.maxFileSize.value().enabled);
+	EXPECT_EQ(0ULL, searchSettings.exactDuplicatesSettings.maxFileSize.value().size);
+	EXPECT_EQ(SearchSettings::FileSizeUnit_t::kB, searchSettings.exactDuplicatesSettings.maxFileSize.value().unit);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.filenameRegexps.empty());
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.searchReadOnly);
+	EXPECT_FALSE(searchSettings.exactDuplicatesSettings.searchHidden);
+	EXPECT_TRUE(searchSettings.exactDuplicatesSettings.searchExecutable);
 }
 
 

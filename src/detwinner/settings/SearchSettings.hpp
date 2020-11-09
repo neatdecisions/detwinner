@@ -3,7 +3,7 @@
  Name        : SearchSettings.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -49,14 +49,28 @@ struct SearchSettings
 		bool processRotations = true;
 	};
 
+	struct CommonSettings
+	{
+		stdx::optional<FileSizeSetting_t> minFileSize;
+		stdx::optional<FileSizeSetting_t> maxFileSize;
+		std::vector<std::string> filenameRegexps;
+		bool searchReadOnly = true;
+		bool searchHidden = false;
+		bool searchExecutable = true;
+	};
+
+	struct UiSettings
+	{
+		bool showHiddenFiles = false;
+	};
+
+	CommonSettings exactDuplicatesSettings;
+	CommonSettings similarImagesSettings;
+
 	SearchMode_t searchMode = SearchMode_t::kExactDuplicates;
-	stdx::optional<ImageSettings_t> imageSettings;
-	stdx::optional<FileSizeSetting_t> minFileSize;
-	stdx::optional<FileSizeSetting_t> maxFileSize;
-	std::vector<std::string> filenameRegexps;
-	bool searchReadOnly = true;
-	bool searchHidden = false;
-	bool searchExecutable = true;
+	ImageSettings_t imageSettings;
+
+	UiSettings uiSettings;
 };
 
 
