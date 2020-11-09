@@ -54,7 +54,11 @@ SearchOptionsPane::SearchOptionsPane() :
 	const std::string & aHomeDir = Glib::get_home_dir();
 	m_places.set_location(Gio::File::create_for_path(aHomeDir));
 	m_fileTree.load(aHomeDir);
-	on_search_mode_changed(getIntBySearchMode(m_searchSettingsManager.getDefaultMode()));
+	on_search_mode_changed(getIntBySearchMode(m_searchSettingsManager.getSearchSettings().searchMode));
+
+	const bool showHiddenFiles = m_searchSettingsManager.getSearchSettings().uiSettings.showHiddenFiles;
+	if (m_refActionShowHidden) m_refActionShowHidden->change_state(showHiddenFiles);
+	m_fileTree.set_show_hidden(showHiddenFiles);
 }
 
 
@@ -70,9 +74,7 @@ SearchOptionsPane::signal_search_mode_changed()
 settings::SearchSettings
 SearchOptionsPane::getSearchSettings() const
 {
-	int state = 0;
-	m_refActionSearchMode->get_state(state);
-	return m_searchSettingsManager.getSearchSettings(getSearchModeByInt(state));
+	return m_searchSettingsManager.getSearchSettings();
 }
 
 
@@ -97,8 +99,9 @@ void
 SearchOptionsPane::on_search_mode_changed(int value)
 {
 	m_refActionSearchMode->change_state(value);
-	settings::SearchSettings::SearchMode_t searchMode = getSearchModeByInt(value);
-	m_searchSettingsManager.setDefaultMode(searchMode);
+	settings::SearchSettings searchSettings = m_searchSettingsManager.getSearchSettings();
+	searchSettings.searchMode = getSearchModeByInt(value);
+	m_searchSettingsManager.setSearchSettings(searchSettings);
 	m_searchSettingsManager.saveSettings();
 	m_signalSearchModeChanged.emit(getSearchModeByInt(value));
 }
@@ -169,6 +172,10 @@ SearchOptionsPane::on_show_hidden_toggled()
 		toggle = !toggle;
 		m_refActionShowHidden->change_state(toggle);
 	}
+	auto searchSettings = m_searchSettingsManager.getSearchSettings();
+	searchSettings.uiSettings.showHiddenFiles = toggle;
+	m_searchSettingsManager.setSearchSettings(searchSettings);
+	m_searchSettingsManager.saveSettings();
 	m_fileTree.set_show_hidden(toggle);
 }
 
@@ -182,9 +189,7 @@ SearchOptionsPane::show_search_settings_dialog(settings::SearchSettings::SearchM
 	builder->get_widget_derived("SettingsDialog", tempPtr);
 	g_assert_nonnull(tempPtr);
 	std::unique_ptr<SearchSettingsDialog> pDialog(tempPtr);
-	pDialog->init(mode,
-		m_searchSettingsManager.getSearchSettings(settings::SearchSettings::SearchMode_t::kExactDuplicates),
-		m_searchSettingsManager.getSearchSettings(settings::SearchSettings::SearchMode_t::kSimilarImages));
+	pDialog->init(mode, m_searchSettingsManager.getSearchSettings());
 	Gtk::Widget * pParent = get_toplevel();
 	if (pParent && pParent->get_is_toplevel())
 	{
@@ -192,8 +197,7 @@ SearchOptionsPane::show_search_settings_dialog(settings::SearchSettings::SearchM
 	}
 	if (pDialog->run() == Gtk::RESPONSE_OK)
 	{
-		m_searchSettingsManager.setSearchSettings(pDialog->getSettings(settings::SearchSettings::SearchMode_t::kExactDuplicates));
-		m_searchSettingsManager.setSearchSettings(pDialog->getSettings(settings::SearchSettings::SearchMode_t::kSimilarImages));
+		m_searchSettingsManager.setSearchSettings(pDialog->getSettings());
 		m_searchSettingsManager.saveSettings();
 	}
 }
@@ -219,7 +223,7 @@ SearchOptionsPane::on_search_settings_exact_duplicates_clicked()
 void
 SearchOptionsPane::on_search_settings_default_clicked()
 {
-	show_search_settings_dialog(m_searchSettingsManager.getDefaultMode());
+	show_search_settings_dialog(m_searchSettingsManager.getSearchSettings().searchMode);
 }
 
 }}

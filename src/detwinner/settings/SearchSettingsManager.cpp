@@ -22,6 +22,7 @@ namespace settings {
 
 namespace {
 	const std::string kGroupName_Global = "Global";
+	const std::string kGroupName_UI = "UI";
 	const std::string kGroupName_ExactDuplicates = "ExactDuplicates";
 	const std::string kGroupName_SimilarImages = "SimilarImages";
 	const std::string kFieldName_Sensitivity = "sensitivity";
@@ -37,25 +38,33 @@ namespace {
 	const std::string kFieldName_AttributeHidden = "attributes.hidden";
 	const std::string kFieldName_AttributeExecutable = "attributes.executable";
 	const std::string kFieldName_DefaultSearchMode = "defaultSearchMode";
+	const std::string kFieldName_ShowHiddenFiles = "showHiddenFiles";
 }
 
 
 //------------------------------------------------------------------------------
 SearchSettingsManager::SearchSettingsManager(const std::string & settingsFilePath) :
-	m_exactDuplicatesSettings(createDefaultExactDuplicatesSettings()),
-	m_similarImagesSettings(createDefaultSimilarImagesSettings()),
-	m_settingsFilePath(settingsFilePath),
-	m_defaultMode(SearchSettings::SearchMode_t::kExactDuplicates)
-{}
+	m_settingsFilePath(settingsFilePath)
+{
+	m_searchSettings.similarImagesSettings.filenameRegexps = {
+		".*?\\.[jJ][pP][gG]$",
+		".*?\\.[jJ][pP][eE][gG]$",
+		".*?\\.[pP][nN][gG]$",
+		".*?\\.[gG][iI][fF]$",
+		".*?\\.[bB][mM][pP]$",
+		".*?\\.[tT][iI][fF]$",
+		".*?\\.[dD][iI][bB]$",
+		".*?\\.[pP][cC][xX]$",
+		".*?\\.[jJ][pP][eE]$",
+	};
+}
 
 
 //------------------------------------------------------------------------------
 SearchSettings
-SearchSettingsManager::getSearchSettings(SearchSettings::SearchMode_t mode) const
+SearchSettingsManager::getSearchSettings() const
 {
-	return (mode == SearchSettings::SearchMode_t::kSimilarImages) ?
-		m_similarImagesSettings :
-		m_exactDuplicatesSettings;
+	return m_searchSettings;
 }
 
 
@@ -63,33 +72,7 @@ SearchSettingsManager::getSearchSettings(SearchSettings::SearchMode_t mode) cons
 void
 SearchSettingsManager::setSearchSettings(const SearchSettings & value)
 {
-	switch (value.searchMode)
-	{
-	case SearchSettings::SearchMode_t::kSimilarImages:
-		m_similarImagesSettings = value;
-		break;
-	case SearchSettings::SearchMode_t::kExactDuplicates:
-		m_exactDuplicatesSettings = value;
-		break;
-	default:
-		break;
-	}
-}
-
-
-//------------------------------------------------------------------------------
-SearchSettings::SearchMode_t
-SearchSettingsManager::getDefaultMode() const
-{
-	return m_defaultMode;
-}
-
-
-//------------------------------------------------------------------------------
-void
-SearchSettingsManager::setDefaultMode(SearchSettings::SearchMode_t value)
-{
-	m_defaultMode = value;
+	m_searchSettings = value;
 }
 
 
@@ -107,7 +90,7 @@ SearchSettingsManager::saveSettings() const
 
 			Glib::KeyFile keyFile;
 
-			if (m_defaultMode == SearchSettings::SearchMode_t::kSimilarImages)
+			if (m_searchSettings.searchMode == SearchSettings::SearchMode_t::kSimilarImages)
 			{
 				keyFile.set_string(kGroupName_Global, kFieldName_DefaultSearchMode, kGroupName_SimilarImages);
 			} else
@@ -115,13 +98,11 @@ SearchSettingsManager::saveSettings() const
 				keyFile.set_string(kGroupName_Global, kFieldName_DefaultSearchMode, kGroupName_ExactDuplicates);
 			}
 
-			saveCommonSettings(kGroupName_ExactDuplicates, m_exactDuplicatesSettings, keyFile);
-			if (m_similarImagesSettings.imageSettings)
-			{
-				keyFile.set_integer(kGroupName_SimilarImages, kFieldName_Sensitivity, m_similarImagesSettings.imageSettings->sensitivity);
-				keyFile.set_boolean(kGroupName_SimilarImages, kFieldName_ProcessRotations, m_similarImagesSettings.imageSettings->processRotations);
-			}
-			saveCommonSettings(kGroupName_SimilarImages, m_similarImagesSettings, keyFile);
+			saveCommonSettings(kGroupName_ExactDuplicates, m_searchSettings.exactDuplicatesSettings, keyFile);
+			saveCommonSettings(kGroupName_SimilarImages, m_searchSettings.similarImagesSettings, keyFile);
+			keyFile.set_integer(kGroupName_SimilarImages, kFieldName_Sensitivity, m_searchSettings.imageSettings.sensitivity);
+			keyFile.set_boolean(kGroupName_SimilarImages, kFieldName_ProcessRotations, m_searchSettings.imageSettings.processRotations);
+			keyFile.set_boolean(kGroupName_UI, kFieldName_ShowHiddenFiles, m_searchSettings.uiSettings.showHiddenFiles);
 
 			keyFile.save_to_file(m_settingsFilePath);
 		}
@@ -130,37 +111,6 @@ SearchSettingsManager::saveSettings() const
 		g_warning("%s", e.what().c_str());
 	}
 }
-
-
-//------------------------------------------------------------------------------
-SearchSettings
-SearchSettingsManager::createDefaultSimilarImagesSettings() const
-{
-	SearchSettings result;
-	result.searchMode = SearchSettings::SearchMode_t::kSimilarImages;
-	result.imageSettings = SearchSettings::ImageSettings_t();
-	result.filenameRegexps = {
-		".*?\\.[jJ][pP][gG]$",
-		".*?\\.[jJ][pP][eE][gG]$",
-		".*?\\.[pP][nN][gG]$",
-		".*?\\.[gG][iI][fF]$",
-		".*?\\.[bB][mM][pP]$",
-		".*?\\.[tT][iI][fF]$",
-		".*?\\.[dD][iI][bB]$",
-		".*?\\.[pP][cC][xX]$",
-		".*?\\.[jJ][pP][eE]$",
-	};
-	return result;
-}
-
-
-//------------------------------------------------------------------------------
-SearchSettings
-SearchSettingsManager::createDefaultExactDuplicatesSettings() const
-{
-	return SearchSettings();
-}
-
 
 //------------------------------------------------------------------------------
 void SearchSettingsManager::loadFileSizeSetting(
@@ -226,7 +176,7 @@ void
 SearchSettingsManager::loadCommonSettings(
 		const std::string & groupName,
 		const Glib::KeyFile & settingsFile,
-		SearchSettings & settings)
+		SearchSettings::CommonSettings & settings)
 {
 	if (settingsFile.has_key(groupName, kFieldName_IncludedRegexps))
 	{
@@ -269,7 +219,7 @@ SearchSettingsManager::loadCommonSettings(
 void
 SearchSettingsManager::saveCommonSettings(
 		const std::string & groupName,
-		const SearchSettings & settings,
+		const SearchSettings::CommonSettings & settings,
 		Glib::KeyFile & settingsFile) const
 {
 	if (!settings.filenameRegexps.empty())
@@ -303,9 +253,7 @@ SearchSettingsManager::saveCommonSettings(
 void
 SearchSettingsManager::loadSettings()
 {
-	m_defaultMode = SearchSettings::SearchMode_t::kExactDuplicates;
-	m_exactDuplicatesSettings = createDefaultExactDuplicatesSettings();
-	m_similarImagesSettings = createDefaultSimilarImagesSettings();
+	m_searchSettings = SearchSettings();
 
 	auto pSettingsFile = Gio::File::create_for_path(m_settingsFilePath);
 	if (pSettingsFile && pSettingsFile->query_exists())
@@ -317,35 +265,36 @@ SearchSettingsManager::loadSettings()
 		     keyFile.has_key(kGroupName_Global, kFieldName_DefaultSearchMode) &&
 		     (keyFile.get_string(kGroupName_Global, kFieldName_DefaultSearchMode) == kGroupName_SimilarImages) )
 		{
-			m_defaultMode = SearchSettings::SearchMode_t::kSimilarImages;
+			m_searchSettings.searchMode  = SearchSettings::SearchMode_t::kSimilarImages;
+		}
+
+		if ( keyFile.has_group(kGroupName_UI) &&
+		     keyFile.has_key(kGroupName_UI, kFieldName_ShowHiddenFiles) )
+		{
+			m_searchSettings.uiSettings.showHiddenFiles = readBoolean(keyFile, kGroupName_UI, kFieldName_ShowHiddenFiles, false);
 		}
 
 		if (keyFile.has_group(kGroupName_SimilarImages))
 		{
-			m_similarImagesSettings = SearchSettings();
-			m_similarImagesSettings.searchMode = SearchSettings::SearchMode_t::kSimilarImages;
-			m_similarImagesSettings.imageSettings = SearchSettings::ImageSettings_t();
 			try
 			{
 				if (keyFile.has_key(kGroupName_SimilarImages, kFieldName_Sensitivity))
 				{
-					m_similarImagesSettings.imageSettings->sensitivity = keyFile.get_integer(kGroupName_SimilarImages, kFieldName_Sensitivity);
+					m_searchSettings.imageSettings.sensitivity = keyFile.get_integer(kGroupName_SimilarImages, kFieldName_Sensitivity);
 				}
 			} catch (const Glib::KeyFileError & e)
 			{
 				g_warning("Error when reading settings: %s", e.what().c_str());
 			}
 
-			m_similarImagesSettings.imageSettings->processRotations = readBoolean(keyFile, kGroupName_SimilarImages, kFieldName_ProcessRotations, true);
+			m_searchSettings.imageSettings.processRotations = readBoolean(keyFile, kGroupName_SimilarImages, kFieldName_ProcessRotations, true);
 
-			loadCommonSettings(kGroupName_SimilarImages, keyFile, m_similarImagesSettings);
+			loadCommonSettings(kGroupName_SimilarImages, keyFile, m_searchSettings.similarImagesSettings);
 		}
 
 		if (keyFile.has_group(kGroupName_ExactDuplicates))
 		{
-			m_exactDuplicatesSettings = SearchSettings();
-			m_exactDuplicatesSettings.searchMode = SearchSettings::SearchMode_t::kExactDuplicates;
-			loadCommonSettings(kGroupName_ExactDuplicates, keyFile, m_exactDuplicatesSettings);
+			loadCommonSettings(kGroupName_ExactDuplicates, keyFile, m_searchSettings.exactDuplicatesSettings);
 		}
 	}
 }

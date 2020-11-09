@@ -25,10 +25,8 @@ class SearchSettingsDialog : public Gtk::Dialog
 {
 public:
 	SearchSettingsDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
-	settings::SearchSettings getSettings(settings::SearchSettings::SearchMode_t mode) const;
-	void init(settings::SearchSettings::SearchMode_t mode,
-	          const settings::SearchSettings & exactDuplicatesSettings,
-	          const settings::SearchSettings & similarImagesSettings);
+	settings::SearchSettings getSettings() const;
+	void init(settings::SearchSettings::SearchMode_t mode, const settings::SearchSettings & searchSettings);
 
 private:
 	struct CommonWidgets
@@ -54,8 +52,8 @@ private:
 	void on_add_regex_line_clicked(CommonWidgets & widgets);
 	void on_regex_listbox_changed(CommonWidgets & widgets);
 
-	void populateCommonWidgets(const settings::SearchSettings & settings, CommonWidgets & widgets);
-	void populateCommonSettings(const CommonWidgets & widgets, settings::SearchSettings & settings) const;
+	void populateCommonWidgets(const settings::SearchSettings::CommonSettings & settings, CommonWidgets & widgets);
+	void populateCommonSettings(const CommonWidgets & widgets, settings::SearchSettings::CommonSettings & settings) const;
 
 	void setUnitComboboxValue(const settings::SearchSettings::FileSizeUnit_t value, Gtk::ComboBoxText & combobox);
 	settings::SearchSettings::FileSizeUnit_t getUnitComboboxValue(const Gtk::ComboBoxText & combobox) const;
@@ -63,6 +61,7 @@ private:
 	void setupWidgets(CommonWidgets & widgets);
 
 	Glib::RefPtr<Gtk::Builder> m_builder;
+	settings::SearchSettings::SearchMode_t m_searchMode = settings::SearchSettings::SearchMode_t::kExactDuplicates;
 
 	Gtk::StackSwitcher * m_stackSwitcher = nullptr;
 	Gtk::SpinButton * m_spinSimilarity = nullptr;

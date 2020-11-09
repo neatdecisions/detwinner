@@ -3,7 +3,7 @@
  Name        : SearchSettingsManager.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -31,23 +31,18 @@ public:
 	void saveSettings() const;
 	void loadSettings();
 
-	SearchSettings getSearchSettings(SearchSettings::SearchMode_t mode) const;
+	SearchSettings getSearchSettings() const;
 	void setSearchSettings(const SearchSettings & value);
 
-	SearchSettings::SearchMode_t getDefaultMode() const;
-	void setDefaultMode(SearchSettings::SearchMode_t value);
-
 private:
-	SearchSettings createDefaultSimilarImagesSettings() const;
-	SearchSettings createDefaultExactDuplicatesSettings() const;
 	void loadCommonSettings(
 			const std::string & groupName,
 			const Glib::KeyFile & settingsFile,
-			SearchSettings & settings);
+			SearchSettings::CommonSettings & settings);
 
 	void saveCommonSettings(
 			const std::string & groupName,
-			const SearchSettings & settings,
+			const SearchSettings::CommonSettings & settings,
 			Glib::KeyFile & settingsFile) const;
 
 	void loadFileSizeSetting(
@@ -75,10 +70,8 @@ private:
 			const std::string & fieldName,
 			bool defaultValue) const;
 
-	SearchSettings m_exactDuplicatesSettings;
-	SearchSettings m_similarImagesSettings;
+	SearchSettings m_searchSettings;
 	const std::string m_settingsFilePath;
-	SearchSettings::SearchMode_t m_defaultMode;
 };
 
 
