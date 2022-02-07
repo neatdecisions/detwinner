@@ -310,7 +310,7 @@ FileTreeView::collectChilden(const std::string & parentPath, std::vector<FolderT
 {
 	Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(parentPath);
 
-	Glib::RefPtr<Gio::FileEnumerator> child_enumeration = file->enumerate_children("standard::name,standard::is-hidden");
+	Glib::RefPtr<Gio::FileEnumerator> child_enumeration = file->enumerate_children("standard::name,standard::is-hidden,standard::type,standard::is-hidden");
 
 	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
 	while (auto file_info = child_enumeration->next_file())
