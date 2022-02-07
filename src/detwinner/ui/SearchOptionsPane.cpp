@@ -35,7 +35,7 @@ SearchOptionsPane::SearchOptionsPane() :
 	m_refActionShowHidden = m_refActionGroup->add_action_bool("showHiddenFiles", sigc::mem_fun(*this, &SearchOptionsPane::on_show_hidden_toggled));
 	m_refActionSearchMode = m_refActionGroup->add_action_radio_integer("searchMode", sigc::mem_fun(*this, &SearchOptionsPane::on_search_mode_changed), 0);
 
-	m_places.set_local_only(true);
+	m_places.set_local_only(false);
 	m_places.set_show_trash(false);
 	m_places.set_show_enter_location(false);
 	m_places.set_show_other_locations(false);
