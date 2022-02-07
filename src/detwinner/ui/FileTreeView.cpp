@@ -228,7 +228,7 @@ FileTreeView::fillChildren(const std::string & path, CheckState_t checkState, Tr
 {
 	// todo: check if path still exists ?..
 	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
-	collectChilden(path, fileInfoVector);
+	collectChildren(path, fileInfoVector);
 
 	Gtk::TreeIter itExistingItem = parentTreeRow.children().begin();
 	for (auto && file_info: fileInfoVector)
@@ -306,7 +306,7 @@ FileTreeView::on_cell_toggled(const Glib::ustring & path)
 
 //------------------------------------------------------------------------------
 void
-FileTreeView::collectChilden(const std::string & parentPath, std::vector<FolderTreeItem> & children)
+FileTreeView::collectChildren(const std::string & parentPath, std::vector<FolderTreeItem> & children)
 {
 	Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(parentPath);
 
@@ -391,7 +391,7 @@ FileTreeView::load(const std::string & path)
 	m_store->clear();
 	if (m_basePath.empty()) return;
 	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
-	collectChilden(path, fileInfoVector);
+	collectChildren(path, fileInfoVector);
 
 	for (auto && file_info: fileInfoVector)
 	{
