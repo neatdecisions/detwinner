@@ -39,13 +39,13 @@ public:
 
 private:
 	std::vector<ImageFeatures> executeInternal(
-		const std::size_t startIndex,
-		const std::size_t endIndex);
+		std::size_t startIndex,
+		std::size_t endIndex);
 
 	const std::vector<std::string> & m_fileNames;
 	callbacks::IImageFinderCallback::Ptr_t m_callback;
-	std::atomic<bool> m_stopped;
-	std::atomic<std::size_t> m_processedCount;
+	std::atomic_bool m_stopped;
+	std::atomic_size_t m_processedCount;
 };
 
 

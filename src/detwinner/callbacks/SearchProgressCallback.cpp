@@ -154,7 +154,7 @@ SearchProgressCallback::accessDispatcher() noexcept
 
 //------------------------------------------------------------------------------
 void
-SearchProgressCallback::onFileProcessed(const unsigned long long)
+SearchProgressCallback::onFileProcessed(unsigned long long)
 {
 	++m_processedCount;
 }
@@ -172,9 +172,9 @@ SearchProgressCallback::updateProgress(unsigned int progress, unsigned int total
 //------------------------------------------------------------------------------
 void
 SearchProgressCallback::onDuplicateFound(
-	const std::size_t numberOfFiles,
-	const unsigned long long totalSize,
-	const unsigned long long wastedSize)
+	std::size_t numberOfFiles,
+	unsigned long long totalSize,
+	unsigned long long wastedSize)
 {
 	m_duplicatesSize += totalSize;
 	m_wastedSize += wastedSize;

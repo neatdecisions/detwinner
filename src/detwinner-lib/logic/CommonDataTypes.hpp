@@ -13,7 +13,7 @@
 
 #include <string>
 #include <vector>
-#include <compat/optional.hpp>
+#include <optional>
 
 
 namespace detwinner {
@@ -33,12 +33,12 @@ struct DuplicateContainer
 
 		unsigned long long size;
 		std::string name;
-		stdx::optional<ImageSize_t> imageResolution;
+		std::optional<ImageSize_t> imageResolution;
 		FileDataInfo(unsigned long long size, const std::string & fileName) :
 			size(size), name(fileName) {}
 
 		FileDataInfo(unsigned long long size, const std::string & fileName, unsigned int width, unsigned int height) :
-			size(size), name(fileName), imageResolution(stdx::make_optional<ImageSize_t>(width, height)) {}
+			size(size), name(fileName), imageResolution(std::make_optional<ImageSize_t>(width, height)) {}
 	};
 	std::vector<FileDataInfo> files;
 };

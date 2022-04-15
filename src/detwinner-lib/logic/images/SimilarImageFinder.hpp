@@ -38,8 +38,8 @@ class SimilarImageFinder
 public:
 	DuplicateImageResult find(
 		const std::vector<std::string> & fileNames,
-		const unsigned short sensitivity,
-		const bool processRotations,
+		unsigned short sensitivity,
+		bool processRotations,
 		const callbacks::IImageFinderCallback::Ptr_t & callback) const;
 
 private:
@@ -68,39 +68,39 @@ private:
 
 	std::size_t findIndexById(
 			const std::vector<Cluster_t> & clusters,
-			const std::size_t id,
-			const std::size_t defaultValue) const;
+			std::size_t id,
+			std::size_t defaultValue) const;
 
 	void updateDistanceCache(
 			const std::vector<Cluster_t> & clusters,
-			const Distance_t maxDistance,
-			const std::size_t mergedClusterId,
+			Distance_t maxDistance,
+			std::size_t mergedClusterId,
 			Cluster_t & newCluster,
 			SimilarityCache & cache) const;
 
 	void clusterize(
 			const std::vector<std::size_t> & imageFeatureMap,
 			const std::vector<std::string> & fileNames,
-			const uint_least8_t sensitivity,
+			uint_least8_t sensitivity,
 			SimilarityCache & cache,
 			DuplicateImageResult & result,
 			const callbacks::IImageFinderCallback::Ptr_t & callback) const;
 
 	void updateNeighbours(
 			const SimilarityCache & cache,
-			const Distance_t maxDistance,
-			const std::size_t mergedClusterId1,
-			const std::size_t mergedClusterId2,
+			Distance_t maxDistance,
+			std::size_t mergedClusterId1,
+			std::size_t mergedClusterId2,
 			std::vector<Cluster_t> & clusters,
 			std::set<std::size_t> & outlierIndexes) const;
 
 	std::set<std::size_t> updateNeighboursPartial(
 			const SimilarityCache & cache,
-			const Distance_t maxDistance,
-			const std::size_t mergedClusterId1,
-			const std::size_t mergedClusterId2,
-			const std::size_t startIndex,
-			const std::size_t endIndex,
+			Distance_t maxDistance,
+			std::size_t mergedClusterId1,
+			std::size_t mergedClusterId2,
+			std::size_t startIndex,
+			std::size_t endIndex,
 			std::vector<Cluster_t> & clusters) const;
 
 };

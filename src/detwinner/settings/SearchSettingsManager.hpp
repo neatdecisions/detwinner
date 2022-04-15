@@ -51,10 +51,10 @@ private:
 			const std::string & fieldEnabled,
 			const std::string & fieldValue,
 			const std::string & fieldUnit,
-			stdx::optional<SearchSettings::FileSizeSetting_t> & value) const;
+			std::optional<SearchSettings::FileSizeSetting_t> & value) const;
 
 	void saveFileSizeSetting(
-			const stdx::optional<SearchSettings::FileSizeSetting_t> & value,
+			const std::optional<SearchSettings::FileSizeSetting_t> & value,
 			const std::string & groupName,
 			const std::string & fieldEnabled,
 			const std::string & fieldValue,

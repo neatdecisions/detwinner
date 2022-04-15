@@ -24,17 +24,16 @@ class ControlCallback
 {
 public:
 	ControlCallback();
-	virtual ~ControlCallback() noexcept = default;
 	bool isPaused() const;
 	void pause(bool doPause = true);
 	void stop();
-	virtual bool pauseAndStopStatus();
+	bool pauseAndStopStatus();
 
 private:
 	std::condition_variable m_pauseEvent;
 	std::mutex m_mutex;
-	std::atomic<bool> m_isStopped;
-	std::atomic<bool> m_isPaused;
+	std::atomic_bool m_isStopped;
+	std::atomic_bool m_isPaused;
 };
 
 

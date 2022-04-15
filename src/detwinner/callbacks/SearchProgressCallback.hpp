@@ -49,12 +49,12 @@ public:
 	long long getElapsedTime() const;
 
 
-	virtual void onFileProcessed(const unsigned long long size) override;
+	virtual void onFileProcessed(unsigned long long size) override;
 	virtual void updateProgress(unsigned int progress, unsigned int total) override;
 	virtual void onDuplicateFound(
-		const std::size_t numberOfFiles,
-		const unsigned long long totalSize,
-		const unsigned long long wastedSize) override;
+		std::size_t numberOfFiles,
+		unsigned long long totalSize,
+		unsigned long long wastedSize) override;
 	virtual void onStartComparing(unsigned int totalNumber) override;
 	virtual void onFileIndexed(bool skipped) override;
 	virtual void setStage(int stage) override;
@@ -69,17 +69,17 @@ private:
 	callbacks::ControlCallback m_pauser;
 	logic::tools::StopTimer m_timer;
 
-	std::atomic<unsigned int> m_groupCount;
-	std::atomic<unsigned int> m_duplicateCount;
-	std::atomic<unsigned int> m_processedCount;
-	std::atomic<unsigned int> m_totalCount;
-	std::atomic<unsigned int> m_skippedCount;
-	std::atomic<unsigned long long> m_processedSize;
-	std::atomic<unsigned long long> m_duplicatesSize;
-	std::atomic<unsigned long long> m_wastedSize;
-	std::atomic<int> m_stage;
-	std::atomic<bool> m_paused;
-	std::atomic<bool> m_finished;
+	std::atomic_uint m_groupCount;
+	std::atomic_uint m_duplicateCount;
+	std::atomic_uint m_processedCount;
+	std::atomic_uint m_totalCount;
+	std::atomic_uint m_skippedCount;
+	std::atomic_ullong m_processedSize;
+	std::atomic_ullong m_duplicatesSize;
+	std::atomic_ullong m_wastedSize;
+	std::atomic_bool m_stage;
+	std::atomic_bool m_paused;
+	std::atomic_bool m_finished;
 	Glib::Dispatcher m_dispatcher;
 };
 

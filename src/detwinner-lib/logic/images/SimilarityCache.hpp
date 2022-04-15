@@ -27,7 +27,7 @@ namespace images {
 class SimilarityCache
 {
 public:
-	explicit SimilarityCache(const std::size_t size);
+	explicit SimilarityCache(std::size_t size);
 	SimilarityCache(const SimilarityCache&) = delete;
 	SimilarityCache& operator=(const SimilarityCache&) = delete;
 	SimilarityCache(SimilarityCache&&) = default;
@@ -36,7 +36,7 @@ public:
 	void set(std::size_t i1, std::size_t i2, Distance_t val) noexcept;
 	Distance_t get(std::size_t i1, std::size_t i2) const noexcept;
 protected:
-	std::size_t m_size;
+	const std::size_t m_size;
 	std::vector<Distance_t> m_matrix;
 };
 

@@ -11,7 +11,7 @@
 #ifndef SETTINGS_SEARCHSETTINGS_HPP_
 #define SETTINGS_SEARCHSETTINGS_HPP_
 
-#include <compat/optional.hpp>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -51,8 +51,8 @@ struct SearchSettings
 
 	struct CommonSettings
 	{
-		stdx::optional<FileSizeSetting_t> minFileSize;
-		stdx::optional<FileSizeSetting_t> maxFileSize;
+		std::optional<FileSizeSetting_t> minFileSize;
+		std::optional<FileSizeSetting_t> maxFileSize;
 		std::vector<std::string> filenameRegexps;
 		bool searchReadOnly = true;
 		bool searchHidden = false;

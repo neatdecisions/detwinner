@@ -31,7 +31,7 @@ using HistogramI = HistogramT<8>;
 //==============================================================================
 struct ImageFeatures
 {
-	ImageFeatures(const unsigned int id, const float aspect);
+	ImageFeatures(unsigned int id, float aspect);
 
 	unsigned int getId() const noexcept { return id; }
 
@@ -44,8 +44,8 @@ struct ImageFeatures
 	float compare(const ImageFeatures & f, bool processRotations) const;
 
 private:
-	unsigned int id;
-	float aspect;
+	const unsigned int id;
+	const float aspect;
 };
 
 

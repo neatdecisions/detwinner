@@ -21,7 +21,7 @@ namespace images {
 
 
 //------------------------------------------------------------------------------
-ImageFeatures::ImageFeatures(const unsigned int id, const float aspect) :
+ImageFeatures::ImageFeatures(unsigned int id, float aspect) :
 	id(id), aspect(aspect)
 {}
 
@@ -32,7 +32,7 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 {
 	constexpr auto lambdaAvgSimilarity = [](const std::array<float, 4> & values) {
 		constexpr std::array<float, 4> kFactors = { 1.0f, 1.0f, 1.0f, 1.0f };
-		static const float kSum = std::accumulate(kFactors.begin(), kFactors.end(), 0.0f);
+		constexpr float kSum = std::accumulate(kFactors.begin(), kFactors.end(), 0.0f);
 		return std::inner_product(values.begin(), values.end(), kFactors.begin(), 0.0f) / kSum;
 	};
 

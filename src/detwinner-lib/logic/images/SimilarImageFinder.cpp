@@ -48,9 +48,9 @@ deleteFromVectorBySwap(std::vector<T> & vec, std::size_t i) noexcept
 //------------------------------------------------------------------------------
 std::set<std::size_t>
 SimilarImageFinder::updateNeighboursPartial(
-	const SimilarityCache & cache, const Distance_t maxDistance,
-	const std::size_t mergedClusterId1, const std::size_t mergedClusterId2,
-	const std::size_t startIndex, const std::size_t endIndex,
+	const SimilarityCache & cache, Distance_t maxDistance,
+	std::size_t mergedClusterId1, std::size_t mergedClusterId2,
+	std::size_t startIndex, std::size_t endIndex,
 	std::vector<Cluster_t> & clusters) const
 {
 	std::set<std::size_t> outliers;
@@ -88,9 +88,9 @@ SimilarImageFinder::updateNeighboursPartial(
 void
 SimilarImageFinder::updateNeighbours(
 	const SimilarityCache & cache,
-	const Distance_t maxDistance,
-	const std::size_t mergedClusterId1,
-	const std::size_t mergedClusterId2,
+	Distance_t maxDistance,
+	std::size_t mergedClusterId1,
+	std::size_t mergedClusterId2,
 	std::vector<Cluster_t> & clusters,
 	std::set<std::size_t> & outlierIndexes) const
 {
@@ -182,8 +182,8 @@ SimilarImageFinder::findMinimalDistanceIndex(const std::vector<Cluster_t> & clus
 void
 SimilarImageFinder::updateDistanceCache(
 	const std::vector<Cluster_t> & clusters,
-	const Distance_t maxDistance,
-	const std::size_t mergedClusterId,
+	Distance_t maxDistance,
+	std::size_t mergedClusterId,
 	Cluster_t & newCluster,
 	SimilarityCache & cache) const
 {
@@ -211,8 +211,8 @@ SimilarImageFinder::updateDistanceCache(
 std::size_t
 SimilarImageFinder::findIndexById(
 	const std::vector<Cluster_t> & clusters,
-	const std::size_t id,
-	const std::size_t defaultValue) const
+	std::size_t id,
+	std::size_t defaultValue) const
 {
 	auto it = std::find_if(clusters.begin(), clusters.end(),
 			[&id](const Cluster_t & c) { return c.id == id; } );
@@ -225,7 +225,7 @@ void
 SimilarImageFinder::clusterize(
 	const std::vector<std::size_t> & imageIndexMap,
 	const std::vector<std::string> & fileNames,
-	const uint_least8_t sensitivity,
+	uint_least8_t sensitivity,
 	SimilarityCache & cache,
 	DuplicateImageResult & result,
 	const callbacks::IImageFinderCallback::Ptr_t & callback) const
@@ -333,8 +333,8 @@ SimilarImageFinder::clusterize(
 DuplicateImageResult
 SimilarImageFinder::find(
 	const std::vector<std::string> & fileNames,
-	const unsigned short sensitivity,
-	const bool processRotations,
+	unsigned short sensitivity,
+	bool processRotations,
 	const callbacks::IImageFinderCallback::Ptr_t & callback) const
 {
 	std::vector<ImageFeatures> imageFeatures = ImageFeaturesBuilder(fileNames, callback).execute();

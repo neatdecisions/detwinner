@@ -32,21 +32,21 @@ class SimilarityCacheBuilder
 public:
 	SimilarityCacheBuilder(
 			const std::vector<ImageFeatures> & imageFeatures,
-			const bool processRotations,
+			bool processRotations,
 			const callbacks::IImageFinderCallback::Ptr_t & callback);
 	SimilarityCache execute();
 
 	using ParallelIndexes_t = std::vector< std::pair<std::size_t, std::size_t> >;
-	static ParallelIndexes_t CalculateParallelIndexes(const std::size_t count, const std::size_t minBucketSize);
+	static ParallelIndexes_t CalculateParallelIndexes(std::size_t count, std::size_t minBucketSize);
 
 private:
-	void calculateDistanceCache(const std::size_t start, const std::size_t end, SimilarityCache & cache);
+	void calculateDistanceCache(std::size_t start, std::size_t end, SimilarityCache & cache);
 
 	const std::vector<ImageFeatures> & m_imageFeatures;
 	const bool m_processRotations;
 	callbacks::IImageFinderCallback::Ptr_t m_callback;
-	std::atomic<bool> m_stopped;
-	std::atomic<std::size_t> m_processedCount;
+	std::atomic_bool m_stopped;
+	std::atomic_size_t m_processedCount;
 };
 
 

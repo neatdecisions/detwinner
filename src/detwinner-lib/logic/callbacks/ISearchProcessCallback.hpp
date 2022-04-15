@@ -26,11 +26,11 @@ public:
 	using Ptr_t = std::shared_ptr<ISearchProcessCallback>;
 	virtual ~ISearchProcessCallback() noexcept = default;
 
-	virtual void onFileProcessed(const unsigned long long size) = 0;
+	virtual void onFileProcessed(unsigned long long size) = 0;
 	virtual void onDuplicateFound(
-		const std::size_t numberOfFiles,
-		const unsigned long long totalSize,
-		const unsigned long long wastedSize) = 0;
+		std::size_t numberOfFiles,
+		unsigned long long totalSize,
+		unsigned long long wastedSize) = 0;
 	virtual void onStartComparing(unsigned int totalNumber) = 0;
 	virtual void onFileIndexed(bool skipped) = 0;
 	virtual void onInit() = 0;

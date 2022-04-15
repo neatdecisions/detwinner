@@ -25,7 +25,7 @@ src = [
     detwinnerresources
 ]
 
-incdir = include_directories('.', '../misc')
+incdir = include_directories('.')
 
 exe = executable(
     'detwinner',

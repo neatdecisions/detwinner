@@ -40,7 +40,7 @@ public:
 
 protected:
 	ISearchProcessCallback::Ptr_t m_callback;
-	std::atomic<bool> m_compareStarted;
+	std::atomic_bool m_compareStarted;
 };
 
 

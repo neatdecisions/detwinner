@@ -83,7 +83,7 @@ ImageFeaturesBuilder::execute()
 
 //------------------------------------------------------------------------------
 std::vector<ImageFeatures>
-ImageFeaturesBuilder::executeInternal(const std::size_t startIndex, const std::size_t endIndex)
+ImageFeaturesBuilder::executeInternal(std::size_t startIndex, std::size_t endIndex)
 {
 	static const Magick::Geometry kResizeGeometry(128, 128); // higher
 	std::vector<ImageFeatures> imageFeatures;

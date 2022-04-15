@@ -18,7 +18,7 @@ namespace images {
 
 
 //------------------------------------------------------------------------------
-SimilarityCache::SimilarityCache(const std::size_t size) :
+SimilarityCache::SimilarityCache(std::size_t size) :
 	m_size(size),
 	m_matrix(size > 0 ? ((size - 1) * (1 + (size - 1))) / 2 : 1, DISTANCE_T_MAX)
 {}

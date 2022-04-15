@@ -11,7 +11,7 @@
 #ifndef LOGIC_FILESEARCHSETTINGS_HPP_
 #define LOGIC_FILESEARCHSETTINGS_HPP_
 
-#include <compat/optional.hpp>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -22,10 +22,10 @@ namespace logic {
 
 struct FileSearchSettings
 {
-	stdx::optional<unsigned short> sensitivity;
-	stdx::optional<bool> processRotations;
-	stdx::optional<unsigned long long> minFileSize;
-	stdx::optional<unsigned long long> maxFileSize;
+	std::optional<unsigned short> sensitivity;
+	std::optional<bool> processRotations;
+	std::optional<unsigned long long> minFileSize;
+	std::optional<unsigned long long> maxFileSize;
 	std::vector<std::string> filenameRegexps;
 	bool searchReadOnlyFiles = true;
 	bool searchHiddenFiles = false;

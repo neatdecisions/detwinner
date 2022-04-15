@@ -21,7 +21,7 @@ namespace images {
 //------------------------------------------------------------------------------
 SimilarityCacheBuilder::SimilarityCacheBuilder(
 	const std::vector<ImageFeatures> & imageFeatures,
-	const bool processRotations,
+	bool processRotations,
 	const callbacks::IImageFinderCallback::Ptr_t & callback) :
 		m_imageFeatures(imageFeatures),
 		m_processRotations(processRotations),
@@ -33,7 +33,7 @@ SimilarityCacheBuilder::SimilarityCacheBuilder(
 //------------------------------------------------------------------------------
 SimilarityCacheBuilder::ParallelIndexes_t
 SimilarityCacheBuilder::CalculateParallelIndexes(
-	const std::size_t count, const std::size_t minBucketSize)
+	std::size_t count, std::size_t minBucketSize)
 {
 	ParallelIndexes_t result;
 
@@ -111,7 +111,7 @@ SimilarityCacheBuilder::execute()
 //------------------------------------------------------------------------------
 void
 SimilarityCacheBuilder::calculateDistanceCache(
-	const std::size_t start, const std::size_t end, SimilarityCache & cache)
+	std::size_t start, std::size_t end, SimilarityCache & cache)
 {
 	if (start >= end) return;
 	const std::size_t sz = m_imageFeatures.size();

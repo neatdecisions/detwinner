@@ -77,44 +77,44 @@ DuplicateFilesFinder::calculateHashes(
 	DuplicatesList_t result;
 	std::string hash;
 
-	for (auto & aSizeGroup: totalMap)
+	for (auto & sizeGroup: totalMap)
 	{
-		if (aSizeGroup.second.size() > 1)
+		if (sizeGroup.second.size() > 1)
 		{
 			sameSizeDuplicateGroup.clear();
 
-			for (const auto & aFileName: aSizeGroup.second)
+			for (const auto & fileName: sizeGroup.second)
 			{
-				if ( !MurmurHash::GetHash(aFileName, hash) )
+				if ( !MurmurHash::GetHash(fileName, hash) )
 				{
-					if (searchProcessCallback) searchProcessCallback->onFileProcessed(aSizeGroup.first);
+					if (searchProcessCallback) searchProcessCallback->onFileProcessed(sizeGroup.first);
 					continue;
 				}
 
 				if (searchProcessCallback)
 				{
 					if (searchProcessCallback->pauseAndStopStatus()) return result;
-					searchProcessCallback->onFileProcessed(aSizeGroup.first);
+					searchProcessCallback->onFileProcessed(sizeGroup.first);
 				}
 
-				sameSizeDuplicateGroup[hash].push_back(aFileName);
+				sameSizeDuplicateGroup[hash].push_back(fileName);
 			}
 
-			for (const auto & aDuplicateGroup : sameSizeDuplicateGroup)
+			for (const auto & duplicateGroup : sameSizeDuplicateGroup)
 			{
-				if (aDuplicateGroup.second.size() > 1)
+				if (duplicateGroup.second.size() > 1)
 				{
 					result.emplace_back();
 					DuplicateContainer & container = result.back();
-					for (auto && fileName: aDuplicateGroup.second)
+					for (auto && fileName: duplicateGroup.second)
 					{
-						container.files.emplace_back(aSizeGroup.first, fileName);
+						container.files.emplace_back(sizeGroup.first, fileName);
 					}
 					if (searchProcessCallback)
 					{
-						const std::size_t fileCount = aDuplicateGroup.second.size();
-						const unsigned long long totalSize = fileCount * aSizeGroup.first;
-						searchProcessCallback->onDuplicateFound(fileCount, totalSize, totalSize - aSizeGroup.first);
+						const std::size_t fileCount = duplicateGroup.second.size();
+						const unsigned long long totalSize = fileCount * sizeGroup.first;
+						searchProcessCallback->onDuplicateFound(fileCount, totalSize, totalSize - sizeGroup.first);
 					}
 				}
 			}
@@ -122,10 +122,10 @@ DuplicateFilesFinder::calculateHashes(
 		{
 			if (searchProcessCallback)
 			{
-				searchProcessCallback->onFileProcessed(aSizeGroup.first);
+				searchProcessCallback->onFileProcessed(sizeGroup.first);
 			}
 		}
-		aSizeGroup.second.clear();
+		sizeGroup.second.clear();
 	}
 
 	return result;
