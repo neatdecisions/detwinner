@@ -12,6 +12,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <span>
 
 
 namespace detwinner {
@@ -38,15 +39,17 @@ ImageFeaturesBridge::GetIntensityHistogram(
 	constexpr float kBinSize = MaxRGBFloat / kBinNumber;
 
 	std::fill(histI.bins.begin(), histI.bins.end(), 0U);
-	for (unsigned int x = roi.xOff(); x < width; ++x)
+
+	std::span<const Magick::PixelPacket> pixels(
+		image.getConstPixels(roi.xOff(), roi.yOff(), roi.width(), roi.height()),
+		roi.width() * roi.height());
+
+	for (const Magick::PixelPacket& pixel : pixels)
 	{
-		for (unsigned int y = roi.yOff(); y < height; ++y)
-		{
-			const Magick::Color & color = image.pixelColor(x, y);
-			const int n = std::clamp(static_cast<int>(std::floor(( color.intensity() ) / kBinSize)), 0, kBinNumber - 1);
-			++histI.bins[n];
-		}
+		const int n = std::clamp(static_cast<int>(std::floor(Magick::Color(pixel).intensity() / kBinSize)), 0, kBinNumber - 1);
+		++histI.bins[n];
 	}
+
 }
 
 
@@ -84,11 +87,13 @@ ImageFeaturesBridge::GetYUVHistograms(
 	std::fill(histU.bins.begin(), histU.bins.end(), 0U);
 	std::fill(histV.bins.begin(), histV.bins.end(), 0U);
 
-	for (unsigned int x = roi.xOff(); x < width; ++x)
+	std::span<const Magick::PixelPacket> pixels(
+		image.getConstPixels(roi.xOff(), roi.yOff(), roi.width(), roi.height()),
+		roi.width() * roi.height());
+
+	for (const Magick::PixelPacket& pixel : pixels)
 	{
-		for (unsigned int y = roi.yOff(); y < height; ++y)
-		{
-			const Magick::ColorYUV color = image.pixelColor(x, y);
+		const Magick::ColorYUV color = Magick::Color(pixel);
 			if (color.alpha() > 0.8) continue;
 
 			const float valY = std::clamp(static_cast<float>(color.y()), kMinY, kMaxY);
@@ -102,7 +107,6 @@ ImageFeaturesBridge::GetYUVHistograms(
 			const float valV = std::clamp(static_cast<float>(color.v()), kMinV, kMaxV);
 			n = std::clamp(static_cast<int>(std::floor(( valV - kMinV ) / kBinSizeV)), 0, kBinNumber - 1);
 			++histV.bins[n];
-		}
 	}
 }
 
