@@ -1,8 +1,8 @@
 project('detwinner', ['c', 'cpp'],
-  version: '0.4.1',
+  version: '0.4.2',
   license: 'GPL3+',
   meson_version: '>=0.45.0',
-	default_options : ['c_std=c11', 'cpp_std=c++17', 'warning_level=3', 'werror=true'])
+	default_options : ['c_std=c11', 'cpp_std=c++20', 'warning_level=3', 'werror=true'])
 
 add_project_arguments ('-DGTKMM_DISABLE_DEPRECATED', language:'cpp')
 i18n = import('i18n')
@@ -30,5 +30,3 @@ subdir('src/detwinner-lib')
 subdir('src/detwinner')
 subdir('test/detwinner-lib')
 subdir('test/detwinner')
-
-run_target('cppcheck', command : ['cppcheck', '--quiet', '--project=' + join_paths(meson.build_root(), 'compile_commands.json')])

@@ -18,7 +18,7 @@ test_detwinner_exe = executable(
     testsrc,
     include_directories : incdir,
     dependencies: [gtkmm_dep, gtest_dep, gmock_dep, libLogic_dep],
-    cpp_args: ['-Wno-ignored-attributes','-std=c++17'],
+    cpp_args: ['-Wno-ignored-attributes','-std=c++20'],
     link_with : libLogic,
     objects: objects)
 

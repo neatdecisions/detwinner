@@ -31,7 +31,7 @@ libLogic = static_library(
     srcLogic,
     dependencies: deps,
     include_directories : incdirLogic,
-    cpp_args: ['-Wno-ignored-attributes','-std=c++17'])
+    cpp_args: ['-Wno-ignored-attributes','-std=c++20'])
 
 libLogic_dep = declare_dependency(
     dependencies: deps,
