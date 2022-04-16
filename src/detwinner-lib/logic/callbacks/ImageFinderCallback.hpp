@@ -3,7 +3,7 @@
  Name        : ImageFinderCallback.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -29,7 +29,7 @@ class ImageFinderCallback: public IImageFinderCallback
 {
 public:
 	explicit ImageFinderCallback(const ISearchProcessCallback::Ptr_t & callback);
-	virtual void imgIndexingProgress(int, int) override;
+	virtual void imgIndexingProgress(int current, int total) override;
 	virtual void imgComparingProgress(int current, int total) override;
 	virtual void imgOrganizingProgress(int current, int total) override;
 	virtual void similarImagesFound(

@@ -22,10 +22,13 @@ namespace callbacks {
 struct IImageFinderCallback
 {
 	using Ptr_t = std::shared_ptr<IImageFinderCallback>;
-	virtual void imgIndexingProgress(int, int) = 0;
-	virtual void imgComparingProgress(int, int) = 0;
-	virtual void imgOrganizingProgress(int, int) = 0;
-	virtual void similarImagesFound(std::size_t, unsigned long long, unsigned long long) = 0;
+	virtual void imgIndexingProgress(int current, int total) = 0;
+	virtual void imgComparingProgress(int current, int total) = 0;
+	virtual void imgOrganizingProgress(int current, int total) = 0;
+	virtual void similarImagesFound(
+		std::size_t fileCount,
+		unsigned long long totalSize,
+		unsigned long long wastedSize) = 0;
 	virtual bool pauseAndStopStatus() = 0;
 	virtual ~IImageFinderCallback() noexcept = default;
 };

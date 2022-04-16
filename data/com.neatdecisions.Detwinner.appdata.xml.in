@@ -35,6 +35,14 @@
     <binary>detwinner</binary>
   </provides>
   <releases>
+    <release version="0.4.2" date="2022-04-16">
+      <description>
+        <p>Main changes in this version:</p>
+        <ul>
+          <li>Faster retrieval of the image features</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.4.1" date="2020-11-09">
       <description>
         <p>Main changes in this version:</p>

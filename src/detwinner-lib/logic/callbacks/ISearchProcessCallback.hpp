@@ -3,7 +3,7 @@
  Name        : ISearchProcessCallback.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
