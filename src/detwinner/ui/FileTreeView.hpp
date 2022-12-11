@@ -66,7 +66,7 @@ private:
 			const std::string & iPath,
 			Gtk::TreeRow & ioTreeRow);
 
-	void collectChilden(const std::string & parentPath, std::vector<FolderTreeItem> & childen);
+	void collectChildren(const std::string & parentPath, std::vector<FolderTreeItem> & childen);
 
 	CheckState_t getCheck(const Gtk::TreeIter & iter) const;
 	bool setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool noUp, bool noDown);
