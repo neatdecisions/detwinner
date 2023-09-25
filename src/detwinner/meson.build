@@ -16,6 +16,7 @@ src = [
     'ui/DetwinnerWindow.cpp',
     'ui/FilePreview.cpp',
     'ui/FileTreeView.cpp',
+    'ui/PlacesSidebar.cpp',
     'ui/RegexListbox.cpp',
     'ui/SearchOptionsPane.cpp',
     'ui/SearchProgressDialog.cpp',
