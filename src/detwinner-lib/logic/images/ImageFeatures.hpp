@@ -3,28 +3,22 @@
  Name        : ImageFeatures.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef LOGIC_IMAGES_IMAGEFEATURES_HPP_
-#define LOGIC_IMAGES_IMAGEFEATURES_HPP_
+#pragma once
 
 #include <logic/images/HistogramT.hpp>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //==============================================================================
 // Histogram
 //==============================================================================
 using Histogram = HistogramT<32>;
 using HistogramI = HistogramT<8>;
-
 
 //==============================================================================
 // ImageFeatures
@@ -48,7 +42,4 @@ private:
 	const float aspect;
 };
 
-
-}}}
-
-#endif /* LOGIC_IMAGES_IMAGEFEATURES_HPP_ */
+} // namespace detwinner::logic::images

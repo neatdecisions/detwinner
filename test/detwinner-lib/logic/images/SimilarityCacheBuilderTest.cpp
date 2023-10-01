@@ -1,22 +1,17 @@
 #include <gtest/gtest.h>
 
-#include <logic/images/SimilarityCacheBuilder.hpp>
-
 #include <algorithm>
 #include <thread>
 
-#include "ImageFeaturesTestFactory.hpp"
+#include <logic/images/SimilarityCacheBuilder.hpp>
+
 #include "../mocks/MockImageFinderCallback.hpp"
+#include "ImageFeaturesTestFactory.hpp"
 
-
-using ::testing::Return;
 using ::testing::_;
+using ::testing::Return;
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //==============================================================================
 // SimilarityCacheBuilderTest
@@ -25,8 +20,6 @@ struct SimilarityCacheBuilderTest : public ::testing::Test
 {
 	const unsigned int m_threadCount = std::max(4U, std::thread::hardware_concurrency());
 };
-
-
 
 //==============================================================================
 // SimilarityCacheBuilderTest - fixtures
@@ -46,7 +39,6 @@ TEST_F(SimilarityCacheBuilderTest, parallel_indexes_normal)
 	EXPECT_EQ(103ULL, assembledCount);
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(SimilarityCacheBuilderTest, parallel_indexes_small)
 {
@@ -54,14 +46,11 @@ TEST_F(SimilarityCacheBuilderTest, parallel_indexes_small)
 	EXPECT_EQ(0ULL, indexes.size());
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(SimilarityCacheBuilderTest, execute_basic_rotations)
 {
-	const std::vector<ImageFeatures> imageFeatures = {
-		ImageFeaturesTestFactory::CreateFeatures_1(),
-		ImageFeaturesTestFactory::CreateFeatures_2()
-	};
+	const std::vector<ImageFeatures> imageFeatures = {ImageFeaturesTestFactory::CreateFeatures_1(),
+	                                                  ImageFeaturesTestFactory::CreateFeatures_2()};
 	SimilarityCache cache = SimilarityCacheBuilder(imageFeatures, true, nullptr).execute();
 	EXPECT_EQ(30U, cache.get(0, 1));
 	EXPECT_EQ(30U, cache.get(1, 0));
@@ -69,14 +58,11 @@ TEST_F(SimilarityCacheBuilderTest, execute_basic_rotations)
 	EXPECT_EQ(0U, cache.get(1, 1));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(SimilarityCacheBuilderTest, execute_basic_no_rotations)
 {
-	const std::vector<ImageFeatures> imageFeatures = {
-		ImageFeaturesTestFactory::CreateFeatures_1(),
-		ImageFeaturesTestFactory::CreateFeatures_2()
-	};
+	const std::vector<ImageFeatures> imageFeatures = {ImageFeaturesTestFactory::CreateFeatures_1(),
+	                                                  ImageFeaturesTestFactory::CreateFeatures_2()};
 
 	callbacks::mocks::MockImageFinderCallback::Ptr pMockedCallback = callbacks::mocks::MockImageFinderCallback::Create();
 	ON_CALL(*pMockedCallback, pauseAndStopStatus()).WillByDefault(Return(false));
@@ -94,5 +80,4 @@ TEST_F(SimilarityCacheBuilderTest, execute_basic_no_rotations)
 	EXPECT_EQ(0U, cache.get(1, 1));
 }
 
-
-}}}
+} // namespace detwinner::logic::images

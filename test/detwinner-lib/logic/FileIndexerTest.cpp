@@ -2,16 +2,13 @@
 
 #include <logic/FileIndexer.hpp>
 
-#include "mocks/MockSearchProcessCallback.hpp"
 #include "TestingHelpers.hpp"
+#include "mocks/MockSearchProcessCallback.hpp"
 
-using ::testing::Return;
 using ::testing::_;
+using ::testing::Return;
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 //==============================================================================
 // DuplicateImageFinderTest
@@ -34,21 +31,14 @@ struct FileIndexerTest : public ::testing::Test
 	callbacks::mocks::MockSearchProcessCallback::Ptr m_pMockedCallback;
 };
 
-
-
 //==============================================================================
 // FakeFileReceiver
 //==============================================================================
 struct FakeFileReceiver : callbacks::IIndexedFileReceiver
 {
-	void receive(FileInfo && fileInfo) override
-	{
-		fileNames.push_back(std::move(fileInfo.fullPath));
-	}
+	void receive(FileInfo && fileInfo) override { fileNames.push_back(std::move(fileInfo.fullPath)); }
 	std::vector<std::string> fileNames;
 };
-
-
 
 //==============================================================================
 // FileIndexerTest - fixtures
@@ -58,7 +48,7 @@ struct FakeFileReceiver : callbacks::IIndexedFileReceiver
 TEST_F(FileIndexerTest, basic_data)
 {
 	FileSearchSettings settings;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(_)).Times(0);
@@ -77,13 +67,12 @@ TEST_F(FileIndexerTest, basic_data)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "gm-654x418t.png"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, size_greater_than)
 {
 	FileSearchSettings settings;
 	settings.minFileSize = 82ULL;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(5);
@@ -99,13 +88,12 @@ TEST_F(FileIndexerTest, size_greater_than)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "gm-654x418t.png"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, size_smaller_than)
 {
 	FileSearchSettings settings;
 	settings.maxFileSize = 82ULL;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(1);
@@ -117,14 +105,13 @@ TEST_F(FileIndexerTest, size_smaller_than)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "empty.foo"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, size_in_between)
 {
 	FileSearchSettings settings;
 	settings.minFileSize = 82ULL;
 	settings.maxFileSize = 3000ULL;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(2);
@@ -137,13 +124,12 @@ TEST_F(FileIndexerTest, size_in_between)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "gm-125x80.png"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, regex_wrong)
 {
 	FileSearchSettings settings;
-	settings.filenameRegexps = { "?" };
-	const std::vector<std::string> folders = { "data" };
+	settings.filenameRegexps = {"?"};
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(8);
@@ -161,13 +147,12 @@ TEST_F(FileIndexerTest, regex_wrong)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "gm-654x418t.png"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, regex_single)
 {
 	FileSearchSettings settings;
-	settings.filenameRegexps = { ".*?gm.*?" };
-	const std::vector<std::string> folders = { "data" };
+	settings.filenameRegexps = {".*?gm.*?"};
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(5);
@@ -183,13 +168,12 @@ TEST_F(FileIndexerTest, regex_single)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "gm-654x418t.png"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, regex_multiple)
 {
 	FileSearchSettings settings;
-	settings.filenameRegexps = { ".*?file\\d\\.txt", ".*?80\\.gif", ".*?80\\.png"};
-	const std::vector<std::string> folders = { "data" };
+	settings.filenameRegexps = {".*?file\\d\\.txt", ".*?80\\.gif", ".*?80\\.png"};
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(4);
@@ -204,12 +188,11 @@ TEST_F(FileIndexerTest, regex_multiple)
 	EXPECT_TRUE(FilePathsContainFileName(fileReceiver.fileNames, "file2.txt"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, interruption)
 {
 	FileSearchSettings settings;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 	auto pMockedCallback = callbacks::mocks::MockSearchProcessCallback::Create();
 	EXPECT_CALL(*pMockedCallback, pauseAndStopStatus()).WillOnce(Return(true));
 	FakeFileReceiver fileReceiver;
@@ -218,16 +201,15 @@ TEST_F(FileIndexerTest, interruption)
 	EXPECT_TRUE(fileReceiver.fileNames.empty());
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(FileIndexerTest, null_callback)
 {
 	FileSearchSettings settings;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 	FakeFileReceiver fileReceiver;
 	FileIndexer(settings).performIndexing(folders, fileReceiver, nullptr);
 
 	EXPECT_EQ(8UL, fileReceiver.fileNames.size());
 }
 
-}}
+} // namespace detwinner::logic

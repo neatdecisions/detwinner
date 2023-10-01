@@ -3,32 +3,24 @@
  Name        : AbstractFileDeleter.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef TOOLS_ABSTRACTFILEDELETER_HPP_
-#define TOOLS_ABSTRACTFILEDELETER_HPP_
+#pragma once
 
 #include <memory>
 #include <string>
 
+namespace detwinner::tools {
 
-namespace detwinner {
-namespace tools {
-
-
-class AbstractFileDeleter
+struct AbstractFileDeleter
 {
-public:
-	using Ptr_t = std::shared_ptr<AbstractFileDeleter>;
+	using Ptr = std::shared_ptr<AbstractFileDeleter>;
 	AbstractFileDeleter() = default;
 	virtual ~AbstractFileDeleter() noexcept = default;
 	virtual bool removeFile(const std::string & filePath) = 0;
 };
 
-
-}}
-
-#endif /* TOOLS_ABSTRACTFILEDELETER_HPP_ */
+} // namespace detwinner::tools

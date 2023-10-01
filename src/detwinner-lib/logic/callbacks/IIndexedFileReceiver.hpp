@@ -3,28 +3,22 @@
  Name        : IIndexedFileReceiver.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef LOGIC_CALLBACKS_IINDEXEDFILERECEIVER_HPP_
-#define LOGIC_CALLBACKS_IINDEXEDFILERECEIVER_HPP_
+#pragma once
 
 #include <string>
 
-
-namespace detwinner {
-namespace logic {
-namespace callbacks {
-
+namespace detwinner::logic::callbacks {
 
 struct IIndexedFileReceiver
 {
 	struct FileInfo
 	{
-		FileInfo(const std::string & fullPath, unsigned long long size) :
-			fullPath(fullPath), size(size){}
+		FileInfo(const std::string & fullPath, unsigned long long size) : fullPath(fullPath), size(size) {}
 		std::string fullPath;
 		unsigned long long size;
 	};
@@ -33,7 +27,4 @@ struct IIndexedFileReceiver
 	virtual ~IIndexedFileReceiver() noexcept = default;
 };
 
-
-}}}
-
-#endif /* LOGIC_CALLBACKS_IINDEXEDFILERECEIVER_HPP_ */
+} // namespace detwinner::logic::callbacks

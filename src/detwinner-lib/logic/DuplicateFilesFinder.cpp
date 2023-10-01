@@ -3,23 +3,20 @@
  Name        : DuplicateFilesFinder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <logic/DuplicateFilesFinder.hpp>
 
-#include <logic/FileIndexer.hpp>
-#include <logic/MurmurHash.hpp>
-
 #include <numeric>
 #include <unordered_map>
 
+#include <logic/FileIndexer.hpp>
+#include <logic/MurmurHash.hpp>
 
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 //==============================================================================
 // DuplicateFilesFinder::FileMappingReceiver
@@ -32,18 +29,15 @@ DuplicateFilesFinder::FileMappingReceiver::receive(FileInfo && fileInfo)
 	mapping[fileInfo.size].push_back(std::move(fileInfo.fullPath));
 }
 
-
-
 //==============================================================================
 // DuplicateFilesFinder
 //==============================================================================
 
 //------------------------------------------------------------------------------
-DuplicatesList_t
-DuplicateFilesFinder::find(
-	const std::vector<std::string> & folderList,
-	const FileSearchSettings & searchSettings,
-	const callbacks::ISearchProcessCallback::Ptr_t & searchProcessCallback)
+DuplicatesList
+DuplicateFilesFinder::find(const std::vector<std::string> & folderList,
+                           const FileSearchSettings & searchSettings,
+                           const callbacks::ISearchProcessCallback::Ptr & searchProcessCallback)
 {
 	if (searchProcessCallback) searchProcessCallback->onInit();
 
@@ -52,40 +46,39 @@ DuplicateFilesFinder::find(
 
 	if (searchProcessCallback)
 	{
-		if (searchProcessCallback->pauseAndStopStatus()) return DuplicatesList_t();
-		const unsigned int count = std::accumulate(totalMap.mapping.begin(), totalMap.mapping.end(), 0,
-			[](unsigned int val, const FileSizeMapping_t::value_type & el) { return val + el.second.size(); });
+		if (searchProcessCallback->pauseAndStopStatus()) return DuplicatesList();
+		const unsigned int count = std::accumulate(
+				totalMap.mapping.begin(), totalMap.mapping.end(), 0,
+				[](unsigned int val, const FileSizeMapping::value_type & el) { return val + el.second.size(); });
 		searchProcessCallback->onStartComparing(count);
 		searchProcessCallback->setStage(1);
 	}
 
-	DuplicatesList_t result = calculateHashes(totalMap.mapping, searchProcessCallback);
+	DuplicatesList result = calculateHashes(totalMap.mapping, searchProcessCallback);
 
 	if (searchProcessCallback) searchProcessCallback->onFinish();
 
 	return result;
 }
 
-
 //------------------------------------------------------------------------------
-DuplicatesList_t
-DuplicateFilesFinder::calculateHashes(
-	FileSizeMapping_t & totalMap,
-	callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback) const
+DuplicatesList
+DuplicateFilesFinder::calculateHashes(FileSizeMapping & totalMap,
+                                      callbacks::ISearchProcessCallback::Ptr searchProcessCallback) const
 {
-	std::unordered_map<std::string, std::vector<std::string> > sameSizeDuplicateGroup;
-	DuplicatesList_t result;
+	std::unordered_map<std::string, std::vector<std::string>> sameSizeDuplicateGroup;
+	DuplicatesList result;
 	std::string hash;
 
-	for (auto & sizeGroup: totalMap)
+	for (auto & sizeGroup : totalMap)
 	{
 		if (sizeGroup.second.size() > 1)
 		{
 			sameSizeDuplicateGroup.clear();
 
-			for (const auto & fileName: sizeGroup.second)
+			for (const auto & fileName : sizeGroup.second)
 			{
-				if ( !MurmurHash::GetHash(fileName, hash) )
+				if (!BuildMurmurHash(fileName, hash))
 				{
 					if (searchProcessCallback) searchProcessCallback->onFileProcessed(sizeGroup.first);
 					continue;
@@ -106,7 +99,7 @@ DuplicateFilesFinder::calculateHashes(
 				{
 					result.emplace_back();
 					DuplicateContainer & container = result.back();
-					for (auto && fileName: duplicateGroup.second)
+					for (auto && fileName : duplicateGroup.second)
 					{
 						container.files.emplace_back(sizeGroup.first, fileName);
 					}
@@ -131,5 +124,4 @@ DuplicateFilesFinder::calculateHashes(
 	return result;
 }
 
-
-}}
+} // namespace detwinner::logic

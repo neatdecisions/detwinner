@@ -3,30 +3,26 @@
  Name        : SearchSettingsDialog.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef UI_SEARCHSETTINGSDIALOG_HPP_
-#define UI_SEARCHSETTINGSDIALOG_HPP_
-
+#pragma once
 
 #include <gtkmm.h>
+
 #include <settings/SearchSettings.hpp>
 #include <ui/RegexListbox.hpp>
 
-
-namespace detwinner {
-namespace ui {
-
+namespace detwinner::ui {
 
 class SearchSettingsDialog : public Gtk::Dialog
 {
 public:
-	SearchSettingsDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
+	SearchSettingsDialog(BaseObjectType * cobject, const Glib::RefPtr<Gtk::Builder> & builder);
 	settings::SearchSettings getSettings() const;
-	void init(settings::SearchSettings::SearchMode_t mode, const settings::SearchSettings & searchSettings);
+	void init(settings::SearchSettings::SearchMode mode, const settings::SearchSettings & searchSettings);
 
 private:
 	struct CommonWidgets
@@ -55,13 +51,13 @@ private:
 	void populateCommonWidgets(const settings::SearchSettings::CommonSettings & settings, CommonWidgets & widgets);
 	void populateCommonSettings(const CommonWidgets & widgets, settings::SearchSettings::CommonSettings & settings) const;
 
-	void setUnitComboboxValue(const settings::SearchSettings::FileSizeUnit_t value, Gtk::ComboBoxText & combobox);
-	settings::SearchSettings::FileSizeUnit_t getUnitComboboxValue(const Gtk::ComboBoxText & combobox) const;
+	void setUnitComboboxValue(const settings::SearchSettings::FileSizeUnit value, Gtk::ComboBoxText & combobox);
+	settings::SearchSettings::FileSizeUnit getUnitComboboxValue(const Gtk::ComboBoxText & combobox) const;
 
 	void setupWidgets(CommonWidgets & widgets);
 
 	Glib::RefPtr<Gtk::Builder> m_builder;
-	settings::SearchSettings::SearchMode_t m_searchMode = settings::SearchSettings::SearchMode_t::kExactDuplicates;
+	settings::SearchSettings::SearchMode m_searchMode = settings::SearchSettings::SearchMode::ExactDuplicates;
 
 	Gtk::StackSwitcher * m_stackSwitcher = nullptr;
 	Gtk::SpinButton * m_spinSimilarity = nullptr;
@@ -73,7 +69,4 @@ private:
 	Gtk::Button * m_btnCancel = nullptr;
 };
 
-
-}}
-
-#endif /* UI_SEARCHSETTINGSDIALOG_HPP_ */
+} // namespace detwinner::ui

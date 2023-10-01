@@ -2,16 +2,14 @@
 
 #include <array>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //------------------------------------------------------------------------------
-ImageFeatures ImageFeaturesTestFactory::CreateFeatures_1()
+ImageFeatures
+ImageFeaturesTestFactory::CreateFeatures_1()
 {
 	ImageFeatures feat1(0, 125.0f / 80.0f);
+	// clang-format off
 	const std::array< std::array<Histogram::BinValue_t, Histogram::kBinCount>, 4 > yHistograms1 = { {
 		{ { 139, 29, 0, 0, 29, 16, 8, 17, 4, 41, 15, 26, 15, 26, 51, 28, 14, 15, 12, 21, 13, 23, 14, 20, 13, 21, 7, 25, 22, 18, 6, 1792 } },
 		{ { 165, 38, 0, 0, 29, 17, 26, 17, 4, 38, 22, 26, 25, 27, 69, 31, 15, 13, 24, 24, 17, 16, 16, 15, 18, 22, 14, 15, 17, 15, 8, 1697 } },
@@ -39,6 +37,7 @@ ImageFeatures ImageFeaturesTestFactory::CreateFeatures_1()
 		{ { 1636, 73, 48, 52, 55, 42, 29, 545 } },
 		{ { 1883, 24, 38, 31, 29, 18, 21, 436 } }
 	} };
+	// clang-format on
 
 	for (std::size_t j = 0; j < 4; ++j)
 	{
@@ -57,11 +56,12 @@ ImageFeatures ImageFeaturesTestFactory::CreateFeatures_1()
 	return feat1;
 }
 
-
 //------------------------------------------------------------------------------
-ImageFeatures ImageFeaturesTestFactory::CreateFeatures_2()
+ImageFeatures
+ImageFeaturesTestFactory::CreateFeatures_2()
 {
 	ImageFeatures feat2(1, 126.0f / 80.0f);
+	// clang-format off
 	const std::array< std::array<Histogram::BinValue_t, Histogram::kBinCount>, 4 > yHistograms2 = { {
 		{ { 54, 3, 4, 9, 10, 12, 18, 27, 24, 35, 34, 45, 45, 76, 68, 334, 21, 5, 6, 14, 9, 6, 13, 15, 16, 12, 3, 18, 11, 4, 5, 11 } },
 		{ { 56, 3, 7, 8, 11, 14, 12, 17, 18, 24, 30, 26, 38, 44, 42, 223, 15, 8, 9, 5, 8, 14, 7, 8, 8, 11, 7, 15, 5, 8, 10, 11 } },
@@ -89,6 +89,7 @@ ImageFeatures ImageFeaturesTestFactory::CreateFeatures_2()
 		{ { 2044, 9,  4,  6,  3,  6,  4,  444 } },
 		{ { 2016, 14, 15, 10, 7,  6,  11, 441 } },
 	} };
+	// clang-format on
 
 	for (std::size_t j = 0; j < 4; ++j)
 	{
@@ -107,5 +108,4 @@ ImageFeatures ImageFeaturesTestFactory::CreateFeatures_2()
 	return feat2;
 }
 
-
-}}}
+} // namespace detwinner::logic::images

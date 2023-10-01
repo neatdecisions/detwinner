@@ -2,17 +2,13 @@
 
 #include <logic/DuplicateFilesFinder.hpp>
 
-#include "mocks/MockSearchProcessCallback.hpp"
 #include "TestingHelpers.hpp"
+#include "mocks/MockSearchProcessCallback.hpp"
 
-
-using ::testing::Return;
 using ::testing::_;
+using ::testing::Return;
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 //==============================================================================
 // DuplicateFilesFinderTest
@@ -35,8 +31,6 @@ struct DuplicateFilesFinderTest : public ::testing::Test
 	callbacks::mocks::MockSearchProcessCallback::Ptr m_pMockedCallback;
 };
 
-
-
 //==============================================================================
 // ImageFeaturesTest - fixtures
 //==============================================================================
@@ -56,12 +50,11 @@ TEST_F(DuplicateFilesFinderTest, empty_input)
 	EXPECT_EQ(0UL, m_finder.find(folders, settings, m_pMockedCallback).size());
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(DuplicateFilesFinderTest, basic_files)
 {
 	FileSearchSettings settings;
-	const std::vector<std::string> folders = { "data/files" };
+	const std::vector<std::string> folders = {"data/files"};
 
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(82)).Times(2);
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(0)).Times(1);
@@ -69,55 +62,52 @@ TEST_F(DuplicateFilesFinderTest, basic_files)
 	EXPECT_CALL(*m_pMockedCallback, onDuplicateFound(2, 164, 82)).Times(1);
 	EXPECT_CALL(*m_pMockedCallback, onStartComparing(3)).Times(1);
 
-	const DuplicatesList_t result = m_finder.find(folders, settings, m_pMockedCallback);
+	const DuplicatesList result = m_finder.find(folders, settings, m_pMockedCallback);
 	ASSERT_EQ(1UL, result.size());
 	EXPECT_EQ(2UL, result[0].files.size());
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "file1.txt"));
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "file2.txt"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(DuplicateFilesFinderTest, basic_images)
 {
 	FileSearchSettings settings;
-	const std::vector<std::string> folders = { "data/images" };
+	const std::vector<std::string> folders = {"data/images"};
 
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(_)).Times(5);
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(5);
 	EXPECT_CALL(*m_pMockedCallback, onDuplicateFound(_, _, _)).Times(0);
 	EXPECT_CALL(*m_pMockedCallback, onStartComparing(5)).Times(1);
 
-	const DuplicatesList_t result = m_finder.find(folders, settings, m_pMockedCallback);
+	const DuplicatesList result = m_finder.find(folders, settings, m_pMockedCallback);
 	EXPECT_EQ(0UL, result.size());
 }
-
 
 //------------------------------------------------------------------------------
 TEST_F(DuplicateFilesFinderTest, basic_all)
 {
 	FileSearchSettings settings;
-	const std::vector<std::string> folders = { "data" };
+	const std::vector<std::string> folders = {"data"};
 
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(_)).Times(8);
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(false)).Times(8);
 	EXPECT_CALL(*m_pMockedCallback, onDuplicateFound(2, 164, 82)).Times(1);
 	EXPECT_CALL(*m_pMockedCallback, onStartComparing(8)).Times(1);
 
-	const DuplicatesList_t result = m_finder.find(folders, settings, m_pMockedCallback);
+	const DuplicatesList result = m_finder.find(folders, settings, m_pMockedCallback);
 	ASSERT_EQ(1UL, result.size());
 	EXPECT_EQ(2UL, result[0].files.size());
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "file1.txt"));
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "file2.txt"));
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(DuplicateFilesFinderTest, basic_regex_positive)
 {
 	FileSearchSettings settings;
-	settings.filenameRegexps = { ".*?/file\\d\\.txt(\\.[^.]*$|$)" };
-	const std::vector<std::string> folders = { "data" };
+	settings.filenameRegexps = {".*?/file\\d\\.txt(\\.[^.]*$|$)"};
+	const std::vector<std::string> folders = {"data"};
 
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(82)).Times(2);
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(true)).Times(6);
@@ -125,7 +115,7 @@ TEST_F(DuplicateFilesFinderTest, basic_regex_positive)
 	EXPECT_CALL(*m_pMockedCallback, onDuplicateFound(2, 164, 82)).Times(1);
 	EXPECT_CALL(*m_pMockedCallback, onStartComparing(2)).Times(1);
 
-	const DuplicatesList_t result = m_finder.find(folders, settings, m_pMockedCallback);
+	const DuplicatesList result = m_finder.find(folders, settings, m_pMockedCallback);
 	ASSERT_EQ(1UL, result.size());
 	ASSERT_EQ(2UL, result[0].files.size());
 	EXPECT_TRUE(FileInfosContainFileName(result[0], "file1.txt"));
@@ -136,22 +126,20 @@ TEST_F(DuplicateFilesFinderTest, basic_regex_positive)
 	EXPECT_FALSE(result[0].files[1].imageResolution);
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(DuplicateFilesFinderTest, basic_regex_negative)
 {
 	FileSearchSettings settings;
-	settings.filenameRegexps = { ".*?/foobar\\d\\.txt(\\.[^.]*$|$)" };
-	const std::vector<std::string> folders = { "data" };
+	settings.filenameRegexps = {".*?/foobar\\d\\.txt(\\.[^.]*$|$)"};
+	const std::vector<std::string> folders = {"data"};
 
 	EXPECT_CALL(*m_pMockedCallback, onFileProcessed(_)).Times(0);
 	EXPECT_CALL(*m_pMockedCallback, onFileIndexed(true)).Times(8);
 	EXPECT_CALL(*m_pMockedCallback, onDuplicateFound(_, _, _)).Times(0);
 	EXPECT_CALL(*m_pMockedCallback, onStartComparing(0)).Times(1);
 
-	const DuplicatesList_t result = m_finder.find(folders, settings, m_pMockedCallback);
+	const DuplicatesList result = m_finder.find(folders, settings, m_pMockedCallback);
 	ASSERT_EQ(0UL, result.size());
 }
 
-
-}}
+} // namespace detwinner::logic

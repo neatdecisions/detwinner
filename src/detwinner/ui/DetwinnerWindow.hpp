@@ -3,28 +3,22 @@
  Name        : DetwinnerWindow.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef UI_DETWINNERWINDOW_HPP_
-#define UI_DETWINNERWINDOW_HPP_
+#pragma once
 
 #include <gtkmm.h>
-
-#include <gtkmm/applicationwindow.h>
 
 #include <settings/SearchSettings.hpp>
 #include <ui/SearchOptionsPane.hpp>
 #include <ui/SearchResultsPane.hpp>
 
+namespace detwinner::ui {
 
-namespace detwinner {
-namespace ui {
-
-
-class DetwinnerWindow: public Gtk::ApplicationWindow
+class DetwinnerWindow : public Gtk::ApplicationWindow
 {
 
 public:
@@ -32,7 +26,7 @@ public:
 
 protected:
 	void on_start_search();
-	void on_search_mode_changed(settings::SearchSettings::SearchMode_t mode);
+	void on_search_mode_changed(settings::SearchSettings::SearchMode mode);
 
 	Gtk::Stack m_Stack;
 	SearchOptionsPane m_SearchOptionsBox;
@@ -46,7 +40,4 @@ protected:
 	static const Glib::ustring kName_SearchResults;
 };
 
-
-}}
-
-#endif // UI_DETWINNERWINDOW_HPP_
+} // namespace detwinner::ui

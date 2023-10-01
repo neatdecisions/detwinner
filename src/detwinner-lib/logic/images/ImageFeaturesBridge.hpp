@@ -3,22 +3,18 @@
  Name        : ImageFeaturesBridge.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef LOGIC_IMAGES_IMAGEFEATURESBRIDGE_HPP_
-#define LOGIC_IMAGES_IMAGEFEATURESBRIDGE_HPP_
+#pragma once
 
 #include <Magick++.h>
+
 #include <logic/images/ImageFeatures.hpp>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //==============================================================================
 // ImageFeaturesBridge
@@ -32,20 +28,13 @@ public:
 	~ImageFeaturesBridge() = delete;
 
 private:
-	static void GetIntensityHistogram(
-			const Magick::Image & image,
-			const Magick::Geometry & roi,
-			HistogramI & histI);
+	static void GetIntensityHistogram(const Magick::Image & image, const Magick::Geometry & roi, HistogramI & histI);
 
-	static void GetYUVHistograms(
-			const Magick::Image & image,
-			const Magick::Geometry & roi,
-			Histogram & histY,
-			Histogram & histU,
-			Histogram & histV);
+	static void GetYUVHistograms(const Magick::Image & image,
+	                             const Magick::Geometry & roi,
+	                             Histogram & histY,
+	                             Histogram & histU,
+	                             Histogram & histV);
 };
 
-
-}}}
-
-#endif /* IMAGEFEATURESBRIDGE_HPP_ */
+} // namespace detwinner::logic::images

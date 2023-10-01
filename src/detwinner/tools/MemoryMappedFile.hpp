@@ -3,21 +3,17 @@
  Name        : MemoryMappedFile.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef TOOLS_MEMORYMAPPEDFILE_HPP_
-#define TOOLS_MEMORYMAPPEDFILE_HPP_
+#pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
-
-namespace detwinner {
-namespace tools {
-
+namespace detwinner::tools {
 
 class MemoryMappedFile
 {
@@ -33,7 +29,4 @@ private:
 	std::unique_ptr<Impl> m_pImpl;
 };
 
-
-}}
-
-#endif /* TOOLS_MEMORYMAPPEDFILE_HPP_ */
+} // namespace detwinner::tools

@@ -7,27 +7,12 @@
  ===============================================================================
  */
 
-#ifndef LOGIC_MURMURHASH_HPP_
-#define LOGIC_MURMURHASH_HPP_
+#pragma once
 
 #include <string>
 
+namespace detwinner::logic {
 
-namespace detwinner {
-namespace logic {
+bool BuildMurmurHash(const std::string & fileName, std::string & hash);
 
-
-class MurmurHash
-{
-public:
-
-	MurmurHash() = delete;
-	~MurmurHash() = delete;
-
-	static bool GetHash(const std::string & fileName, std::string & hash);
-};
-
-
-}}
-
-#endif /* LOGIC_MURMURHASH_HPP_ */
+}

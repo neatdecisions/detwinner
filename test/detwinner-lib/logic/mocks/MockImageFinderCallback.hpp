@@ -1,15 +1,10 @@
-#ifndef TEST_LOGIC_MOCKS_MOCKIMAGEFINDERCALLBACK_HPP_
-#define TEST_LOGIC_MOCKS_MOCKIMAGEFINDERCALLBACK_HPP_
+#pragma once
 
 #include <gmock/gmock.h>
+
 #include <logic/callbacks/IImageFinderCallback.hpp>
 
-
-namespace detwinner {
-namespace logic {
-namespace callbacks {
-namespace mocks {
-
+namespace detwinner::logic::callbacks::mocks {
 
 class MockImageFinderCallback : public detwinner::logic::callbacks::IImageFinderCallback
 {
@@ -23,7 +18,4 @@ public:
 	MOCK_METHOD0(pauseAndStopStatus, bool());
 };
 
-
-}}}}
-
-#endif
+} // namespace detwinner::logic::callbacks::mocks

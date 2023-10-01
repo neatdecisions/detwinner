@@ -3,37 +3,30 @@
  Name        : SimilarityCacheBuilder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <logic/images/SimilarityCacheBuilder.hpp>
 
+#include <algorithm>
 #include <future>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //------------------------------------------------------------------------------
-SimilarityCacheBuilder::SimilarityCacheBuilder(
-	const std::vector<ImageFeatures> & imageFeatures,
-	bool processRotations,
-	const callbacks::IImageFinderCallback::Ptr_t & callback) :
-		m_imageFeatures(imageFeatures),
-		m_processRotations(processRotations),
-		m_callback(callback),
-		m_stopped(false), m_processedCount(0)
-{}
-
+SimilarityCacheBuilder::SimilarityCacheBuilder(const std::vector<ImageFeatures> & imageFeatures,
+                                               bool processRotations,
+                                               const callbacks::IImageFinderCallback::Ptr & callback)
+		: m_imageFeatures(imageFeatures), m_processRotations(processRotations), m_callback(callback), m_stopped(false),
+			m_processedCount(0)
+{
+}
 
 //------------------------------------------------------------------------------
 SimilarityCacheBuilder::ParallelIndexes_t
-SimilarityCacheBuilder::CalculateParallelIndexes(
-	std::size_t count, std::size_t minBucketSize)
+SimilarityCacheBuilder::CalculateParallelIndexes(std::size_t count, std::size_t minBucketSize)
 {
 	ParallelIndexes_t result;
 
@@ -68,7 +61,6 @@ SimilarityCacheBuilder::CalculateParallelIndexes(
 	return result;
 }
 
-
 //------------------------------------------------------------------------------
 SimilarityCache
 SimilarityCacheBuilder::execute()
@@ -80,26 +72,20 @@ SimilarityCacheBuilder::execute()
 
 	SimilarityCache cache(count);
 	ParallelIndexes_t parallelIndexes = CalculateParallelIndexes(count, 1000);
-	std::vector< std::future<void> > futures;
+	std::vector<std::future<void>> futures;
 	if (parallelIndexes.empty())
 	{
-		futures.push_back( std::async(std::launch::deferred,
-				&SimilarityCacheBuilder::calculateDistanceCache, this,
-				0, count, std::ref(cache) ) );
+		futures.push_back(std::async(std::launch::deferred, &SimilarityCacheBuilder::calculateDistanceCache, this, 0, count,
+		                             std::ref(cache)));
 	} else
 	{
-		for (auto && aIndexPair: parallelIndexes)
+		for (auto & [indexStart, indexEnd] : parallelIndexes)
 		{
-			futures.push_back( std::async(std::launch::async,
-					&SimilarityCacheBuilder::calculateDistanceCache, this,
-					aIndexPair.first, aIndexPair.second, std::ref(cache) ) );
+			futures.push_back(std::async(std::launch::async, &SimilarityCacheBuilder::calculateDistanceCache, this,
+			                             indexStart, indexEnd, std::ref(cache)));
 		}
 	}
-
-	for (auto && future: futures)
-	{
-		future.wait();
-	}
+	std::for_each(futures.begin(), futures.end(), [](auto & future) { future.wait(); });
 	futures.clear();
 
 	if (m_callback) m_callback->imgComparingProgress(m_imageFeatures.size(), m_imageFeatures.size());
@@ -107,11 +93,9 @@ SimilarityCacheBuilder::execute()
 	return cache;
 }
 
-
 //------------------------------------------------------------------------------
 void
-SimilarityCacheBuilder::calculateDistanceCache(
-	std::size_t start, std::size_t end, SimilarityCache & cache)
+SimilarityCacheBuilder::calculateDistanceCache(std::size_t start, std::size_t end, SimilarityCache & cache)
 {
 	if (start >= end) return;
 	const std::size_t sz = m_imageFeatures.size();
@@ -133,5 +117,4 @@ SimilarityCacheBuilder::calculateDistanceCache(
 	}
 }
 
-
-}}}
+} // namespace detwinner::logic::images

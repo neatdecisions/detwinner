@@ -3,32 +3,25 @@
  Name        : SimilarImageFinder.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef LOGIC_IMAGES_SIMILARIMAGEFINDER_HPP_
-#define LOGIC_IMAGES_SIMILARIMAGEFINDER_HPP_
-
+#pragma once
 
 #include <set>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 #include <logic/callbacks/IImageFinderCallback.hpp>
 #include <logic/images/DuplicateImageResult.hpp>
 #include <logic/images/ImageFeatures.hpp>
 #include <logic/images/Types.hpp>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 class SimilarityCache;
-
 
 //==============================================================================
 // SimilarImageFinder
@@ -36,76 +29,64 @@ class SimilarityCache;
 class SimilarImageFinder
 {
 public:
-	DuplicateImageResult find(
-		const std::vector<std::string> & fileNames,
-		unsigned short sensitivity,
-		bool processRotations,
-		const callbacks::IImageFinderCallback::Ptr_t & callback) const;
+	DuplicateImageResult find(const std::vector<std::string> & fileNames,
+	                          unsigned short sensitivity,
+	                          bool processRotations,
+	                          const callbacks::IImageFinderCallback::Ptr & callback) const;
 
 private:
 	using FeaturesVector = std::vector<ImageFeatures>;
 
-	struct Cluster_t
+	struct Cluster
 	{
-		Cluster_t() = default;
-		Cluster_t(std::size_t id, std::size_t neighborId, Distance_t neighborDistance, std::size_t firstItemId) :
-			id(id), neighborId(neighborId), neighborDistance(neighborDistance), items({firstItemId}) {}
+		Cluster() = default;
+		Cluster(std::size_t id, std::size_t neighborId, Distance_t neighborDistance, std::size_t firstItemId)
+				: id(id), neighborId(neighborId), neighborDistance(neighborDistance), items({firstItemId})
+		{
+		}
 		std::size_t id = 0;
 		std::size_t neighborId = 0;
 		Distance_t neighborDistance = 0;
 		std::unordered_set<std::size_t> items;
 	};
 
-	void addClusterToResult(
-			const Cluster_t & cluster,
-			const std::vector<std::size_t> & imageIndexMap,
-			const std::vector<std::string> & fileNames,
-			DuplicateImageResult & result,
-			const callbacks::IImageFinderCallback::Ptr_t & callback) const;
+	void addClusterToResult(const Cluster & cluster,
+	                        const std::vector<std::size_t> & imageIndexMap,
+	                        const std::vector<std::string> & fileNames,
+	                        DuplicateImageResult & result,
+	                        const callbacks::IImageFinderCallback::Ptr & callback) const;
 
-	std::size_t findMinimalDistanceIndex(
-			const std::vector<Cluster_t> & clusters) const;
+	std::size_t findMinimalDistanceIndex(const std::vector<Cluster> & clusters) const;
 
-	std::size_t findIndexById(
-			const std::vector<Cluster_t> & clusters,
-			std::size_t id,
-			std::size_t defaultValue) const;
+	std::size_t findIndexById(const std::vector<Cluster> & clusters, std::size_t id, std::size_t defaultValue) const;
 
-	void updateDistanceCache(
-			const std::vector<Cluster_t> & clusters,
-			Distance_t maxDistance,
-			std::size_t mergedClusterId,
-			Cluster_t & newCluster,
-			SimilarityCache & cache) const;
+	void updateDistanceCache(const std::vector<Cluster> & clusters,
+	                         Distance_t maxDistance,
+	                         std::size_t mergedClusterId,
+	                         Cluster & newCluster,
+	                         SimilarityCache & cache) const;
 
-	void clusterize(
-			const std::vector<std::size_t> & imageFeatureMap,
-			const std::vector<std::string> & fileNames,
-			uint_least8_t sensitivity,
-			SimilarityCache & cache,
-			DuplicateImageResult & result,
-			const callbacks::IImageFinderCallback::Ptr_t & callback) const;
+	void clusterize(const std::vector<std::size_t> & imageFeatureMap,
+	                const std::vector<std::string> & fileNames,
+	                uint_least8_t sensitivity,
+	                SimilarityCache & cache,
+	                DuplicateImageResult & result,
+	                const callbacks::IImageFinderCallback::Ptr & callback) const;
 
-	void updateNeighbours(
-			const SimilarityCache & cache,
-			Distance_t maxDistance,
-			std::size_t mergedClusterId1,
-			std::size_t mergedClusterId2,
-			std::vector<Cluster_t> & clusters,
-			std::set<std::size_t> & outlierIndexes) const;
+	void updateNeighbours(const SimilarityCache & cache,
+	                      Distance_t maxDistance,
+	                      std::size_t mergedClusterId1,
+	                      std::size_t mergedClusterId2,
+	                      std::vector<Cluster> & clusters,
+	                      std::set<std::size_t> & outlierIndexes) const;
 
-	std::set<std::size_t> updateNeighboursPartial(
-			const SimilarityCache & cache,
-			Distance_t maxDistance,
-			std::size_t mergedClusterId1,
-			std::size_t mergedClusterId2,
-			std::size_t startIndex,
-			std::size_t endIndex,
-			std::vector<Cluster_t> & clusters) const;
-
+	std::set<std::size_t> updateNeighboursPartial(const SimilarityCache & cache,
+	                                              Distance_t maxDistance,
+	                                              std::size_t mergedClusterId1,
+	                                              std::size_t mergedClusterId2,
+	                                              std::size_t startIndex,
+	                                              std::size_t endIndex,
+	                                              std::vector<Cluster> & clusters) const;
 };
 
-
-}}}
-
-#endif /* LOGIC_IMAGES_SIMILARIMAGEFINDER_HPP_ */
+} // namespace detwinner::logic::images

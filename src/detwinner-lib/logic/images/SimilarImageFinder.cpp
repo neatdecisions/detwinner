@@ -3,29 +3,26 @@
  Name        : SimilarImageFinder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <logic/images/SimilarImageFinder.hpp>
 
+#include <assert.h>
+#include <future>
+#include <vector>
+
+#include <Magick++.h>
+
 #include <logic/images/ImageFeaturesBuilder.hpp>
 #include <logic/images/SimilarityCacheBuilder.hpp>
 
-#include <assert.h>
-#include <Magick++.h>
-#include <vector>
-#include <future>
-
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //------------------------------------------------------------------------------
-template<typename T>
+template <typename T>
 void
 deleteFromVectorBySwap(std::vector<T> & vec, std::size_t i) noexcept
 {
@@ -39,34 +36,34 @@ deleteFromVectorBySwap(std::vector<T> & vec, std::size_t i) noexcept
 	vec.resize(n - 1);
 }
 
-
-
 //==============================================================================
 // SimilarImageFinder
 //==============================================================================
 
 //------------------------------------------------------------------------------
 std::set<std::size_t>
-SimilarImageFinder::updateNeighboursPartial(
-	const SimilarityCache & cache, Distance_t maxDistance,
-	std::size_t mergedClusterId1, std::size_t mergedClusterId2,
-	std::size_t startIndex, std::size_t endIndex,
-	std::vector<Cluster_t> & clusters) const
+SimilarImageFinder::updateNeighboursPartial(const SimilarityCache & cache,
+                                            Distance_t maxDistance,
+                                            std::size_t mergedClusterId1,
+                                            std::size_t mergedClusterId2,
+                                            std::size_t startIndex,
+                                            std::size_t endIndex,
+                                            std::vector<Cluster> & clusters) const
 {
 	std::set<std::size_t> outliers;
 	for (std::size_t i = startIndex; i < endIndex; ++i)
 	{
-		Cluster_t & cluster = clusters[i];
+		Cluster & cluster = clusters[i];
 		if (cluster.neighborDistance > maxDistance) continue;
 
 		if (cluster.id == mergedClusterId1) continue;
-		if ( (cluster.neighborId == mergedClusterId1) || (cluster.neighborId == mergedClusterId2))
+		if ((cluster.neighborId == mergedClusterId1) || (cluster.neighborId == mergedClusterId2))
 		{
 			cluster.neighborId = mergedClusterId1;
 			cluster.neighborDistance = cache.get(cluster.id, mergedClusterId1);
-			for (const auto & subcluster: clusters)
+			for (const auto & subcluster : clusters)
 			{
-				if ( (subcluster.id == mergedClusterId1) || (subcluster.id == cluster.id) ) continue;
+				if ((subcluster.id == mergedClusterId1) || (subcluster.id == cluster.id)) continue;
 				const Distance_t dist = cache.get(cluster.id, subcluster.id);
 				if (dist < cluster.neighborDistance)
 				{
@@ -83,51 +80,48 @@ SimilarImageFinder::updateNeighboursPartial(
 	return outliers;
 }
 
-
 //------------------------------------------------------------------------------
 void
-SimilarImageFinder::updateNeighbours(
-	const SimilarityCache & cache,
-	Distance_t maxDistance,
-	std::size_t mergedClusterId1,
-	std::size_t mergedClusterId2,
-	std::vector<Cluster_t> & clusters,
-	std::set<std::size_t> & outlierIndexes) const
+SimilarImageFinder::updateNeighbours(const SimilarityCache & cache,
+                                     Distance_t maxDistance,
+                                     std::size_t mergedClusterId1,
+                                     std::size_t mergedClusterId2,
+                                     std::vector<Cluster> & clusters,
+                                     std::set<std::size_t> & outlierIndexes) const
 {
-	const SimilarityCacheBuilder::ParallelIndexes_t parallelIndexes = SimilarityCacheBuilder::CalculateParallelIndexes(clusters.size(), 1000);
+	const SimilarityCacheBuilder::ParallelIndexes_t parallelIndexes =
+			SimilarityCacheBuilder::CalculateParallelIndexes(clusters.size(), 1000);
 
-	std::vector< std::future< std::set<std::size_t> > > futures;
+	std::vector<std::future<std::set<std::size_t>>> futures;
 	if (parallelIndexes.empty())
 	{
-		futures.push_back( std::async(std::launch::deferred,
-				&SimilarImageFinder::updateNeighboursPartial, this,
-				std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, 0, clusters.size(), std::ref(clusters) ) );
+		futures.push_back(std::async(std::launch::deferred, &SimilarImageFinder::updateNeighboursPartial, this,
+		                             std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, 0, clusters.size(),
+		                             std::ref(clusters)));
 	} else
 	{
-		for (const auto & indexPair: parallelIndexes)
+		for (const auto & indexPair : parallelIndexes)
 		{
-			futures.push_back( std::async(std::launch::async,
-					&SimilarImageFinder::updateNeighboursPartial, this,
-					std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, indexPair.first, indexPair.second, std::ref(clusters) ) );
+			futures.push_back(std::async(std::launch::async, &SimilarImageFinder::updateNeighboursPartial, this,
+			                             std::ref(cache), maxDistance, mergedClusterId1, mergedClusterId2, indexPair.first,
+			                             indexPair.second, std::ref(clusters)));
 		}
 	}
 
-	for (auto && future: futures)
+	for (auto && future : futures)
 	{
 		const std::set<std::size_t> & set1 = future.get();
 		outlierIndexes.insert(set1.begin(), set1.end());
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
-SimilarImageFinder::addClusterToResult(
-	const Cluster_t & cluster,
-	const std::vector<std::size_t> & imageIndexMap,
-	const std::vector<std::string> & fileNames,
-	DuplicateImageResult & result,
-	const callbacks::IImageFinderCallback::Ptr_t & callback) const
+SimilarImageFinder::addClusterToResult(const Cluster & cluster,
+                                       const std::vector<std::size_t> & imageIndexMap,
+                                       const std::vector<std::string> & fileNames,
+                                       DuplicateImageResult & result,
+                                       const callbacks::IImageFinderCallback::Ptr & callback) const
 {
 	if (cluster.items.size() > 1)
 	{
@@ -138,7 +132,7 @@ SimilarImageFinder::addClusterToResult(
 		imgGroup.reserve(cluster.items.size());
 		unsigned long long totalFilesSize = 0ULL;
 		unsigned long long maxFileSize = 0ULL;
-		for (auto && featureIndex: cluster.items)
+		for (auto && featureIndex : cluster.items)
 		{
 			if (featureIndex < similaritiesSize)
 			{
@@ -167,30 +161,28 @@ SimilarImageFinder::addClusterToResult(
 	}
 }
 
-
 //------------------------------------------------------------------------------
 std::size_t
-SimilarImageFinder::findMinimalDistanceIndex(const std::vector<Cluster_t> & clusters) const
+SimilarImageFinder::findMinimalDistanceIndex(const std::vector<Cluster> & clusters) const
 {
-	auto it = std::min_element(clusters.begin(), clusters.end(),
-		[](const Cluster_t & c1, const Cluster_t & c2) { return c1.neighborDistance < c2.neighborDistance; });
+	auto it = std::min_element(clusters.begin(), clusters.end(), [](const Cluster & c1, const Cluster & c2) {
+		return c1.neighborDistance < c2.neighborDistance;
+	});
 	return std::distance(clusters.begin(), it);
 }
 
-
 //------------------------------------------------------------------------------
 void
-SimilarImageFinder::updateDistanceCache(
-	const std::vector<Cluster_t> & clusters,
-	Distance_t maxDistance,
-	std::size_t mergedClusterId,
-	Cluster_t & newCluster,
-	SimilarityCache & cache) const
+SimilarImageFinder::updateDistanceCache(const std::vector<Cluster> & clusters,
+                                        Distance_t maxDistance,
+                                        std::size_t mergedClusterId,
+                                        Cluster & newCluster,
+                                        SimilarityCache & cache) const
 {
 	newCluster.neighborDistance = maxDistance + 1;
 	newCluster.neighborId = newCluster.id;
 
-	for (auto && cluster: clusters)
+	for (auto && cluster : clusters)
 	{
 		assert(cluster.id != mergedClusterId);
 		if (cluster.neighborDistance > maxDistance) continue;
@@ -206,36 +198,29 @@ SimilarImageFinder::updateDistanceCache(
 	}
 }
 
-
 //------------------------------------------------------------------------------
 std::size_t
-SimilarImageFinder::findIndexById(
-	const std::vector<Cluster_t> & clusters,
-	std::size_t id,
-	std::size_t defaultValue) const
+SimilarImageFinder::findIndexById(const std::vector<Cluster> & clusters, std::size_t id, std::size_t defaultValue) const
 {
-	auto it = std::find_if(clusters.begin(), clusters.end(),
-			[&id](const Cluster_t & c) { return c.id == id; } );
+	auto it = std::find_if(clusters.begin(), clusters.end(), [&id](const Cluster & c) { return c.id == id; });
 	return (it == clusters.end()) ? defaultValue : std::distance(clusters.begin(), it);
 }
 
-
 //------------------------------------------------------------------------------
 void
-SimilarImageFinder::clusterize(
-	const std::vector<std::size_t> & imageIndexMap,
-	const std::vector<std::string> & fileNames,
-	uint_least8_t sensitivity,
-	SimilarityCache & cache,
-	DuplicateImageResult & result,
-	const callbacks::IImageFinderCallback::Ptr_t & callback) const
+SimilarImageFinder::clusterize(const std::vector<std::size_t> & imageIndexMap,
+                               const std::vector<std::string> & fileNames,
+                               uint_least8_t sensitivity,
+                               SimilarityCache & cache,
+                               DuplicateImageResult & result,
+                               const callbacks::IImageFinderCallback::Ptr & callback) const
 {
 	const std::size_t count = imageIndexMap.size();
 
 	const Distance_t d = (sensitivity > 100) ? 0 : 100 - sensitivity;
 	std::size_t progress = 0;
 
-	std::vector<Cluster_t> clusters;
+	std::vector<Cluster> clusters;
 	clusters.reserve(count);
 
 	if (callback) callback->imgOrganizingProgress(0, count);
@@ -267,7 +252,6 @@ SimilarImageFinder::clusterize(
 		}
 	}
 
-
 	while (clusters.size() > 1)
 	{
 		// find a cluster with the minimal distance to its closest neighbour
@@ -276,14 +260,14 @@ SimilarImageFinder::clusterize(
 		assert(clusterPos1 < clusters.size());
 
 		const std::size_t mergedClusterId = clusters[clusterPos1].neighborId;
-		if (clusters[clusterPos1].neighborDistance > d || (clusters[clusterPos1].id == mergedClusterId) ) break;
+		if (clusters[clusterPos1].neighborDistance > d || (clusters[clusterPos1].id == mergedClusterId)) break;
 		std::size_t clusterPos2 = findIndexById(clusters, mergedClusterId, clusterPos1);
 
 		assert(clusterPos1 != clusterPos2);
 
 		// clusterPos1 will hold the merged cluster, clusterPos2 will be deleted
 		if (clusterPos2 < clusterPos1) std::swap(clusterPos1, clusterPos2);
-		Cluster_t & newCluster = clusters[clusterPos1];
+		Cluster & newCluster = clusters[clusterPos1];
 		newCluster.items.insert(clusters[clusterPos2].items.begin(), clusters[clusterPos2].items.end());
 		deleteFromVectorBySwap(clusters, clusterPos2);
 
@@ -317,7 +301,7 @@ SimilarImageFinder::clusterize(
 	}
 
 	// in case if there are any valid clusters remaining, add them to the result
-	for (auto && cluster: clusters)
+	for (auto && cluster : clusters)
 	{
 		addClusterToResult(cluster, imageIndexMap, fileNames, result, callback);
 		if (callback)
@@ -328,20 +312,18 @@ SimilarImageFinder::clusterize(
 	}
 }
 
-
 //------------------------------------------------------------------------------
 DuplicateImageResult
-SimilarImageFinder::find(
-	const std::vector<std::string> & fileNames,
-	unsigned short sensitivity,
-	bool processRotations,
-	const callbacks::IImageFinderCallback::Ptr_t & callback) const
+SimilarImageFinder::find(const std::vector<std::string> & fileNames,
+                         unsigned short sensitivity,
+                         bool processRotations,
+                         const callbacks::IImageFinderCallback::Ptr & callback) const
 {
 	std::vector<ImageFeatures> imageFeatures = ImageFeaturesBuilder(fileNames, callback).execute();
 
 	// similar image clusters
 	DuplicateImageResult res;
-	if ( imageFeatures.empty() || (callback && callback->pauseAndStopStatus()) )
+	if (imageFeatures.empty() || (callback && callback->pauseAndStopStatus()))
 	{
 		return res;
 	}
@@ -350,7 +332,7 @@ SimilarImageFinder::find(
 
 	std::vector<std::size_t> imageFeatureMap(imageFeatures.size());
 	std::transform(imageFeatures.begin(), imageFeatures.end(), imageFeatureMap.begin(),
-		[] (const ImageFeatures & f) { return f.getId(); } );
+	               [](const ImageFeatures & f) { return f.getId(); });
 	// release some memory
 	std::vector<ImageFeatures>().swap(imageFeatures);
 
@@ -359,5 +341,4 @@ SimilarImageFinder::find(
 	return res;
 }
 
-
-}}}
+} // namespace detwinner::logic::images

@@ -3,7 +3,7 @@
  Name        : ImageFeatures.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -15,23 +15,17 @@
 #include <numeric>
 #include <vector>
 
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //------------------------------------------------------------------------------
-ImageFeatures::ImageFeatures(unsigned int id, float aspect) :
-	id(id), aspect(aspect)
-{}
-
+ImageFeatures::ImageFeatures(unsigned int id, float aspect) : id(id), aspect(aspect) {}
 
 //------------------------------------------------------------------------------
 float
 ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 {
 	constexpr auto lambdaAvgSimilarity = [](const std::array<float, 4> & values) {
-		constexpr std::array<float, 4> kFactors = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr std::array<float, 4> kFactors = {1.0f, 1.0f, 1.0f, 1.0f};
 		constexpr float kSum = std::accumulate(kFactors.begin(), kFactors.end(), 0.0f);
 		return std::inner_product(values.begin(), values.end(), kFactors.begin(), 0.0f) / kSum;
 	};
@@ -52,7 +46,7 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 			values[3] += histI[sectionIndex].compare(f.histI[sectionIndex2]);
 		}
 
-		std::transform(values.begin(), values.end(), values.begin(), [](float v) { return v / 4.0f; } );
+		std::transform(values.begin(), values.end(), values.begin(), [](float v) { return v / 4.0f; });
 
 		const float similarity = lambdaAvgSimilarity(values);
 
@@ -63,18 +57,15 @@ ImageFeatures::compare(const ImageFeatures & f, bool processRotations) const
 		}
 	}
 
-	if ( (aspect > 0.0f) && (f.aspect > 0.0f) )
+	if ((aspect > 0.0f) && (f.aspect > 0.0f))
 	{
 		const float normalizedAspect = isMinValueForSameRotation ? f.aspect : 1.0f / f.aspect;
 
-		const float aspectMultiplier = aspect > normalizedAspect ?
-			aspect / normalizedAspect :
-			normalizedAspect / aspect;
+		const float aspectMultiplier = aspect > normalizedAspect ? aspect / normalizedAspect : normalizedAspect / aspect;
 		minVal *= aspectMultiplier;
 	}
 
 	return minVal;
 }
 
-
-}}}
+} // namespace detwinner::logic::images

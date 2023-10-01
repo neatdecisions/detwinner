@@ -1,37 +1,33 @@
-	/*
- ===============================================================================
- Name        : SearchProgressDialog.hpp
- Author      : NeatDecisions
- Version     :
- Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
- Description : Detwinner
- ===============================================================================
- */
+/*
+===============================================================================
+Name        : SearchProgressDialog.hpp
+Author      : NeatDecisions
+Version     :
+Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
+Description : Detwinner
+===============================================================================
+*/
 
-#ifndef UI_SEARCHPROGRESSDIALOG_HPP_
-#define UI_SEARCHPROGRESSDIALOG_HPP_
+#pragma once
 
-#include <gtkmm.h>
-#include <callbacks/SearchProgressCallback.hpp>
-#include <callbacks/IDuplicateReceiver.hpp>
-
-#include <logic/CommonDataTypes.hpp>
-#include <settings/SearchSettings.hpp>
 #include <future>
 
+#include <gtkmm.h>
 
-namespace detwinner {
-namespace ui {
+#include <callbacks/IDuplicateReceiver.hpp>
+#include <callbacks/SearchProgressCallback.hpp>
+#include <logic/CommonDataTypes.hpp>
+#include <settings/SearchSettings.hpp>
 
+namespace detwinner::ui {
 
 class SearchProgressDialog : public Gtk::Dialog
 {
 public:
-	SearchProgressDialog(
-			Gtk::Window& parent,
-			const settings::SearchSettings & searchSettings,
-			const std::vector<std::string> & pathsToSearch,
-			const callbacks::IDuplicateReceiver::Ptr_t & duplicateReceiver);
+	SearchProgressDialog(Gtk::Window & parent,
+	                     const settings::SearchSettings & searchSettings,
+	                     const std::vector<std::string> & pathsToSearch,
+	                     const callbacks::IDuplicateReceiver::Ptr & duplicateReceiver);
 	virtual ~SearchProgressDialog() noexcept override;
 
 	bool on_timeout();
@@ -45,7 +41,7 @@ private:
 	void switch_to_finish();
 	void update_indicators();
 
-	callbacks::IDuplicateReceiver::Ptr_t m_duplicateReceiver;
+	callbacks::IDuplicateReceiver::Ptr m_duplicateReceiver;
 	Gtk::Button m_btnStop;
 	Gtk::Button m_btnPause;
 
@@ -60,15 +56,12 @@ private:
 	Gtk::Label m_labelTimeSpent;
 	sigc::connection m_refreshConnection;
 
-	const settings::SearchSettings::SearchMode_t m_searchMode;
-	callbacks::SearchProgressCallback::Ptr_t m_progressItem;
+	const settings::SearchSettings::SearchMode m_searchMode;
+	callbacks::SearchProgressCallback::Ptr m_progressItem;
 
-	std::future<logic::DuplicatesList_t> m_result;
+	std::future<logic::DuplicatesList> m_result;
 	bool m_switchedToFinish = false;
 	bool m_isPopulationInterrupted = false;
 };
 
-
-}}
-
-#endif /* UI_SEARCHPROGRESSDIALOG_HPP_ */
+} // namespace detwinner::ui

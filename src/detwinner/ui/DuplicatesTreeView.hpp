@@ -3,37 +3,29 @@
  Name        : DuplicatesTreeView.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef UI_DUPLICATESTREEVIEW_HPP_
-#define UI_DUPLICATESTREEVIEW_HPP_
+#pragma once
 
 #include <gtkmm.h>
-
 #include <gtkmm/treestore.h>
-#include <logic/CommonDataTypes.hpp>
+
 #include <callbacks/IDeferredAction.hpp>
 #include <callbacks/IDuplicateReceiver.hpp>
+#include <logic/CommonDataTypes.hpp>
 #include <tools/AbstractFileDeleter.hpp>
 
-
-namespace detwinner {
-namespace ui {
-
+namespace detwinner::ui {
 
 class DuplicatesTreeView : public Gtk::TreeView
 {
 public:
-	enum class Mode_t
-	{
-		Normal,
-		Images
-	};
+	enum class Mode { Normal, Images };
 
-	struct DuplicateStats_t
+	struct DuplicateStats
 	{
 		unsigned int groupCount = 0;
 		unsigned int fileCount = 0;
@@ -44,11 +36,11 @@ public:
 	DuplicatesTreeView();
 	virtual ~DuplicatesTreeView() noexcept override;
 
-	void setMode(Mode_t mode);
+	void setMode(Mode mode);
 	bool empty() const;
 	void clear();
 	bool atLeastOneTopLevelItemChecked() const;
-	DuplicateStats_t calculateStats() const;
+	DuplicateStats calculateStats() const;
 
 	// sorting methods
 	void sortByTotalSize(bool asc);
@@ -56,32 +48,32 @@ public:
 	void sortByNumberOfFiles(bool asc);
 
 	// smart selection methods
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepFirstInGroup();
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepLastInGroup();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepFirstInGroup();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepLastInGroup();
 
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepEarliestModified();
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepLatestModified();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepEarliestModified();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepLatestModified();
 
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepShortestName();
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepLongestName();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepShortestName();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepLongestName();
 
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepShortestPath();
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepLongestPath();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepShortestPath();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepLongestPath();
 
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepLowestResolution();
-	callbacks::IDeferredAction::Ptr_t smartSelect_KeepHighestResolution();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepLowestResolution();
+	callbacks::IDeferredAction::Ptr smartSelect_KeepHighestResolution();
 
 	// bulk selection methods
-	callbacks::IDeferredAction::Ptr_t selectAll();
-	callbacks::IDeferredAction::Ptr_t clearSelection();
-	callbacks::IDeferredAction::Ptr_t invertSelection();
+	callbacks::IDeferredAction::Ptr selectAll();
+	callbacks::IDeferredAction::Ptr clearSelection();
+	callbacks::IDeferredAction::Ptr invertSelection();
 
 	// deletion methods
-	callbacks::IDeferredAction::Ptr_t deletePermanently();
-	callbacks::IDeferredAction::Ptr_t deleteToTrash();
-	callbacks::IDeferredAction::Ptr_t deleteToBackupFolder(const std::string & folder, Gtk::Window * dialogParent);
+	callbacks::IDeferredAction::Ptr deletePermanently();
+	callbacks::IDeferredAction::Ptr deleteToTrash();
+	callbacks::IDeferredAction::Ptr deleteToBackupFolder(const std::string & folder, Gtk::Window * dialogParent);
 
-	callbacks::IDuplicateReceiver::Ptr_t createPopulationDelegate();
+	callbacks::IDuplicateReceiver::Ptr createPopulationDelegate();
 
 	// row selection signal
 	using signal_duplicate_selected = sigc::signal<void, Glib::ustring, Glib::ustring>;
@@ -99,31 +91,35 @@ protected:
 	virtual bool on_button_press_event(GdkEventButton * button_event) override;
 
 private:
-	enum class CheckState_t
-	{
-		Checked,
-		Unchecked,
-		Mixed
-	};
+	enum class CheckState { Checked, Unchecked, Mixed };
 
 	struct FileModelColumn : public Gtk::TreeModel::ColumnRecord
 	{
 		Gtk::TreeModelColumn<bool> locked;
-		Gtk::TreeModelColumn<CheckState_t> checkState;
+		Gtk::TreeModelColumn<CheckState> checkState;
 		Gtk::TreeModelColumn<Glib::ustring> filePath;
 		Gtk::TreeModelColumn<unsigned long long> fileSize;
 		Gtk::TreeModelColumn<Glib::DateTime> updateTime;
 		Gtk::TreeModelColumn<unsigned int> width;
 		Gtk::TreeModelColumn<unsigned int> height;
-		FileModelColumn() { add(checkState); add(locked); add(filePath); add(fileSize); add(updateTime); add(width); add(height);}
+		FileModelColumn()
+		{
+			add(checkState);
+			add(locked);
+			add(filePath);
+			add(fileSize);
+			add(updateTime);
+			add(width);
+			add(height);
+		}
 	};
 
 	// checkbox handler
 	virtual void on_cell_toggled(const Glib::ustring & path);
 
 	// check getter/setter
-	CheckState_t getCheck(const Gtk::TreeIter & iter) const;
-	bool setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool noUp, bool noDown);
+	CheckState getCheck(const Gtk::TreeIter & iter) const;
+	bool setCheck(const Gtk::TreeIter & iter, CheckState checkState, bool noUp, bool noDown);
 
 	// cell rendering handles
 	void on_render_filename(Gtk::CellRenderer * cellRenderer, const Gtk::TreeModel::iterator & iter);
@@ -168,7 +164,8 @@ private:
 	{
 	public:
 		explicit PopulationDelegate(DuplicatesTreeView & tree);
-		virtual callbacks::IDeferredAction::Ptr_t populate(logic::DuplicatesList_t && container) override;
+		virtual callbacks::IDeferredAction::Ptr populate(logic::DuplicatesList && container) override;
+
 	private:
 		DuplicatesTreeView & m_tree;
 	};
@@ -178,66 +175,73 @@ private:
 	public:
 		explicit TreeAction(DuplicatesTreeView & tree);
 		virtual double getProgress() const override;
-		virtual Result_t getStatus() const override;
+		virtual Result getStatus() const override;
+
 	protected:
 		DuplicatesTreeView & m_tree;
 		std::size_t m_totalItems;
 		std::size_t m_currentItem;
 		Gtk::TreeModel::iterator m_iter;
-		Result_t m_resultStatus;
+		Result m_resultStatus;
 	};
 
 	struct ISmartSelector
 	{
-		using Ptr_t = std::shared_ptr<ISmartSelector>;
+		using Ptr = std::shared_ptr<ISmartSelector>;
 		virtual ~ISmartSelector() = default;
 		virtual void select(DuplicatesTreeView & tree, Gtk::TreeIter iter) = 0;
 	};
 
-	class SmartSelector_t : public ISmartSelector
+	class SmartSelector : public ISmartSelector
 	{
 	public:
-		using SelectFunc_t = std::function<bool(const Gtk::TreeModel::iterator&, const Gtk::TreeModel::iterator&)>;
-		using IgnoreFunc_t = std::function<bool(const Gtk::TreeModel::iterator&)>;
-		explicit SmartSelector_t(const SelectFunc_t & selectFunc, const IgnoreFunc_t & ignoreFunc = [](const Gtk::TreeModel::iterator&){ return false; });
+		using SelectFunc = std::function<bool(const Gtk::TreeModel::iterator &, const Gtk::TreeModel::iterator &)>;
+		using IgnoreFunc = std::function<bool(const Gtk::TreeModel::iterator &)>;
+		explicit SmartSelector(
+				const SelectFunc & selectFunc,
+				const IgnoreFunc & ignoreFunc = [](const Gtk::TreeModel::iterator &) { return false; });
 		virtual void select(DuplicatesTreeView & tree, Gtk::TreeIter iter) override;
+
 	private:
-		SelectFunc_t m_selectFunc;
-		IgnoreFunc_t m_ignoreFunc;
+		SelectFunc m_selectFunc;
+		IgnoreFunc m_ignoreFunc;
 	};
 
 	class TreeSelect_Smart : public TreeAction
 	{
 	public:
-		TreeSelect_Smart(const ISmartSelector::Ptr_t & smartSelector, DuplicatesTreeView & tree);
+		TreeSelect_Smart(const ISmartSelector::Ptr & smartSelector, DuplicatesTreeView & tree);
 		virtual bool processNext() override;
+
 	private:
-		ISmartSelector::Ptr_t m_smartSelector;
+		ISmartSelector::Ptr m_smartSelector;
 	};
 
-	class TreeSelect_Bulk_t : public TreeAction
+	class TreeSelect_Bulk : public TreeAction
 	{
 	public:
-		using SelectFunc_t = std::function<CheckState_t(const Gtk::TreeModel::iterator&)>;
-		TreeSelect_Bulk_t(const SelectFunc_t & selectFunc, DuplicatesTreeView & tree);
+		using SelectFunc = std::function<CheckState(const Gtk::TreeModel::iterator &)>;
+		TreeSelect_Bulk(const SelectFunc & selectFunc, DuplicatesTreeView & tree);
 		virtual bool processNext() override;
+
 	private:
-		SelectFunc_t m_selectFunc;
+		SelectFunc m_selectFunc;
 	};
 
 	class TreePopulateAction : public callbacks::IDeferredAction
 	{
 	public:
-		explicit TreePopulateAction(DuplicatesTreeView & tree, logic::DuplicatesList_t && values);
+		explicit TreePopulateAction(DuplicatesTreeView & tree, logic::DuplicatesList && values);
 		virtual ~TreePopulateAction() noexcept override;
 		virtual double getProgress() const override;
 		virtual bool processNext() override;
-		virtual Result_t getStatus() const override;
+		virtual Result getStatus() const override;
+
 	private:
 		void beginBatch();
 		void endBatch();
 		DuplicatesTreeView & m_tree;
-		logic::DuplicatesList_t m_values;
+		logic::DuplicatesList m_values;
 		std::size_t m_currentItem;
 		bool m_batchStarted;
 	};
@@ -245,23 +249,24 @@ private:
 	class TreeDeleteAction : public TreeAction
 	{
 	public:
-		explicit TreeDeleteAction(DuplicatesTreeView & tree, tools::AbstractFileDeleter::Ptr_t fileDeleter);
+		explicit TreeDeleteAction(DuplicatesTreeView & tree, tools::AbstractFileDeleter::Ptr fileDeleter);
 		virtual bool processNext() override;
+
 	private:
-		void updateResultStatus(Result_t stepStatus);
-		tools::AbstractFileDeleter::Ptr_t m_fileDeleter;
+		void updateResultStatus(Result stepStatus);
+		tools::AbstractFileDeleter::Ptr m_fileDeleter;
 	};
 
-	ISmartSelector::Ptr_t createSmartSelector_KeepFirstInGroup();
-	ISmartSelector::Ptr_t createSmartSelector_KeepLastInGroup();
-	ISmartSelector::Ptr_t createSmartSelector_KeepEarliestModified();
-	ISmartSelector::Ptr_t createSmartSelector_KeepLatestModified();
-	ISmartSelector::Ptr_t createSmartSelector_KeepShortestName();
-	ISmartSelector::Ptr_t createSmartSelector_KeepLongestName();
-	ISmartSelector::Ptr_t createSmartSelector_KeepShortestPath();
-	ISmartSelector::Ptr_t createSmartSelector_KeepLongestPath();
-	ISmartSelector::Ptr_t createSmartSelector_KeepLowestResolution();
-	ISmartSelector::Ptr_t createSmartSelector_KeepHighestResolution();
+	ISmartSelector::Ptr createSmartSelector_KeepFirstInGroup();
+	ISmartSelector::Ptr createSmartSelector_KeepLastInGroup();
+	ISmartSelector::Ptr createSmartSelector_KeepEarliestModified();
+	ISmartSelector::Ptr createSmartSelector_KeepLatestModified();
+	ISmartSelector::Ptr createSmartSelector_KeepShortestName();
+	ISmartSelector::Ptr createSmartSelector_KeepLongestName();
+	ISmartSelector::Ptr createSmartSelector_KeepShortestPath();
+	ISmartSelector::Ptr createSmartSelector_KeepLongestPath();
+	ISmartSelector::Ptr createSmartSelector_KeepLowestResolution();
+	ISmartSelector::Ptr createSmartSelector_KeepHighestResolution();
 
 	std::unique_ptr<Gtk::Menu> loadMenu(const Glib::ustring & name);
 
@@ -284,12 +289,10 @@ private:
 	signal_duplicate_selected m_signalDuplicateSelected;
 	signal_stats_changed m_signalStatsChanged;
 
-	Mode_t m_mode;
+	Mode m_mode;
 	bool m_adapted;
 
 	Gtk::TreeViewColumn * m_columnResolution;
 };
 
-}}
-
-#endif /* UI_DUPLICATESTREEVIEW_HPP_ */
+} // namespace detwinner::ui

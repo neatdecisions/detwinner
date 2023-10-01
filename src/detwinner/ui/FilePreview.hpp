@@ -3,21 +3,18 @@
  Name        : FilePreview.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef UI_FILEPREVIEW_HPP_
-#define UI_FILEPREVIEW_HPP_
+#pragma once
 
 #include <gtkmm.h>
+
 #include <ui/AutosizedImage.hpp>
 
-
-namespace detwinner {
-namespace ui {
-
+namespace detwinner::ui {
 
 class FilePreview : public Gtk::Box
 {
@@ -45,7 +42,4 @@ private:
 	Gtk::Label m_labelFileModified_value;
 };
 
-
-}}
-
-#endif /* UI_FILEPREVIEW_HPP_ */
+} // namespace detwinner::ui

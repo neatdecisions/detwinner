@@ -12,8 +12,7 @@
 
 #include <ui/SearchSettingsDialog.hpp>
 
-namespace detwinner {
-namespace ui {
+namespace detwinner::ui {
 
 //------------------------------------------------------------------------------
 SearchOptionsPane::SearchOptionsPane()
@@ -36,21 +35,22 @@ SearchOptionsPane::SearchOptionsPane()
 	m_refActionShowHidden = m_refActionGroup->add_action_bool(
 			"showHiddenFiles", sigc::mem_fun(*this, &SearchOptionsPane::on_show_hidden_toggled));
 	m_refActionSearchMode = m_refActionGroup->add_action_radio_integer(
-			"searchMode", sigc::mem_fun(*this, &SearchOptionsPane::on_search_mode_changed), 0);
+			"searchMode", sigc::mem_fun(*this, &SearchOptionsPane::on_search_mode_changed),
+			static_cast<int>(settings::SearchSettings::SearchMode::ExactDuplicates));
 
 	m_places.signalOpenLocation().connect(sigc::mem_fun(*this, &SearchOptionsPane::on_open_location));
 
 	m_scrolledWindow.add(m_fileTree);
 	m_scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
-	auto pMainBox = Gtk::manage(new Gtk::Paned());
+	auto pMainBox = Gtk::make_managed<Gtk::Paned>();
 	pMainBox->add(m_places);
 	pMainBox->add(m_scrolledWindow);
 	pack_end(*pMainBox);
 
 	on_open_location(m_places.getLocation());
 
-	on_search_mode_changed(getIntBySearchMode(m_searchSettingsManager.getSearchSettings().searchMode));
+	on_search_mode_changed(static_cast<int>(m_searchSettingsManager.getSearchSettings().searchMode));
 
 	const bool showHiddenFiles = m_searchSettingsManager.getSearchSettings().uiSettings.showHiddenFiles;
 	if (m_refActionShowHidden) m_refActionShowHidden->change_state(showHiddenFiles);
@@ -87,29 +87,14 @@ SearchOptionsPane::getActionGroup()
 
 //------------------------------------------------------------------------------
 void
-SearchOptionsPane::on_search_mode_changed(int value)
+SearchOptionsPane::on_search_mode_changed(int searchMode)
 {
-	m_refActionSearchMode->change_state(value);
+	m_refActionSearchMode->change_state(searchMode);
 	settings::SearchSettings searchSettings = m_searchSettingsManager.getSearchSettings();
-	searchSettings.searchMode = getSearchModeByInt(value);
+	searchSettings.searchMode = static_cast<settings::SearchSettings::SearchMode>(searchMode);
 	m_searchSettingsManager.setSearchSettings(searchSettings);
 	m_searchSettingsManager.saveSettings();
-	m_signalSearchModeChanged.emit(getSearchModeByInt(value));
-}
-
-//------------------------------------------------------------------------------
-settings::SearchSettings::SearchMode_t
-SearchOptionsPane::getSearchModeByInt(int value) const
-{
-	return (value == 1) ? settings::SearchSettings::SearchMode_t::kSimilarImages
-	                    : settings::SearchSettings::SearchMode_t::kExactDuplicates;
-}
-
-//------------------------------------------------------------------------------
-int
-SearchOptionsPane::getIntBySearchMode(settings::SearchSettings::SearchMode_t value) const
-{
-	return (value == settings::SearchSettings::SearchMode_t::kSimilarImages) ? 1 : 0;
+	m_signalSearchModeChanged.emit(static_cast<settings::SearchSettings::SearchMode>(searchMode));
 }
 
 //------------------------------------------------------------------------------
@@ -160,7 +145,7 @@ SearchOptionsPane::on_show_hidden_toggled()
 
 //------------------------------------------------------------------------------
 void
-SearchOptionsPane::show_search_settings_dialog(settings::SearchSettings::SearchMode_t mode)
+SearchOptionsPane::show_search_settings_dialog(settings::SearchSettings::SearchMode mode)
 {
 	Glib::RefPtr<Gtk::Builder> builder =
 			Gtk::Builder::create_from_resource("/com/neatdecisions/detwinner/ui/settingsDialog.ui");
@@ -185,14 +170,14 @@ SearchOptionsPane::show_search_settings_dialog(settings::SearchSettings::SearchM
 void
 SearchOptionsPane::on_search_settings_similar_images_clicked()
 {
-	show_search_settings_dialog(settings::SearchSettings::SearchMode_t::kSimilarImages);
+	show_search_settings_dialog(settings::SearchSettings::SearchMode::SimilarImages);
 }
 
 //------------------------------------------------------------------------------
 void
 SearchOptionsPane::on_search_settings_exact_duplicates_clicked()
 {
-	show_search_settings_dialog(settings::SearchSettings::SearchMode_t::kExactDuplicates);
+	show_search_settings_dialog(settings::SearchSettings::SearchMode::ExactDuplicates);
 }
 
 //------------------------------------------------------------------------------
@@ -202,5 +187,4 @@ SearchOptionsPane::on_search_settings_default_clicked()
 	show_search_settings_dialog(m_searchSettingsManager.getSearchSettings().searchMode);
 }
 
-} // namespace ui
-} // namespace detwinner
+} // namespace detwinner::ui

@@ -20,12 +20,8 @@ namespace {
 class PlacesRow : public Gtk::ListBoxRow
 {
 public:
-	enum class Kind
-	{
-		Special,
-		Volume,
-		Bookmark
-	};
+	enum class Kind { Special, Volume, Bookmark };
+
 	PlacesRow(Kind kind,
 	          const Glib::ustring & text,
 	          const Glib::RefPtr<Gio::Icon> & icon,
@@ -229,6 +225,9 @@ PlacesSidebar::update()
 		                        Gio::ThemedIcon::create(dir.second, true), location->get_path(), m_listBox);
 	}
 
+	PlacesRow::AddToListBox(PlacesRow::Kind::Volume, Glib::get_host_name(),
+	                        Gio::ThemedIcon::create("drive-harddisk-symbolic", true), "/", m_listBox);
+
 	for (const auto & drive : m_volumeMonitor->get_connected_drives())
 	{
 		if (drive->get_volumes().empty() && drive->is_media_removable() && !drive->is_media_check_automatic())
@@ -278,9 +277,6 @@ PlacesSidebar::update()
 		PlacesRow::AddToListBox(PlacesRow::Kind::Volume, mount->get_name(), mount->get_symbolic_icon(),
 		                        mountLocation->get_path(), m_listBox, {}, {}, mount);
 	}
-
-	PlacesRow::AddToListBox(PlacesRow::Kind::Volume, Glib::get_host_name(),
-	                        Gio::ThemedIcon::create("drive-harddisk-symbolic", true), "/", m_listBox);
 
 	auto filename = Glib::build_filename(Glib::get_user_config_dir(), "gtk-3.0", "bookmarks");
 	if (!Glib::file_test(filename, Glib::FILE_TEST_EXISTS))

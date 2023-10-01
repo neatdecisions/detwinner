@@ -3,20 +3,16 @@
  Name        : DetwinnerApp.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-
-#ifndef DETWINNERAPP_HPP_
-#define DETWINNERAPP_HPP_
+#pragma once
 
 #include <gtkmm.h>
 
-
 namespace detwinner {
-
 
 class DetwinnerApp : public Gtk::Application
 {
@@ -35,7 +31,4 @@ private:
 	void on_action_quit();
 };
 
-
-}
-
-#endif /* DETWINNERAPP_HPP_ */
+} // namespace detwinner

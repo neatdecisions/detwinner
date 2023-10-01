@@ -3,7 +3,7 @@
  Name        : SearchProgressDialog.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2020 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -12,31 +12,24 @@
 
 #include <glibmm.h>
 #include <glibmm/i18n.h>
+
 #include <logic/DuplicateFilesFinder.hpp>
 #include <logic/DuplicateImageFinder.hpp>
 
-
-namespace detwinner {
-namespace ui {
-
+namespace detwinner::ui {
 
 //------------------------------------------------------------------------------
-SearchProgressDialog::SearchProgressDialog(
-		Gtk::Window& parent,
-		const settings::SearchSettings & searchSettings,
-		const std::vector<std::string> & pathsToSearch,
-		const callbacks::IDuplicateReceiver::Ptr_t & duplicateReceiver) :
-	Gtk::Dialog(_("Search progress"), parent, true),
-	m_duplicateReceiver(duplicateReceiver),
-	m_btnStop(_("Stop")),
-	m_btnPause(_("Pause")),
-	m_labelStage("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_labelTotalProcessed("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_labelSkipped("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_labelDuplicatesFound("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_labelTimeSpent("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_searchMode(searchSettings.searchMode),
-	m_progressItem(callbacks::SearchProgressCallback::Create())
+SearchProgressDialog::SearchProgressDialog(Gtk::Window & parent,
+                                           const settings::SearchSettings & searchSettings,
+                                           const std::vector<std::string> & pathsToSearch,
+                                           const callbacks::IDuplicateReceiver::Ptr & duplicateReceiver)
+		: Gtk::Dialog(_("Search progress"), parent, true), m_duplicateReceiver(duplicateReceiver), m_btnStop(_("Stop")),
+			m_btnPause(_("Pause")), m_labelStage("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
+			m_labelTotalProcessed("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
+			m_labelSkipped("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
+			m_labelDuplicatesFound("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
+			m_labelTimeSpent("", Gtk::ALIGN_START, Gtk::ALIGN_BASELINE), m_searchMode(searchSettings.searchMode),
+			m_progressItem(callbacks::SearchProgressCallback::Create())
 {
 	m_progressBar.set_show_text(false);
 	m_progressBar.set_text(_("Paused"));
@@ -50,12 +43,11 @@ SearchProgressDialog::SearchProgressDialog(
 	m_grid.set_row_spacing(6);
 
 	const std::vector<Gtk::Label *> labels = {
-			Gtk::manage(new Gtk::Label(_("<b>Stage:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE)),
-			Gtk::manage(new Gtk::Label(_("<b>Total files processed:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE)),
-			Gtk::manage(new Gtk::Label(_("<b>Skipped files:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE)),
-			Gtk::manage(new Gtk::Label(_("<b>Duplicates found:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE)),
-			Gtk::manage(new Gtk::Label(_("<b>Time spent:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE))
-	};
+			Gtk::make_managed<Gtk::Label>(_("<b>Stage:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE),
+			Gtk::make_managed<Gtk::Label>(_("<b>Total files processed:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE),
+			Gtk::make_managed<Gtk::Label>(_("<b>Skipped files:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE),
+			Gtk::make_managed<Gtk::Label>(_("<b>Duplicates found:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE),
+			Gtk::make_managed<Gtk::Label>(_("<b>Time spent:</b> "), Gtk::ALIGN_END, Gtk::ALIGN_BASELINE)};
 
 	unsigned int rowNum = 0;
 	for (Gtk::Label * pLabel : labels)
@@ -73,7 +65,7 @@ SearchProgressDialog::SearchProgressDialog(
 	get_content_area()->pack_start(m_grid);
 	get_content_area()->pack_start(m_progressBar, Gtk::PACK_SHRINK);
 
-	auto buttonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_HORIZONTAL));
+	auto buttonBox = Gtk::make_managed<Gtk::ButtonBox>(Gtk::ORIENTATION_HORIZONTAL);
 
 	buttonBox->pack_end(m_btnPause);
 	buttonBox->pack_end(m_btnStop);
@@ -87,13 +79,13 @@ SearchProgressDialog::SearchProgressDialog(
 	set_resizable(false);
 	show_all_children();
 
-	m_progressItem->accessDispatcher().connect( sigc::mem_fun(*this, &SearchProgressDialog::switch_to_finish) );
+	m_progressItem->accessDispatcher().connect(sigc::mem_fun(*this, &SearchProgressDialog::switch_to_finish));
 	m_refreshConnection = Glib::signal_timeout().connect(sigc::mem_fun(*this, &SearchProgressDialog::on_timeout), 1000);
 
 	// convert SearchSettings to FileSearchSettings
-	const settings::SearchSettings::CommonSettings & commonSettings = (m_searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages) ?
-		searchSettings.similarImagesSettings :
-		searchSettings.exactDuplicatesSettings;
+	const settings::SearchSettings::CommonSettings & commonSettings =
+			(m_searchMode == settings::SearchSettings::SearchMode::SimilarImages) ? searchSettings.similarImagesSettings
+																																						: searchSettings.exactDuplicatesSettings;
 	logic::FileSearchSettings fileSearchSettings;
 	fileSearchSettings.searchReadOnlyFiles = commonSettings.searchReadOnly;
 	fileSearchSettings.searchHiddenFiles = commonSettings.searchHidden;
@@ -101,17 +93,19 @@ SearchProgressDialog::SearchProgressDialog(
 	fileSearchSettings.filenameRegexps = commonSettings.filenameRegexps;
 	if (commonSettings.minFileSize && commonSettings.minFileSize->enabled)
 	{
-		fileSearchSettings.minFileSize = commonSettings.minFileSize->size *
-			( std::pow(10ULL, static_cast<unsigned int>(commonSettings.minFileSize->unit) * 3ULL) );
+		fileSearchSettings.minFileSize =
+				commonSettings.minFileSize->size *
+				(std::pow(10ULL, static_cast<unsigned int>(commonSettings.minFileSize->unit) * 3ULL));
 	}
 
 	if (commonSettings.maxFileSize && commonSettings.maxFileSize->enabled)
 	{
-		fileSearchSettings.maxFileSize = commonSettings.maxFileSize->size *
-			( std::pow(10ULL, static_cast<unsigned int>(commonSettings.maxFileSize->unit) * 3ULL) );
+		fileSearchSettings.maxFileSize =
+				commonSettings.maxFileSize->size *
+				(std::pow(10ULL, static_cast<unsigned int>(commonSettings.maxFileSize->unit) * 3ULL));
 	}
 
-	if (m_searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
+	if (m_searchMode == settings::SearchSettings::SearchMode::SimilarImages)
 	{
 		fileSearchSettings.sensitivity = searchSettings.imageSettings.sensitivity;
 		fileSearchSettings.processRotations = searchSettings.imageSettings.processRotations;
@@ -128,19 +122,14 @@ SearchProgressDialog::SearchProgressDialog(
 	}
 }
 
-
 //------------------------------------------------------------------------------
-SearchProgressDialog::~SearchProgressDialog() noexcept
-{
-	m_refreshConnection.disconnect();
-}
-
+SearchProgressDialog::~SearchProgressDialog() noexcept { m_refreshConnection.disconnect(); }
 
 //------------------------------------------------------------------------------
 void
 SearchProgressDialog::update_indicators()
 {
-	if (m_searchMode == settings::SearchSettings::SearchMode_t::kSimilarImages)
+	if (m_searchMode == settings::SearchSettings::SearchMode::SimilarImages)
 	{
 		switch (m_progressItem->getStage())
 		{
@@ -174,16 +163,18 @@ SearchProgressDialog::update_indicators()
 		}
 	}
 
-	m_labelTotalProcessed.set_text(Glib::ustring::compose(_("%1 of %2"),
-			m_progressItem->getProcessedCount(), m_progressItem->getTotalCount()));
+	m_labelTotalProcessed.set_text(
+			Glib::ustring::compose(_("%1 of %2"), m_progressItem->getProcessedCount(), m_progressItem->getTotalCount()));
 	m_labelSkipped.set_text(Glib::ustring::compose("%1", m_progressItem->getSkippedCount()));
 
-	m_labelDuplicatesFound.set_text( Glib::ustring::compose(_("%1 in %2 groups (total size: %3, can be freed: %4)"),
-			m_progressItem->getDuplicateCount(), m_progressItem->getGroupCount(),
-			Glib::format_size(m_progressItem->getDuplicatesSize()), Glib::format_size(m_progressItem->getWastedSize())) );
-	m_labelTimeSpent.set_text( Glib::DateTime::create_now_utc(static_cast<gint64>(m_progressItem->getElapsedTime())).format("%H∶%M∶%S") );
+	m_labelDuplicatesFound.set_text(Glib::ustring::compose(
+			_("%1 in %2 groups (total size: %3, can be freed: %4)"), m_progressItem->getDuplicateCount(),
+			m_progressItem->getGroupCount(), Glib::format_size(m_progressItem->getDuplicatesSize()),
+			Glib::format_size(m_progressItem->getWastedSize())));
+	m_labelTimeSpent.set_text(
+			Glib::DateTime::create_now_utc(static_cast<gint64>(m_progressItem->getElapsedTime())).format("%H∶%M∶%S"));
 
-	if ( (m_progressItem->getStage() == 0) || (m_progressItem->getTotalCount() == 0) )
+	if ((m_progressItem->getStage() == 0) || (m_progressItem->getTotalCount() == 0))
 	{
 		if (!m_progressItem->isPaused())
 		{
@@ -191,12 +182,11 @@ SearchProgressDialog::update_indicators()
 		}
 	} else
 	{
-		const double progress = static_cast<double>(m_progressItem->getProcessedCount()) /
-		                        static_cast<double>(m_progressItem->getTotalCount());
+		const double progress =
+				static_cast<double>(m_progressItem->getProcessedCount()) / static_cast<double>(m_progressItem->getTotalCount());
 		m_progressBar.set_fraction(progress);
 	}
 }
-
 
 //------------------------------------------------------------------------------
 bool
@@ -205,7 +195,6 @@ SearchProgressDialog::on_timeout()
 	update_indicators();
 	return !m_progressItem->isFinished();
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -223,7 +212,6 @@ SearchProgressDialog::on_pause_clicked()
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
 SearchProgressDialog::on_stop_clicked()
@@ -238,7 +226,6 @@ SearchProgressDialog::on_stop_clicked()
 		switch_to_finish();
 	}
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -257,7 +244,7 @@ SearchProgressDialog::switch_to_finish()
 	bool atLeastOneAdded = false;
 	if (m_result.valid() && m_duplicateReceiver)
 	{
-		callbacks::IDeferredAction::Ptr_t pPopulateAction = m_duplicateReceiver->populate(m_result.get());
+		callbacks::IDeferredAction::Ptr pPopulateAction = m_duplicateReceiver->populate(m_result.get());
 		if (pPopulateAction)
 		{
 			while (pPopulateAction->processNext())
@@ -284,7 +271,6 @@ SearchProgressDialog::switch_to_finish()
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
 SearchProgressDialog::on_response(int response_id)
@@ -294,5 +280,4 @@ SearchProgressDialog::on_response(int response_id)
 	Gtk::Dialog::on_response(response_id);
 }
 
-
-}}
+} // namespace detwinner::ui

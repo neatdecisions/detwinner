@@ -3,7 +3,7 @@
  Name        : FileTreeView.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
@@ -12,23 +12,21 @@
 
 #include <giomm/file.h>
 #include <glibmm/miscutils.h>
+
 #include <tools/IconManager.hpp>
 
-
-namespace detwinner {
-namespace ui {
-
+namespace detwinner::ui {
 
 //------------------------------------------------------------------------------
 FileTreeView::FileTreeView() : m_store(Gtk::TreeStore::create(m_columns))
 {
 	set_model(m_store);
 
-	Gtk::TreeViewColumn * pColumn = Gtk::manage(new Gtk::TreeViewColumn(""));
-	Gtk::CellRendererToggle * pRendererToggle = Gtk::manage(new Gtk::CellRendererToggle());
-	Gtk::CellRendererText * pRendererText = Gtk::manage(new Gtk::CellRendererText());
-	Gtk::CellRendererPixbuf * pRendererPixbuf = Gtk::manage(new Gtk::CellRendererPixbuf());
-	pRendererToggle->signal_toggled().connect( sigc::mem_fun(*this, &FileTreeView::on_cell_toggled) );
+	Gtk::TreeViewColumn * pColumn = Gtk::make_managed<Gtk::TreeViewColumn>("");
+	Gtk::CellRendererToggle * pRendererToggle = Gtk::make_managed<Gtk::CellRendererToggle>();
+	Gtk::CellRendererText * pRendererText = Gtk::make_managed<Gtk::CellRendererText>();
+	Gtk::CellRendererPixbuf * pRendererPixbuf = Gtk::make_managed<Gtk::CellRendererPixbuf>();
+	pRendererToggle->signal_toggled().connect(sigc::mem_fun(*this, &FileTreeView::on_cell_toggled));
 	pColumn->pack_start(*pRendererToggle, false);
 	pColumn->pack_end(*pRendererText, false);
 	pColumn->pack_end(*pRendererPixbuf, false);
@@ -42,7 +40,6 @@ FileTreeView::FileTreeView() : m_store(Gtk::TreeStore::create(m_columns))
 	set_fixed_height_mode(true);
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::on_render_filename(Gtk::CellRenderer * cellRenderer, const Gtk::TreeModel::iterator & iter)
@@ -51,20 +48,19 @@ FileTreeView::on_render_filename(Gtk::CellRenderer * cellRenderer, const Gtk::Tr
 	cellRenderer->set_property("text", getFileName(iter));
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::on_render_toggle(Gtk::CellRenderer * cellRenderer, const Gtk::TreeModel::iterator & iter)
 {
 	if (cellRenderer == nullptr) return;
-	const CheckState_t checkState = iter ? (*iter)[m_columns.checkState] : CheckState_t::Unchecked;
+	const CheckState checkState = iter ? (*iter)[m_columns.checkState] : CheckState::Unchecked;
 	switch (checkState)
 	{
-	case CheckState_t::Checked:
+	case CheckState::Checked:
 		cellRenderer->set_property("active", true);
 		cellRenderer->set_property("inconsistent", false);
 		break;
-	case CheckState_t::Unchecked:
+	case CheckState::Unchecked:
 		cellRenderer->set_property("active", false);
 		cellRenderer->set_property("inconsistent", false);
 		break;
@@ -75,7 +71,6 @@ FileTreeView::on_render_toggle(Gtk::CellRenderer * cellRenderer, const Gtk::Tree
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::on_render_icon(Gtk::CellRenderer * cellRenderer, const Gtk::TreeModel::iterator & iter)
@@ -85,20 +80,17 @@ FileTreeView::on_render_icon(Gtk::CellRenderer * cellRenderer, const Gtk::TreeMo
 	cellRenderer->set_property("icon-name", Glib::ustring("text-x-generic"));
 	if (!iter) return;
 
-	const Glib::RefPtr<Gdk::Pixbuf> iconPixBuf = tools::IconManager::GetInstance().getFileIcon(Glib::ustring((*iter)[m_columns.fullPath]), 16);
+	const Glib::RefPtr<Gdk::Pixbuf> iconPixBuf =
+			tools::IconManager::GetInstance().getFileIcon(Glib::ustring((*iter)[m_columns.fullPath]), 16);
 	if (iconPixBuf) cellRenderer->set_property("pixbuf", iconPixBuf);
 }
-
 
 //------------------------------------------------------------------------------
 std::string
 FileTreeView::getFileName(const Gtk::TreeModel::iterator & iter)
 {
-	return iter ?
-			Glib::path_get_basename(Glib::ustring((*iter)[m_columns.fullPath])) :
-			std::string();
+	return iter ? Glib::path_get_basename(Glib::ustring((*iter)[m_columns.fullPath])) : std::string();
 }
-
 
 //------------------------------------------------------------------------------
 std::vector<std::string>
@@ -112,26 +104,24 @@ FileTreeView::fetchSelectedPaths() const
 	return paths;
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::fetchSelectedPathsInternal(const Gtk::TreeRow & treeRow, std::vector<std::string> & paths) const
 {
-	if (getCheck(treeRow) == CheckState_t::Mixed)
+	if (getCheck(treeRow) == CheckState::Mixed)
 	{
 		for (auto && row : treeRow.children())
 		{
 			fetchSelectedPathsInternal(row, paths);
-	}
+		}
 	} else
 	{
-		if ( (getCheck(treeRow) == CheckState_t::Checked) && !treeRow[m_columns.fake] )
+		if ((getCheck(treeRow) == CheckState::Checked) && !treeRow[m_columns.fake])
 		{
 			paths.push_back(static_cast<Glib::ustring>(treeRow[m_columns.fullPath]));
 		}
 	}
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -140,20 +130,18 @@ FileTreeView::on_row_expanded(const Gtk::TreeModel::iterator & iter, const Gtk::
 	Gtk::TreeView::on_row_expanded(iter, path);
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::refresh_children(const Gtk::TreeModel::iterator & iter)
 {
-	if ( iter->children().empty() ) return;
-	if ( (iter->children().size() == 1) && (*iter->children().begin())[m_columns.fake] ) return;
+	if (iter->children().empty()) return;
+	if ((iter->children().size() == 1) && (*iter->children().begin())[m_columns.fake]) return;
 	reload_from_filesystem(iter);
-	for (auto && kid: iter->children())
+	for (auto && kid : iter->children())
 	{
 		refresh_children(kid);
 	}
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -164,7 +152,7 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 
 	const std::string filePath = Glib::ustring(row[m_columns.fullPath]);
 
-	for (auto it = row.children().begin(); it; )
+	for (auto it = row.children().begin(); it;)
 	{
 		Gtk::TreeRow childRow = *it;
 		if (childRow[m_columns.fake])
@@ -176,7 +164,7 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 		}
 	}
 
-	const CheckState_t checkState = getCheck(iter);
+	const CheckState checkState = getCheck(iter);
 
 	fillChildren(filePath, checkState, row);
 
@@ -184,17 +172,17 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 	// and this subnode has been deleted, so node checkstate should change
 	// from half-checked to unchecked
 	// and the similar case when a single unchecked subnode is deleted
-	if (checkState == CheckState_t::Mixed)
+	if (checkState == CheckState::Mixed)
 	{
 		bool allUnchecked = true;
 		bool allChecked = true;
 		for (auto kid : row.children())
 		{
-			if (getCheck(kid) != CheckState_t::Unchecked)
+			if (getCheck(kid) != CheckState::Unchecked)
 			{
 				allUnchecked = false;
 			}
-			if (getCheck(kid) != CheckState_t::Checked)
+			if (getCheck(kid) != CheckState::Checked)
 			{
 				allChecked = false;
 			}
@@ -203,35 +191,33 @@ FileTreeView::reload_from_filesystem(const Gtk::TreeModel::iterator & iter)
 
 		if (allUnchecked)
 		{
-			setCheck(row, CheckState_t::Unchecked, false, true);
+			setCheck(row, CheckState::Unchecked, false, true);
 		} else if (allChecked)
 		{
-			setCheck(row, CheckState_t::Checked, false, true);
+			setCheck(row, CheckState::Checked, false, true);
 		}
-
 	}
 }
 
 //------------------------------------------------------------------------------
 bool
-FileTreeView::on_test_expand_row(const Gtk::TreeModel::iterator & iter, const Gtk::TreeModel::Path&)
+FileTreeView::on_test_expand_row(const Gtk::TreeModel::iterator & iter, const Gtk::TreeModel::Path &)
 {
 	reload_from_filesystem(iter);
 	return false;
 }
 
-
 //------------------------------------------------------------------------------
 template <class TreeIter_t>
 void
-FileTreeView::fillChildren(const std::string & path, CheckState_t checkState, TreeIter_t & parentTreeRow)
+FileTreeView::fillChildren(const std::string & path, CheckState checkState, TreeIter_t & parentTreeRow)
 {
 	// todo: check if path still exists ?..
-	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
+	std::vector<Glib::RefPtr<Gio::FileInfo>> fileInfoVector;
 	collectChilden(path, fileInfoVector);
 
 	Gtk::TreeIter itExistingItem = parentTreeRow.children().begin();
-	for (auto && file_info: fileInfoVector)
+	for (auto && file_info : fileInfoVector)
 	{
 		if (itExistingItem)
 		{
@@ -241,7 +227,7 @@ FileTreeView::fillChildren(const std::string & path, CheckState_t checkState, Tr
 
 			// make sure that directories should go first
 			int cmp = 0;
-			if ( !treeRow.children().empty() == (file_info->get_file_type() == Gio::FILE_TYPE_DIRECTORY) )
+			if (!treeRow.children().empty() == (file_info->get_file_type() == Gio::FILE_TYPE_DIRECTORY))
 			{
 				cmp = existingFileName.compare(newFileName);
 			} else
@@ -253,14 +239,13 @@ FileTreeView::fillChildren(const std::string & path, CheckState_t checkState, Tr
 			{
 				Gtk::TreeRow newRow = *m_store->insert(itExistingItem);
 				fillTreeRow(file_info, path, newRow);
-				if (checkState != CheckState_t::Mixed)
+				if (checkState != CheckState::Mixed)
 				{
 					setCheck(newRow, checkState, true, false);
 				}
-			} else
-			if (cmp < 0)
+			} else if (cmp < 0)
 			{
-				while ( (itExistingItem = m_store->erase(itExistingItem)) )
+				while ((itExistingItem = m_store->erase(itExistingItem)))
 				{
 					if (getFileName(itExistingItem) == newFileName)
 					{
@@ -276,7 +261,7 @@ FileTreeView::fillChildren(const std::string & path, CheckState_t checkState, Tr
 		{
 			Gtk::TreeRow treeRow = *m_store->append(parentTreeRow.children());
 			fillTreeRow(file_info, path, treeRow);
-			if (checkState != CheckState_t::Mixed)
+			if (checkState != CheckState::Mixed)
 			{
 				setCheck(treeRow, checkState, true, false);
 			}
@@ -289,7 +274,6 @@ FileTreeView::fillChildren(const std::string & path, CheckState_t checkState, Tr
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::on_cell_toggled(const Glib::ustring & path)
@@ -297,12 +281,10 @@ FileTreeView::on_cell_toggled(const Glib::ustring & path)
 	auto iter = m_store->get_iter(path);
 	if (!iter) return;
 	auto item = *iter;
-	const CheckState_t newCheckState = (item[m_columns.checkState] == CheckState_t::Unchecked) ?
-		CheckState_t::Checked :
-		CheckState_t::Unchecked;
+	const CheckState newCheckState =
+			(item[m_columns.checkState] == CheckState::Unchecked) ? CheckState::Checked : CheckState::Unchecked;
 	setCheck(item, newCheckState, false, false);
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -312,7 +294,7 @@ FileTreeView::collectChilden(const std::string & parentPath, std::vector<FolderT
 
 	Glib::RefPtr<Gio::FileEnumerator> child_enumeration = file->enumerate_children("standard::name,standard::is-hidden");
 
-	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
+	std::vector<Glib::RefPtr<Gio::FileInfo>> fileInfoVector;
 	while (auto file_info = child_enumeration->next_file())
 	{
 		if (!file_info) continue;
@@ -339,26 +321,24 @@ FileTreeView::collectChilden(const std::string & parentPath, std::vector<FolderT
 	children.swap(fileInfoVector);
 }
 
-
 //------------------------------------------------------------------------------
-FileTreeView::CheckState_t
+FileTreeView::CheckState
 FileTreeView::getCheck(const Gtk::TreeIter & iter) const
 {
-	if (!iter) return CheckState_t::Unchecked;
+	if (!iter) return CheckState::Unchecked;
 	return (*iter)[m_columns.checkState];
 }
 
-
 //------------------------------------------------------------------------------
 bool
-FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool noUp, bool noDown)
+FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState checkState, bool noUp, bool noDown)
 {
 	if (!iter) return false;
 	if (getCheck(iter) == checkState) return true;
 
 	(*iter)[m_columns.checkState] = checkState;
 
-	if (!noDown && (checkState != CheckState_t::Mixed))
+	if (!noDown && (checkState != CheckState::Mixed))
 	{
 		for (Gtk::TreeIter kid : iter->children())
 		{
@@ -372,15 +352,14 @@ FileTreeView::setCheck(const Gtk::TreeIter & iter, CheckState_t checkState, bool
 		if (parent)
 		{
 			const auto & kids = parent->children();
-			const bool all = std::all_of(kids.begin(), kids.end(),
-				[this, checkState](auto it) { return getCheck(it) == checkState; });
-			setCheck(parent, all ? checkState : CheckState_t::Mixed, noUp, true);
+			const bool all =
+					std::all_of(kids.begin(), kids.end(), [this, checkState](auto it) { return getCheck(it) == checkState; });
+			setCheck(parent, all ? checkState : CheckState::Mixed, noUp, true);
 		}
 	}
 
 	return true;
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -390,10 +369,10 @@ FileTreeView::load(const std::string & path)
 	m_basePath = path;
 	m_store->clear();
 	if (m_basePath.empty()) return;
-	std::vector< Glib::RefPtr<Gio::FileInfo> > fileInfoVector;
+	std::vector<Glib::RefPtr<Gio::FileInfo>> fileInfoVector;
 	collectChilden(path, fileInfoVector);
 
-	for (auto && file_info: fileInfoVector)
+	for (auto && file_info : fileInfoVector)
 	{
 		Gtk::TreeRow treeRow = *m_store->append();
 		fillTreeRow(file_info, path, treeRow);
@@ -402,20 +381,18 @@ FileTreeView::load(const std::string & path)
 	if (get_realized()) scroll_to_point(0, 0);
 }
 
-
 //------------------------------------------------------------------------------
 void
-FileTreeView::fillTreeRow(
-		const Glib::RefPtr<Gio::FileInfo> & fileInfo,
-		const std::string & path,
-		Gtk::TreeRow & treeRow)
+FileTreeView::fillTreeRow(const Glib::RefPtr<Gio::FileInfo> & fileInfo,
+                          const std::string & path,
+                          Gtk::TreeRow & treeRow)
 {
 	if (!fileInfo) return;
 	const std::string & filePath = Glib::build_filename(path, fileInfo->get_name());
 
 	treeRow[m_columns.fake] = false;
 	treeRow[m_columns.fullPath] = filePath;
-	treeRow[m_columns.checkState] = CheckState_t::Unchecked;
+	treeRow[m_columns.checkState] = CheckState::Unchecked;
 
 	if (fileInfo->get_file_type() == Gio::FILE_TYPE_DIRECTORY)
 	{
@@ -427,7 +404,7 @@ FileTreeView::fillTreeRow(
 				auto t = m_store->append(treeRow->children());
 				(*t)[m_columns.fake] = true;
 			}
-		} catch (const Glib::Exception &ex)
+		} catch (const Glib::Exception & ex)
 		{
 			// disable checkbox
 			g_warning("%s", ex.what().c_str());
@@ -435,17 +412,15 @@ FileTreeView::fillTreeRow(
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
 FileTreeView::selectAll()
 {
 	for (auto && iter : m_store->children())
 	{
-		setCheck(*iter, CheckState_t::Checked, true, false);
+		setCheck(*iter, CheckState::Checked, true, false);
 	}
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -453,10 +428,9 @@ FileTreeView::clearSelection()
 {
 	for (auto && iter : m_store->children())
 	{
-		setCheck(*iter, CheckState_t::Unchecked, true, false);
+		setCheck(*iter, CheckState::Unchecked, true, false);
 	}
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -466,7 +440,7 @@ FileTreeView::refresh()
 	freeze_notify();
 	try
 	{
-		fillChildren(m_basePath, CheckState_t::Mixed, (*m_store.operator->()));
+		fillChildren(m_basePath, CheckState::Mixed, (*m_store.operator->()));
 		for (auto && kid : m_store->children())
 		{
 			refresh_children(kid);
@@ -477,7 +451,6 @@ FileTreeView::refresh()
 	}
 	thaw_notify();
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -490,5 +463,4 @@ FileTreeView::set_show_hidden(bool value)
 	}
 }
 
-
-}}
+} // namespace detwinner::ui

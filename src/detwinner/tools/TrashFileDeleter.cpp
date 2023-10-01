@@ -3,19 +3,17 @@
  Name        : TrashFileDeleter.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <tools/TrashFileDeleter.hpp>
 
-#include <gtkmm.h>
+#include <giomm.h>
+#include <glibmm.h>
 
-
-namespace detwinner {
-namespace tools {
-
+namespace detwinner::tools {
 
 //------------------------------------------------------------------------------
 bool
@@ -39,5 +37,4 @@ TrashFileDeleter::removeFile(const std::string & filePath)
 	return isFileDeleted;
 }
 
-
-}}
+} // namespace detwinner::tools

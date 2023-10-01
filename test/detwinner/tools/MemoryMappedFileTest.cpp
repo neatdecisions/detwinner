@@ -2,10 +2,7 @@
 
 #include <tools/MemoryMappedFile.hpp>
 
-
-namespace detwinner {
-namespace tools {
-
+namespace detwinner::tools {
 
 //------------------------------------------------------------------------------
 TEST(MemoryMappedFileTest, empty_path)
@@ -15,7 +12,6 @@ TEST(MemoryMappedFileTest, empty_path)
 	EXPECT_EQ(0UL, f.size());
 	EXPECT_EQ(nullptr, f.buffer());
 }
-
 
 //------------------------------------------------------------------------------
 TEST(MemoryMappedFileTest, settings_ini)
@@ -32,5 +28,4 @@ TEST(MemoryMappedFileTest, settings_ini)
 	EXPECT_EQ('l', f.buffer()[6]);
 }
 
-
-}}
+} // namespace detwinner::tools

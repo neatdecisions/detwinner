@@ -3,29 +3,24 @@
  Name        : ImageFeaturesBridge.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <logic/images/ImageFeaturesBridge.hpp>
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <span>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 //------------------------------------------------------------------------------
 void
-ImageFeaturesBridge::GetIntensityHistogram(
-	const Magick::Image & image,
-	const Magick::Geometry & roi,
-	HistogramI & histI)
+ImageFeaturesBridge::GetIntensityHistogram(const Magick::Image & image,
+                                           const Magick::Geometry & roi,
+                                           HistogramI & histI)
 {
 	const unsigned int width = roi.xOff() + roi.width();
 	const unsigned int height = roi.yOff() + roi.height();
@@ -40,27 +35,21 @@ ImageFeaturesBridge::GetIntensityHistogram(
 
 	std::fill(histI.bins.begin(), histI.bins.end(), 0U);
 
-	std::span<const Magick::PixelPacket> pixels(
-		image.getConstPixels(roi.xOff(), roi.yOff(), roi.width(), roi.height()),
-		roi.width() * roi.height());
+	std::span<const Magick::PixelPacket> pixels(image.getConstPixels(roi.xOff(), roi.yOff(), roi.width(), roi.height()),
+	                                            roi.width() * roi.height());
 
-	for (const Magick::PixelPacket& pixel : pixels)
+	for (const Magick::PixelPacket & pixel : pixels)
 	{
-		const int n = std::clamp(static_cast<int>(std::floor(Magick::Color(pixel).intensity() / kBinSize)), 0, kBinNumber - 1);
+		const int n =
+				std::clamp(static_cast<int>(std::floor(Magick::Color(pixel).intensity() / kBinSize)), 0, kBinNumber - 1);
 		++histI.bins[n];
 	}
-
 }
-
 
 //------------------------------------------------------------------------------
 void
 ImageFeaturesBridge::GetYUVHistograms(
-	const Magick::Image & image,
-	const Magick::Geometry & roi,
-	Histogram & histY,
-	Histogram & histU,
-	Histogram & histV)
+		const Magick::Image & image, const Magick::Geometry & roi, Histogram & histY, Histogram & histU, Histogram & histV)
 {
 	constexpr float kMaxY = 1.0f;
 	constexpr float kMaxU = 0.436f;
@@ -87,29 +76,27 @@ ImageFeaturesBridge::GetYUVHistograms(
 	std::fill(histU.bins.begin(), histU.bins.end(), 0U);
 	std::fill(histV.bins.begin(), histV.bins.end(), 0U);
 
-	std::span<const Magick::PixelPacket> pixels(
-		image.getConstPixels(roi.xOff(), roi.yOff(), roi.width(), roi.height()),
-		roi.width() * roi.height());
+	std::span<const Magick::PixelPacket> pixels(image.getConstPixels(roi.xOff(), roi.yOff(), roi.width(), roi.height()),
+	                                            roi.width() * roi.height());
 
-	for (const Magick::PixelPacket& pixel : pixels)
+	for (const Magick::PixelPacket & pixel : pixels)
 	{
 		const Magick::ColorYUV color = Magick::Color(pixel);
-			if (color.alpha() > 0.8) continue;
+		if (color.alpha() > 0.8) continue;
 
-			const float valY = std::clamp(static_cast<float>(color.y()), kMinY, kMaxY);
-			int n = std::clamp(static_cast<int>(std::floor((valY - kMinY) / kBinSizeY)), 0, kBinNumber - 1);
-			++histY.bins[n];
+		const float valY = std::clamp(static_cast<float>(color.y()), kMinY, kMaxY);
+		int n = std::clamp(static_cast<int>(std::floor((valY - kMinY) / kBinSizeY)), 0, kBinNumber - 1);
+		++histY.bins[n];
 
-			const float valU = std::clamp(static_cast<float>(color.u()), kMinU, kMaxU);
-			n = std::clamp(static_cast<int>(std::floor((valU - kMinU) / kBinSizeU)), 0, kBinNumber - 1);
-			++histU.bins[n];
+		const float valU = std::clamp(static_cast<float>(color.u()), kMinU, kMaxU);
+		n = std::clamp(static_cast<int>(std::floor((valU - kMinU) / kBinSizeU)), 0, kBinNumber - 1);
+		++histU.bins[n];
 
-			const float valV = std::clamp(static_cast<float>(color.v()), kMinV, kMaxV);
-			n = std::clamp(static_cast<int>(std::floor(( valV - kMinV ) / kBinSizeV)), 0, kBinNumber - 1);
-			++histV.bins[n];
+		const float valV = std::clamp(static_cast<float>(color.v()), kMinV, kMaxV);
+		n = std::clamp(static_cast<int>(std::floor((valV - kMinV) / kBinSizeV)), 0, kBinNumber - 1);
+		++histV.bins[n];
 	}
 }
-
 
 //------------------------------------------------------------------------------
 ImageFeatures
@@ -154,5 +141,4 @@ ImageFeaturesBridge::GetImageFeatures(Magick::Image & image, unsigned int id)
 	return feats;
 }
 
-
-}}}
+} // namespace detwinner::logic::images

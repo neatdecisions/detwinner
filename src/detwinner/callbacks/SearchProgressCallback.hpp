@@ -3,36 +3,31 @@
  Name        : SearchProgressCallback.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
+#pragma once
 
-#ifndef CALLBACKS_SEARCHPROGRESSCALLBACK_HPP_
-#define CALLBACKS_SEARCHPROGRESSCALLBACK_HPP_
-
+#include <atomic>
 #include <callbacks/ControlCallback.hpp>
+#include <glibmm.h>
 #include <logic/callbacks/ISearchProcessCallback.hpp>
 #include <logic/tools/StopTimer.hpp>
-#include <atomic>
-#include <glibmm.h>
 
+namespace detwinner::callbacks {
 
-namespace detwinner {
-namespace callbacks {
-
-
-struct SearchProgressCallback : public logic::callbacks::ISearchProcessCallback
+class SearchProgressCallback : public logic::callbacks::ISearchProcessCallback
 {
 public:
-	using Ptr_t = std::shared_ptr<SearchProgressCallback>;
-	static Ptr_t Create();
+	using Ptr = std::shared_ptr<SearchProgressCallback>;
+	static Ptr Create();
 
 	void init() noexcept;
 	SearchProgressCallback() noexcept;
-	SearchProgressCallback(const SearchProgressCallback&) = delete;
-	SearchProgressCallback& operator=(const SearchProgressCallback&) = delete;
+	SearchProgressCallback(const SearchProgressCallback &) = delete;
+	SearchProgressCallback & operator=(const SearchProgressCallback &) = delete;
 
 	unsigned int getGroupCount() const noexcept;
 	unsigned int getDuplicateCount() const noexcept;
@@ -48,13 +43,10 @@ public:
 	Glib::Dispatcher & accessDispatcher() noexcept;
 	long long getElapsedTime() const;
 
-
 	virtual void onFileProcessed(unsigned long long size) override;
 	virtual void updateProgress(unsigned int progress, unsigned int total) override;
-	virtual void onDuplicateFound(
-		std::size_t numberOfFiles,
-		unsigned long long totalSize,
-		unsigned long long wastedSize) override;
+	virtual void
+	onDuplicateFound(std::size_t numberOfFiles, unsigned long long totalSize, unsigned long long wastedSize) override;
 	virtual void onStartComparing(unsigned int totalNumber) override;
 	virtual void onFileIndexed(bool skipped) override;
 	virtual void setStage(int stage) override;
@@ -83,7 +75,4 @@ private:
 	Glib::Dispatcher m_dispatcher;
 };
 
-
-}}
-
-#endif /* CALLBACKS_SEARCHPROGRESSCALLBACK_HPP_ */
+} // namespace detwinner::callbacks

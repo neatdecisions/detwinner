@@ -3,27 +3,23 @@
  Name        : DuplicateFilesFinder.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef LOGIC_DUPLICATEFILESFINDER_HPP_
-#define LOGIC_DUPLICATEFILESFINDER_HPP_
+#pragma once
 
 #include <map>
 #include <string>
 #include <vector>
 
-#include <logic/callbacks/ISearchProcessCallback.hpp>
-#include <logic/callbacks/IIndexedFileReceiver.hpp>
 #include <logic/CommonDataTypes.hpp>
 #include <logic/FileSearchSettings.hpp>
+#include <logic/callbacks/IIndexedFileReceiver.hpp>
+#include <logic/callbacks/ISearchProcessCallback.hpp>
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 //==============================================================================
 // DuplicateFilesFinder
@@ -31,25 +27,21 @@ namespace logic {
 class DuplicateFilesFinder
 {
 public:
-	DuplicatesList_t find(
-			const std::vector<std::string> & folderList,
-			const FileSearchSettings & searchSettings,
-			const callbacks::ISearchProcessCallback::Ptr_t & searchProcessCallback);
+	DuplicatesList find(const std::vector<std::string> & folderList,
+	                    const FileSearchSettings & searchSettings,
+	                    const callbacks::ISearchProcessCallback::Ptr & searchProcessCallback);
 
 private:
-	using FileSizeMapping_t = std::map< unsigned long long, std::vector<std::string> >;
+	using FileSizeMapping = std::map<unsigned long long, std::vector<std::string>>;
 
 	struct FileMappingReceiver : callbacks::IIndexedFileReceiver
 	{
 		void receive(FileInfo && fileInfo) override;
-		FileSizeMapping_t mapping;
+		FileSizeMapping mapping;
 	};
 
-	DuplicatesList_t calculateHashes(
-			FileSizeMapping_t & totalMap,
-			callbacks::ISearchProcessCallback::Ptr_t searchProcessCallback) const;
+	DuplicatesList calculateHashes(FileSizeMapping & totalMap,
+	                               callbacks::ISearchProcessCallback::Ptr searchProcessCallback) const;
 };
 
-}}
-
-#endif /* LOGIC_DUPLICATEFILESFINDER_HPP_ */
+} // namespace detwinner::logic

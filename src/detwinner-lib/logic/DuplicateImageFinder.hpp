@@ -3,25 +3,21 @@
  Name        : DuplicateImageFinder.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ============================================================================
  */
 
-#ifndef LOGIC_IMAGES_DUPLICATEIMAGEFINDER_HPP_
-#define LOGIC_IMAGES_DUPLICATEIMAGEFINDER_HPP_
-
+#pragma once
 #include <string>
 #include <vector>
-#include <logic/callbacks/IIndexedFileReceiver.hpp>
-#include <logic/callbacks/ISearchProcessCallback.hpp>
+
 #include <logic/CommonDataTypes.hpp>
 #include <logic/FileSearchSettings.hpp>
+#include <logic/callbacks/IIndexedFileReceiver.hpp>
+#include <logic/callbacks/ISearchProcessCallback.hpp>
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 //==============================================================================
 // DuplicateImageFinder
@@ -29,10 +25,9 @@ namespace logic {
 class DuplicateImageFinder
 {
 public:
-	DuplicatesList_t find(
-			const std::vector<std::string> & folderList,
-			const FileSearchSettings & searchSettings,
-			const callbacks::ISearchProcessCallback::Ptr_t & searchProcessCallback);
+	DuplicatesList find(const std::vector<std::string> & folderList,
+	                    const FileSearchSettings & searchSettings,
+	                    const callbacks::ISearchProcessCallback::Ptr & searchProcessCallback);
 
 private:
 	struct FileToProcessReceiver : callbacks::IIndexedFileReceiver
@@ -45,7 +40,4 @@ private:
 	static constexpr bool kDefaultProcessRotations = false;
 };
 
-
-}}
-
-#endif /* LOGIC_IMAGES_DUPLICATEIMAGEFINDER_HPP_ */
+} // namespace detwinner::logic

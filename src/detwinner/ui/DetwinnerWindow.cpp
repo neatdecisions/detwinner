@@ -12,9 +12,9 @@
 
 #include <glibmm/i18n.h>
 #include <glibmm/timer.h>
+
 #include <logic/DuplicateFilesFinder.hpp>
 #include <ui/SearchProgressDialog.hpp>
-
 
 namespace detwinner {
 namespace ui {
@@ -23,8 +23,7 @@ const Glib::ustring DetwinnerWindow::kName_SearchOptions = "searchOptions";
 const Glib::ustring DetwinnerWindow::kName_SearchResults = "searchResults";
 
 //------------------------------------------------------------------------------
-DetwinnerWindow::DetwinnerWindow() :
-	m_refBuilder(Gtk::Builder::create())
+DetwinnerWindow::DetwinnerWindow() : m_refBuilder(Gtk::Builder::create())
 {
 	m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/toolbarResultsPane.glade");
 	m_refBuilder->add_from_resource("/com/neatdecisions/detwinner/ui/toolbarSearchPane.glade");
@@ -33,7 +32,6 @@ DetwinnerWindow::DetwinnerWindow() :
 	m_pHeaderBarResults->insert_action_group("view", m_SearchResultsBox.getActionGroup());
 	m_pHeaderBarResults->set_show_close_button(true);
 	m_pHeaderBarResults->set_title("Detwinner");
-
 
 	m_refBuilder->get_widget("headerBarSearchOptions", m_pHeaderBarOptions);
 	m_pHeaderBarOptions->insert_action_group("view", m_SearchOptionsBox.getActionGroup());
@@ -56,9 +54,9 @@ DetwinnerWindow::DetwinnerWindow() :
 	add_action("startSearch", sigc::mem_fun(*this, &DetwinnerWindow::on_start_search));
 
 	on_search_mode_changed(m_SearchOptionsBox.getSearchSettings().searchMode);
-	m_SearchOptionsBox.signal_search_mode_changed().connect( sigc::mem_fun(*this, &DetwinnerWindow::on_search_mode_changed) );
+	m_SearchOptionsBox.signal_search_mode_changed().connect(
+			sigc::mem_fun(*this, &DetwinnerWindow::on_search_mode_changed));
 }
-
 
 //------------------------------------------------------------------------------
 void
@@ -68,11 +66,8 @@ DetwinnerWindow::on_start_search()
 	{
 		m_SearchResultsBox.init();
 		const settings::SearchSettings searchSettings = m_SearchOptionsBox.getSearchSettings();
-		SearchProgressDialog dialog(
-			*this,
-			searchSettings,
-			m_SearchOptionsBox.getSearchPaths(),
-			m_SearchResultsBox.createPopulationDelegate());
+		SearchProgressDialog dialog(*this, searchSettings, m_SearchOptionsBox.getSearchPaths(),
+		                            m_SearchResultsBox.createPopulationDelegate());
 
 		if (dialog.run() == Gtk::RESPONSE_OK)
 		{
@@ -89,14 +84,13 @@ DetwinnerWindow::on_start_search()
 	}
 }
 
-
 //------------------------------------------------------------------------------
 void
-DetwinnerWindow::on_search_mode_changed(settings::SearchSettings::SearchMode_t mode)
+DetwinnerWindow::on_search_mode_changed(settings::SearchSettings::SearchMode mode)
 {
 	if (m_pLabelSearchMode != nullptr)
 	{
-		if (mode == settings::SearchSettings::SearchMode_t::kSimilarImages)
+		if (mode == settings::SearchSettings::SearchMode::SimilarImages)
 		{
 			m_pLabelSearchMode->set_label(_("Similar images"));
 		} else
@@ -106,5 +100,5 @@ DetwinnerWindow::on_search_mode_changed(settings::SearchSettings::SearchMode_t m
 	}
 }
 
-
-}}
+} // namespace ui
+} // namespace detwinner

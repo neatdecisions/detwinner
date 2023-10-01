@@ -3,30 +3,29 @@
  Name        : FilePreview.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <ui/FilePreview.hpp>
 
+#include <iomanip>
+
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glibmm/i18n.h>
-#include <iomanip>
+
 #include <tools/MemoryMappedFile.hpp>
 
-
-namespace detwinner {
-namespace ui {
-
+namespace detwinner::ui {
 
 //------------------------------------------------------------------------------
-FilePreview::FilePreview() :
-	Gtk::Box(Gtk::ORIENTATION_VERTICAL),
-	m_labelFileName(_("<b>File name:</b> "), Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_labelFileSize(_("<b>File size:</b> "), Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
-	m_labelFileModified(_("<b>Modified:</b> "), Gtk::ALIGN_START, Gtk::ALIGN_BASELINE)
+FilePreview::FilePreview()
+		: Gtk::Box(Gtk::ORIENTATION_VERTICAL),
+			m_labelFileName(_("<b>File name:</b> "), Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
+			m_labelFileSize(_("<b>File size:</b> "), Gtk::ALIGN_START, Gtk::ALIGN_BASELINE),
+			m_labelFileModified(_("<b>Modified:</b> "), Gtk::ALIGN_START, Gtk::ALIGN_BASELINE)
 {
 	m_labelFileName.set_use_markup(true);
 	m_labelFileSize.set_use_markup(true);
@@ -77,7 +76,6 @@ FilePreview::FilePreview() :
 	set_homogeneous(false);
 }
 
-
 //------------------------------------------------------------------------------
 void
 FilePreview::setFileName(const std::string & filePath)
@@ -97,7 +95,8 @@ FilePreview::setFileName(const std::string & filePath)
 
 				if (fileInfo->has_attribute(G_FILE_ATTRIBUTE_TIME_MODIFIED))
 				{
-					const Glib::DateTime & aDateTime = Glib::DateTime::create_now_local(fileInfo->get_attribute_uint64(G_FILE_ATTRIBUTE_TIME_MODIFIED));
+					const Glib::DateTime & aDateTime =
+							Glib::DateTime::create_now_local(fileInfo->get_attribute_uint64(G_FILE_ATTRIBUTE_TIME_MODIFIED));
 					m_labelFileModified_value.set_text(aDateTime.format("%x %X"));
 				}
 			}
@@ -114,26 +113,26 @@ FilePreview::setFileName(const std::string & filePath)
 	reload();
 }
 
-
 //------------------------------------------------------------------------------
 Glib::ustring
 FilePreview::buildHexPreview(const char * buffer, unsigned long size) const
 {
 	Glib::ustring result;
-	if ( (buffer == nullptr) || (size == 0) ) return result;
+	if ((buffer == nullptr) || (size == 0)) return result;
 
-	result.reserve(size * 3 + size + (size / 16 + ( (size % 16) ? 1 : 0)) * 10);
+	result.reserve(size * 3 + size + (size / 16 + ((size % 16) ? 1 : 0)) * 10);
 
 	for (unsigned long i = 0; i < size; i += 16)
 	{
 		unsigned long n = std::min(i + 16, size);
 
-		result.append(Glib::ustring::format(std::hex, std::setfill(L'0'), std::setw(8), i ));
+		result.append(Glib::ustring::format(std::hex, std::setfill(L'0'), std::setw(8), i));
 		result.append("\t");
 
 		for (unsigned long j = i; j < n; ++j)
 		{
-			result.append(Glib::ustring::format(std::hex, std::setfill(L'0'), std::setw(2), static_cast<unsigned short>(static_cast<unsigned char>(buffer[j])) ));
+			result.append(Glib::ustring::format(std::hex, std::setfill(L'0'), std::setw(2),
+			                                    static_cast<unsigned short>(static_cast<unsigned char>(buffer[j]))));
 			result.append(" ");
 		}
 
@@ -155,9 +154,9 @@ FilePreview::buildHexPreview(const char * buffer, unsigned long size) const
 	return result;
 }
 
-
 //------------------------------------------------------------------------------
-void FilePreview::reload()
+void
+FilePreview::reload()
 {
 	m_previewText.get_buffer().clear();
 	m_previewImage.clear();
@@ -202,7 +201,8 @@ void FilePreview::reload()
 					} else
 					{
 						Glib::ustring cutContent = buildHexPreview(pData, kMaxSize);
-						cutContent.append(Glib::ustring::compose(_("\n ... only first %1 shown ... \n"), Glib::format_size(kMaxSize, Glib::FORMAT_SIZE_LONG_FORMAT)));
+						cutContent.append(Glib::ustring::compose(_("\n ... only first %1 shown ... \n"),
+						                                         Glib::format_size(kMaxSize, Glib::FORMAT_SIZE_LONG_FORMAT)));
 						m_previewText.get_buffer()->set_text(cutContent);
 					}
 				}
@@ -213,5 +213,4 @@ void FilePreview::reload()
 	}
 }
 
-
-}}
+} // namespace detwinner::ui

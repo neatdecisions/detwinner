@@ -4,15 +4,10 @@
 
 #include "../mocks/MockSearchProcessCallback.hpp"
 
-
-using ::testing::Return;
 using ::testing::_;
+using ::testing::Return;
 
-
-namespace detwinner {
-namespace logic {
-namespace callbacks {
-
+namespace detwinner::logic::callbacks {
 
 //==============================================================================
 // ImageFinderCallbackTest
@@ -31,8 +26,6 @@ struct ImageFinderCallbackTest : public ::testing::Test
 	mocks::MockSearchProcessCallback::Ptr m_pMockedCallback;
 };
 
-
-
 //==============================================================================
 // ImageFinderCallbackTest - fixtures
 //==============================================================================
@@ -48,7 +41,6 @@ TEST_F(ImageFinderCallbackTest, imgIndexingProgress)
 	imageCallback.imgIndexingProgress(5, 6);
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(ImageFinderCallbackTest, imgComparingProgress)
 {
@@ -59,7 +51,6 @@ TEST_F(ImageFinderCallbackTest, imgComparingProgress)
 	EXPECT_CALL(*m_pMockedCallback, pauseAndStopStatus()).Times(0);
 	imageCallback.imgComparingProgress(1, 2);
 }
-
 
 //------------------------------------------------------------------------------
 TEST_F(ImageFinderCallbackTest, similarImagesFound_normal)
@@ -72,7 +63,6 @@ TEST_F(ImageFinderCallbackTest, similarImagesFound_normal)
 	imageCallback.similarImagesFound(5, 10, 11);
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(ImageFinderCallbackTest, similarImagesFound_none)
 {
@@ -83,7 +73,6 @@ TEST_F(ImageFinderCallbackTest, similarImagesFound_none)
 	EXPECT_CALL(*m_pMockedCallback, pauseAndStopStatus()).Times(0);
 	imageCallback.similarImagesFound(0, 10, 11);
 }
-
 
 //------------------------------------------------------------------------------
 TEST_F(ImageFinderCallbackTest, pauseAndStopStatus_true)
@@ -96,7 +85,6 @@ TEST_F(ImageFinderCallbackTest, pauseAndStopStatus_true)
 	EXPECT_TRUE(imageCallback.pauseAndStopStatus());
 }
 
-
 //------------------------------------------------------------------------------
 TEST_F(ImageFinderCallbackTest, pauseAndStopStatus_false)
 {
@@ -107,7 +95,6 @@ TEST_F(ImageFinderCallbackTest, pauseAndStopStatus_false)
 	EXPECT_CALL(*m_pMockedCallback, pauseAndStopStatus()).WillOnce(Return(false));
 	EXPECT_FALSE(imageCallback.pauseAndStopStatus());
 }
-
 
 //------------------------------------------------------------------------------
 TEST_F(ImageFinderCallbackTest, null_base_callback)
@@ -120,5 +107,4 @@ TEST_F(ImageFinderCallbackTest, null_base_callback)
 	EXPECT_NO_FATAL_FAILURE(imageCallback.pauseAndStopStatus());
 }
 
-
-}}}
+} // namespace detwinner::logic::callbacks

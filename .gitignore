@@ -35,6 +35,7 @@
 .vscode
 *.ui~
 *.glade~
+.cache
 
 # Translations
 *.mo

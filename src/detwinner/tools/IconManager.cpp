@@ -3,36 +3,28 @@
  Name        : IconManager.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-
 #include <tools/IconManager.hpp>
 
-
-namespace detwinner {
-namespace tools {
-
+namespace detwinner::tools {
 
 //------------------------------------------------------------------------------
-IconManager::IconManager() : m_iconTheme(Gtk::IconTheme::get_default())
-{}
-
+IconManager::IconManager() : m_iconTheme(Gtk::IconTheme::get_default()) {}
 
 //------------------------------------------------------------------------------
 IconManager::~IconManager() = default;
 
-
 //------------------------------------------------------------------------------
-IconManager & IconManager::GetInstance()
+IconManager &
+IconManager::GetInstance()
 {
 	static IconManager iconManager;
 	return iconManager;
 }
-
-
 
 //------------------------------------------------------------------------------
 Glib::RefPtr<Gdk::Pixbuf>
@@ -44,14 +36,10 @@ IconManager::getFileIcon(const std::string & filePath, int size) const
 	if (fileInfo)
 	{
 		const Glib::RefPtr<Gio::Icon> icon = fileInfo->get_icon();
-		if (icon)
-		{
-			result = IconManager::GetInstance().getBuiltinIcon(icon, size);
-		}
+		if (icon) result = IconManager::GetInstance().getBuiltinIcon(icon, size);
 	}
 	return result;
 }
-
 
 //------------------------------------------------------------------------------
 Glib::RefPtr<Gdk::Pixbuf>
@@ -67,7 +55,6 @@ IconManager::getBuiltinIcon(const std::string & iconName, int size) const
 	return result;
 }
 
-
 //------------------------------------------------------------------------------
 Glib::RefPtr<Gdk::Pixbuf>
 IconManager::getBuiltinIcon(const Glib::RefPtr<Gio::Icon> & icon, int size) const
@@ -82,5 +69,4 @@ IconManager::getBuiltinIcon(const Glib::RefPtr<Gio::Icon> & icon, int size) cons
 	return result;
 }
 
-
-}}
+} // namespace detwinner::tools

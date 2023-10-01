@@ -3,30 +3,23 @@
  Name        : IDuplicateReceiver.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef CALLBACKS_IDUPLICATERECEIVER_HPP_
-#define CALLBACKS_IDUPLICATERECEIVER_HPP_
+#pragma once
 
 #include <callbacks/IDeferredAction.hpp>
 #include <logic/CommonDataTypes.hpp>
 
+namespace detwinner::callbacks {
 
-namespace detwinner {
-namespace callbacks {
-
-
-class IDuplicateReceiver
+struct IDuplicateReceiver
 {
-public:
-	using Ptr_t = std::shared_ptr<IDuplicateReceiver>;
-	virtual IDeferredAction::Ptr_t populate(logic::DuplicatesList_t && container) = 0;
+	using Ptr = std::shared_ptr<IDuplicateReceiver>;
+	virtual IDeferredAction::Ptr populate(logic::DuplicatesList && container) = 0;
 	virtual ~IDuplicateReceiver() noexcept = default;
 };
 
-}}
-
-#endif /* CALLBACKS_IDUPLICATERECEIVER_HPP_ */
+} // namespace detwinner::callbacks

@@ -1,13 +1,8 @@
-#ifndef TEST_LOGIC_IMAGES_IMAGEFEATURESTESTFACTORY_HPP_
-#define TEST_LOGIC_IMAGES_IMAGEFEATURESTESTFACTORY_HPP_
+#pragma once
 
 #include <logic/images/ImageFeatures.hpp>
 
-
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 struct ImageFeaturesTestFactory
 {
@@ -15,7 +10,4 @@ struct ImageFeaturesTestFactory
 	static ImageFeatures CreateFeatures_2();
 };
 
-
-}}}
-
-#endif
+} // namespace detwinner::logic::images

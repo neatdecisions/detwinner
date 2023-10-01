@@ -3,22 +3,16 @@
  Name        : Initializer.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ============================================================================
  */
 
-#ifndef LOGIC_INITIALIZER_HPP_
-#define LOGIC_INITIALIZER_HPP_
+#pragma once
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 void Initialize();
 
+}
 
-}}
-
-#endif

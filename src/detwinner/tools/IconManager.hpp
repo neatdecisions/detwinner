@@ -3,20 +3,16 @@
  Name        : IconManager.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018-2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef TOOLS_ICONMANAGER_HPP_
-#define TOOLS_ICONMANAGER_HPP_
+#pragma once
 
 #include <gtkmm.h>
 
-
-namespace detwinner {
-namespace tools {
-
+namespace detwinner::tools {
 
 class IconManager
 {
@@ -32,6 +28,4 @@ private:
 	~IconManager();
 };
 
-}}
-
-#endif /* TOOLS_ICONMANAGER_HPP_ */
+} // namespace detwinner::tools

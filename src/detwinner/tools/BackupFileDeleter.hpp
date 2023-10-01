@@ -3,25 +3,22 @@
  Name        : BackupFileDeleter.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2019 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef TOOLS_BACKUPFILEDELETER_HPP_
-#define TOOLS_BACKUPFILEDELETER_HPP_
+#pragma once
 
 #include <tools/AbstractFileDeleter.hpp>
 
+namespace Gtk {
+class Window;
+}
 
-namespace Gtk { class Window; }
+namespace detwinner::tools {
 
-
-namespace detwinner {
-namespace tools {
-
-
-class BackupFileDeleter: public AbstractFileDeleter
+class BackupFileDeleter : public AbstractFileDeleter
 {
 public:
 	BackupFileDeleter(const std::string & backupFolder, Gtk::Window * dialogParent);
@@ -35,7 +32,4 @@ private:
 	bool m_cancelMode;
 };
 
-
-}}
-
-#endif /* TOOLS_BACKUPFILEDELETER_HPP_ */
+} // namespace detwinner::tools

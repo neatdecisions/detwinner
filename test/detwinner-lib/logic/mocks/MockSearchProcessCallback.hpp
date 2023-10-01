@@ -1,15 +1,9 @@
-#ifndef TEST_LOGIC_MOCKS_MOCKSEARCHPROCESSCALLBACK_HPP_
-#define TEST_LOGIC_MOCKS_MOCKSEARCHPROCESSCALLBACK_HPP_
+#pragma once
 
 #include <gmock/gmock.h>
 #include <logic/callbacks/ISearchProcessCallback.hpp>
 
-
-namespace detwinner {
-namespace logic {
-namespace callbacks {
-namespace mocks {
-
+namespace detwinner::logic::callbacks::mocks {
 
 class MockSearchProcessCallback : public detwinner::logic::callbacks::ISearchProcessCallback
 {
@@ -28,7 +22,4 @@ public:
 	MOCK_METHOD0(onFinish, void());
 };
 
-
-}}}}
-
-#endif
+} // namespace detwinner::logic::callbacks::mocks

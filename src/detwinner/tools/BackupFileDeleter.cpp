@@ -10,20 +10,17 @@
 
 #include <tools/BackupFileDeleter.hpp>
 
-#include <gtkmm.h>
 #include <glibmm.h>
 #include <glibmm/i18n.h>
+#include <gtkmm.h>
 
-
-namespace detwinner {
-namespace tools {
-
+namespace detwinner::tools {
 
 //------------------------------------------------------------------------------
-BackupFileDeleter::BackupFileDeleter(const std::string & backupFolder, Gtk::Window * dialogParent) :
-		m_backupFolder(backupFolder), m_dialogParent(dialogParent), m_cancelMode(false)
-{}
-
+BackupFileDeleter::BackupFileDeleter(const std::string & backupFolder, Gtk::Window * dialogParent)
+		: m_backupFolder(backupFolder), m_dialogParent(dialogParent), m_cancelMode(false)
+{
+}
 
 //------------------------------------------------------------------------------
 bool
@@ -36,8 +33,8 @@ BackupFileDeleter::removeFile(const std::string & filePath)
 
 	if (Glib::file_test(backupFilePath, Glib::FILE_TEST_EXISTS))
 	{
-		Gtk::MessageDialog messageDialog(_("File with this name already exists. What should we do?"),
-				false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE, true);
+		Gtk::MessageDialog messageDialog(_("File with this name already exists. What should we do?"), false,
+		                                 Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE, true);
 		messageDialog.set_secondary_text(backupFilePath);
 		messageDialog.set_secondary_text(filePath, false);
 		messageDialog.add_button(_("Overwrite"), Gtk::RESPONSE_YES);
@@ -47,25 +44,24 @@ BackupFileDeleter::removeFile(const std::string & filePath)
 
 		switch (messageDialog.run())
 		{
-			case Gtk::RESPONSE_YES:
-				break;
-			case Gtk::RESPONSE_CANCEL:
-				m_cancelMode = true;
-				return false;
-			default:
-				return false;
+		case Gtk::RESPONSE_YES:
+			break;
+		case Gtk::RESPONSE_CANCEL:
+			m_cancelMode = true;
+			return false;
+		default:
+			return false;
 		}
 	}
 
 	return move(filePath, backupFilePath);
 }
 
-
 //------------------------------------------------------------------------------
 bool
-BackupFileDeleter::prepareDirectory(const std::string & iBackupFileName)
+BackupFileDeleter::prepareDirectory(const std::string & backupFileName)
 {
-	const std::string & backupFileDirName = Glib::path_get_dirname(iBackupFileName);
+	const std::string & backupFileDirName = Glib::path_get_dirname(backupFileName);
 	bool result = Glib::file_test(backupFileDirName, Glib::FILE_TEST_IS_DIR);
 	if (!result)
 	{
@@ -87,14 +83,13 @@ BackupFileDeleter::prepareDirectory(const std::string & iBackupFileName)
 	return result;
 }
 
-
 //------------------------------------------------------------------------------
 bool
-BackupFileDeleter::move(const std::string & iFrom, const std::string & iTo)
+BackupFileDeleter::move(const std::string & from, const std::string & to)
 {
 	bool isFileMoved = false;
-	const Glib::RefPtr<Gio::File> & fileFrom = Gio::File::create_for_path(iFrom);
-	const Glib::RefPtr<Gio::File> & fileTo = Gio::File::create_for_path(iTo);
+	const Glib::RefPtr<Gio::File> & fileFrom = Gio::File::create_for_path(from);
+	const Glib::RefPtr<Gio::File> & fileTo = Gio::File::create_for_path(to);
 	if (fileFrom && fileTo)
 	{
 		try
@@ -102,14 +97,13 @@ BackupFileDeleter::move(const std::string & iFrom, const std::string & iTo)
 			isFileMoved = !fileFrom->query_exists() || fileFrom->move(fileTo, Gio::FILE_COPY_OVERWRITE);
 		} catch (const Glib::Error & e)
 		{
-			g_warning("Unable to move file %s to %s: %s", iFrom.c_str(), iTo.c_str(), e.what().c_str());
+			g_warning("Unable to move file %s to %s: %s", from.c_str(), to.c_str(), e.what().c_str());
 		} catch (...)
 		{
-			g_warning("Unable to move file %s to %s: unknown error", iFrom.c_str(), iTo.c_str());
+			g_warning("Unable to move file %s to %s: unknown error", from.c_str(), to.c_str());
 		}
 	}
 	return isFileMoved;
 }
 
-
-}}
+} // namespace detwinner::tools

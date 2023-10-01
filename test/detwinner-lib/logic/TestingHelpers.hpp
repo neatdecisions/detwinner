@@ -1,30 +1,20 @@
-#ifndef TEST_LOGIC_TESTINGHELPERS_HPP_
-#define TEST_LOGIC_TESTINGHELPERS_HPP_
+#pragma once
 
 #include <string>
+#include <vector>
+
 #include <logic/CommonDataTypes.hpp>
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 //==============================================================================
 // Free functions
 //==============================================================================
 
-bool FilePathIncludesFileName(
-	const std::string & filePath,
-	const std::string & fileName);
+bool FilePathIncludesFileName(const std::string & filePath, const std::string & fileName);
 
-bool FilePathsContainFileName(
-	const std::vector<std::string> & filePaths,
-	const std::string & fileName);
+bool FilePathsContainFileName(const std::vector<std::string> & filePaths, const std::string & fileName);
 
-bool FileInfosContainFileName(
-	const DuplicateContainer & duplicateContainer,
-	const std::string & fileName);
+bool FileInfosContainFileName(const DuplicateContainer & duplicateContainer, const std::string & fileName);
 
-}}
-
-#endif
+} // namespace detwinner::logic

@@ -3,47 +3,33 @@
  Name        : SearchSettings.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef SETTINGS_SEARCHSETTINGS_HPP_
-#define SETTINGS_SEARCHSETTINGS_HPP_
+#pragma once
 
 #include <optional>
 #include <string>
 #include <vector>
 
-
-namespace detwinner {
-namespace settings {
-
+namespace detwinner::settings {
 
 struct SearchSettings
 {
-	enum class SearchMode_t
-	{
-		kExactDuplicates,
-		kSimilarImages
-	};
+	enum class SearchMode : int { ExactDuplicates = 0, SimilarImages = 1 };
 
-	enum class FileSizeUnit_t
-	{
-		kB = 0,
-		kKB = 1,
-		kMB = 2,
-		kGB = 3
-	};
+	enum class FileSizeUnit { B = 0, KB = 1, MB = 2, GB = 3 };
 
-	struct FileSizeSetting_t
+	struct FileSizeSetting
 	{
 		bool enabled = false;
 		unsigned long long size = 0;
-		FileSizeUnit_t unit = FileSizeUnit_t::kB;
+		FileSizeUnit unit = FileSizeUnit::B;
 	};
 
-	struct ImageSettings_t
+	struct ImageSettings
 	{
 		unsigned short sensitivity = 85;
 		bool processRotations = true;
@@ -51,8 +37,8 @@ struct SearchSettings
 
 	struct CommonSettings
 	{
-		std::optional<FileSizeSetting_t> minFileSize;
-		std::optional<FileSizeSetting_t> maxFileSize;
+		std::optional<FileSizeSetting> minFileSize;
+		std::optional<FileSizeSetting> maxFileSize;
 		std::vector<std::string> filenameRegexps;
 		bool searchReadOnly = true;
 		bool searchHidden = false;
@@ -67,14 +53,10 @@ struct SearchSettings
 	CommonSettings exactDuplicatesSettings;
 	CommonSettings similarImagesSettings;
 
-	SearchMode_t searchMode = SearchMode_t::kExactDuplicates;
-	ImageSettings_t imageSettings;
+	SearchMode searchMode = SearchMode::ExactDuplicates;
+	ImageSettings imageSettings;
 
 	UiSettings uiSettings;
 };
 
-
-
-}}
-
-#endif /* SETTINGS_SEARCHSETTINGS_HPP_ */
+} // namespace detwinner::settings

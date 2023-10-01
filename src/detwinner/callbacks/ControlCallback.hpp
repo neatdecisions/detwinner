@@ -3,22 +3,18 @@
  Name        : ControlCallback.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef CALLBACKS_CONTROLCALLBACK_HPP_
-#define CALLBACKS_CONTROLCALLBACK_HPP_
+#pragma once
 
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 
-
-namespace detwinner {
-namespace callbacks {
-
+namespace detwinner::callbacks {
 
 class ControlCallback
 {
@@ -36,7 +32,4 @@ private:
 	std::atomic_bool m_isPaused;
 };
 
-
-}}
-
-#endif /* CALLBACKS_CONTROLCALLBACK_HPP_ */
+} // namespace detwinner::callbacks

@@ -3,35 +3,29 @@
  Name        : ImageFeaturesBuilder.cpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
 #include <logic/images/ImageFeaturesBuilder.hpp>
 
-#include <logic/images/ImageFeaturesBridge.hpp>
-
 #include <future>
 
+#include <logic/images/ImageFeaturesBridge.hpp>
 
-namespace detwinner {
-namespace logic {
-namespace images {
-
+namespace detwinner::logic::images {
 
 namespace {
-	constexpr unsigned int kMinimumFilesPerThread = 1000;
+constexpr unsigned int kMinimumFilesPerThread = 1000;
 }
 
 //------------------------------------------------------------------------------
-ImageFeaturesBuilder::ImageFeaturesBuilder(
-	const std::vector<std::string> & fileNames,
-	const callbacks::IImageFinderCallback::Ptr_t & callback) :
-	m_fileNames(fileNames), m_callback(callback),
-	m_stopped(false), m_processedCount(0)
-{}
-
+ImageFeaturesBuilder::ImageFeaturesBuilder(const std::vector<std::string> & fileNames,
+                                           const callbacks::IImageFinderCallback::Ptr & callback)
+		: m_fileNames(fileNames), m_callback(callback), m_stopped(false), m_processedCount(0)
+{
+}
 
 //------------------------------------------------------------------------------
 std::vector<ImageFeatures>
@@ -42,13 +36,13 @@ ImageFeaturesBuilder::execute()
 	m_processedCount = 0;
 	if (m_callback) m_callback->imgIndexingProgress(0, fns);
 	// we don't want to create threads for a microtasks
-	const unsigned int numThreads = (fns > kMinimumFilesPerThread) ?
-		std::max(4U, std::thread::hardware_concurrency()) : 1;
+	const unsigned int numThreads =
+			(fns > kMinimumFilesPerThread) ? std::max(4U, std::thread::hardware_concurrency()) : 1;
 	// distribute the list of filenames into separate tasks
 	// which than will be run in a separate tasks
 	const std::size_t delta = fns / numThreads;
 
-	std::vector< std::future< std::vector<ImageFeatures> > > futures;
+	std::vector<std::future<std::vector<ImageFeatures>>> futures;
 
 	const std::launch launchType = (numThreads > 1) ? std::launch::async : std::launch::deferred;
 
@@ -56,14 +50,13 @@ ImageFeaturesBuilder::execute()
 	{
 		const std::size_t start = i * delta;
 		// the last bucket will go entirely to the last task
-		const std::size_t end = ( i == (numThreads - 1) ) ? m_fileNames.size() : i * delta + delta;
-		futures.push_back( std::async(
-				launchType, &ImageFeaturesBuilder::executeInternal, this, start, end) );
+		const std::size_t end = (i == (numThreads - 1)) ? m_fileNames.size() : i * delta + delta;
+		futures.push_back(std::async(launchType, &ImageFeaturesBuilder::executeInternal, this, start, end));
 	}
 
 	std::vector<ImageFeatures> imageFeatures;
 	imageFeatures.reserve(fns);
-	for (auto && future: futures)
+	for (auto && future : futures)
 	{
 		auto partialResult = future.get();
 
@@ -79,7 +72,6 @@ ImageFeaturesBuilder::execute()
 
 	return imageFeatures;
 }
-
 
 //------------------------------------------------------------------------------
 std::vector<ImageFeatures>
@@ -99,7 +91,7 @@ ImageFeaturesBuilder::executeInternal(std::size_t startIndex, std::size_t endInd
 		{
 			img.read(kResizeGeometry, m_fileNames[i]);
 			imageFeatures.push_back(ImageFeaturesBridge::GetImageFeatures(img, i));
-		} catch (const Magick::Exception&)
+		} catch (const Magick::Exception &)
 		{
 			// normal to have it here if the file being read is not an image
 		}
@@ -113,5 +105,4 @@ ImageFeaturesBuilder::executeInternal(std::size_t startIndex, std::size_t endInd
 	return imageFeatures;
 }
 
-
-}}}
+} // namespace detwinner::logic::images

@@ -3,22 +3,18 @@
  Name        : FileSearchSettings.hpp
  Author      : NeatDecisions
  Version     :
- Copyright   : Copyright © 2018–2022 Neat Decisions. All rights reserved.
+ Copyright   : Copyright © 2018–2023 Neat Decisions. All rights reserved.
  Description : Detwinner
  ===============================================================================
  */
 
-#ifndef LOGIC_FILESEARCHSETTINGS_HPP_
-#define LOGIC_FILESEARCHSETTINGS_HPP_
+#pragma once
 
 #include <optional>
 #include <string>
 #include <vector>
 
-
-namespace detwinner {
-namespace logic {
-
+namespace detwinner::logic {
 
 struct FileSearchSettings
 {
@@ -32,7 +28,4 @@ struct FileSearchSettings
 	bool searchExecutableFiles = false;
 };
 
-
-}}
-
-#endif /* LOGIC_FILESEARCHSETTINGS_HPP_ */
+} // namespace detwinner::logic
